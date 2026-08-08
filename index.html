@@ -598,7 +598,7 @@
             <select id="cBroker" onchange="onBrokerChange()"></select>
           </div>
           <div class="field"><label>Instrument</label>
-            <select id="cInstrument"></select>
+            <select id="cInstrument" onchange="calculateLotSize()"></select>
           </div>
         </div>
         <div class="form-grid cols-4">
@@ -625,7 +625,7 @@
           <div class="calc-mini"><div class="label">% de risque réel pris</div><div class="value" id="calcPctHaut">0.00%</div></div>
         </div>
         <div class="warn hidden" id="calcWarning">Le lot brut est trop petit pour un pas de 0.01 : utilise la section « arrondi supérieur » ci-dessus (le risque réel dépassera légèrement ta cible).</div>
-        <p class="note">Valeurs de pip par défaut (indicatives) — à remplacer par tes valeurs réelles issues de l'onglet Hypothèses une fois la synchronisation activée. Lot standard = 100 000 unités.</p>
+        <p class="note">Valeurs de pip réelles issues de l'onglet Hypothèses (par broker). Lot standard = 100 000 unités.</p>
       </div>
     </div>
 
@@ -655,23 +655,37 @@
 
   var BROKERS = ["FTMO", "Funding Pips"];
   var INSTRUMENTS_JOURNAL = ["US30","EURUSD","GBPUSD","USDJPY","USDCHF","AUDUSD","USDCAD","NZDUSD"];
-  var INSTRUMENTS_CALC_ONLY = ["XAUUSD","US100","US500"];
   var STRATEGIES = ["Supply","Demand","Equal low","Equal high","Imbalance"];
 
-  // pip values par défaut (identiques pour les deux brokers tant que non synchronisées) :
-  // { instrument: { v001: valeur par point a 0.01 lot, v100: valeur par point a 1.00 lot } }
+  // Valeurs de pip reelles, issues de l'onglet "Hypotheses" (specifiques a chaque broker)
+  // { broker: { instrument: { v001: valeur par point a 0.01 lot, v100: valeur par point a 1.00 lot } } }
   var PIP_VALUES = {
-    "EURUSD": {v001:0.10, v100:10.0},
-    "GBPUSD": {v001:0.10, v100:10.0},
-    "USDJPY": {v001:0.093, v100:9.3},
-    "USDCHF": {v001:0.11, v100:11.0},
-    "AUDUSD": {v001:0.10, v100:10.0},
-    "USDCAD": {v001:0.074, v100:7.4},
-    "NZDUSD": {v001:0.10, v100:10.0},
-    "US30":   {v001:0.10, v100:10.0},
-    "XAUUSD": {v001:0.01, v100:1.0},
-    "US100":  {v001:0.10, v100:10.0},
-    "US500":  {v001:0.10, v100:10.0}
+    "FTMO": {
+      "AUDUSD": {v001:0.10, v100:10},
+      "EURUSD": {v001:0.10, v100:10},
+      "GBPUSD": {v001:0.10, v100:10},
+      "NZDUSD": {v001:0.10, v100:10},
+      "US30":   {v001:0.01, v100:1},
+      "USDCAD": {v001:0.10, v100:10},
+      "USDCHF": {v001:0.10, v100:10},
+      "USDJPY": {v001:0.06, v100:6}
+    },
+    "Funding Pips": {
+      "AUDUSD": {v001:0.10, v100:10},
+      "EURUSD": {v001:0.10, v100:10},
+      "GBPUSD": {v001:0.10, v100:10},
+      "NZDUSD": {v001:0.10, v100:10},
+      "US30":   {v001:0.05, v100:5},
+      "USDCAD": {v001:0.10, v100:10},
+      "USDCHF": {v001:0.12, v100:12},
+      "USDJPY": {v001:0.05, v100:5}
+    }
+  };
+
+  // Taille du point par instrument (reference, issue de l'onglet Hypotheses)
+  var POINT_SIZE = {
+    "AUDUSD":0.0001, "EURUSD":0.0001, "GBPUSD":0.0001, "NZDUSD":0.0001,
+    "US30":1, "USDCAD":0.0001, "USDCHF":0.0001, "USDJPY":0.01
   };
 
   var trades = [
@@ -681,7 +695,7 @@
     {trade_num:4, date:'2026-08-06', instrument:'USDJPY', direction:'Sell', broker:'FTMO', entry_price:151.20, exit_price:151.20, sl_pts:20, tp_pts:40, outcome:'Breakeven', r_realized:0, pnl:0, strategy:'Imbalance', notes:'Sorti à breakeven après nouvelles macro.'}
   ];
 
-  var objectifParams = { date_debut:'2026-07-01', capital_initial:10000, objectif_par_compte:5000 };
+  var objectifParams = { date_debut:'2026-08-07', capital_initial:100000, objectif_par_compte:50000 };
   var objectifEntries = [
     {date:'2026-07-10', compte:'FTMO', montant:820, frequence:'Hebdo', note:'Semaine 1'},
     {date:'2026-07-17', compte:'FTMO', montant:640, frequence:'Hebdo', note:'Semaine 2'},
@@ -757,7 +771,8 @@
   }
 
   function onBrokerChange(){
-    fillSelect('cInstrument', INSTRUMENTS_JOURNAL.concat(INSTRUMENTS_CALC_ONLY));
+    fillSelect('cInstrument', INSTRUMENTS_JOURNAL);
+    calculateLotSize();
   }
 
   // ---------- Overview ----------
@@ -1008,8 +1023,9 @@
     var capital = parseFloat(document.getElementById('cBalance').value) || 0;
     var riskPct = (parseFloat(document.getElementById('cRisk').value) || 0) / 100;
     var slPts = parseFloat(document.getElementById('cSL').value) || 0;
+    var broker = document.getElementById('cBroker').value;
     var instrument = document.getElementById('cInstrument').value;
-    var pip = PIP_VALUES[instrument];
+    var pip = PIP_VALUES[broker] ? PIP_VALUES[broker][instrument] : null;
 
     if(!pip || slPts <= 0){
       document.getElementById('calcWarning').classList.remove('hidden');

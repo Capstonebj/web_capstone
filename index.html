@@ -6,7 +6,7 @@
 <title>CAPSTONE — Solidité. Vision. Performance.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
 <style>
   :root{
     --void:#10131a;
@@ -149,15 +149,21 @@
     display:flex; align-items:center; justify-content:center; z-index:100; padding:20px; overflow-y:auto;
   }
   .modal{
-    background:var(--surface); border:1px solid var(--line-strong); width:100%; max-width:400px; padding:44px 38px;
-    position:relative;
+    background:var(--surface); border:1px solid var(--line-strong); width:100%; max-width:min(400px, 92vw);
+    max-height:88vh; display:flex; flex-direction:column; position:relative; overflow:hidden;
   }
-  .modal.wide{ max-width:520px; }
-  .modal .close{ position:absolute; top:16px; right:18px; background:none; border:none; color:var(--ink-faint); font-size:20px; cursor:pointer; font-family:var(--body); }
-  .modal .close:hover{ color:var(--ink); }
-  .modal .eyebrow{ margin-bottom:18px; }
-  .modal h3{ font-family:var(--disp); font-size:26px; margin-bottom:8px; }
-  .modal .sub{ color:var(--ink-muted); font-size:13.5px; margin-bottom:30px; }
+  .modal.wide{ max-width:min(520px, 92vw); }
+  .modal-head{ padding:32px 32px 0; flex-shrink:0; position:relative; }
+  .modal-body{ padding:0 32px 32px; overflow-y:auto; }
+  .modal .close{
+    position:absolute; top:14px; right:14px; background:var(--surface-raised); border:1px solid var(--line-strong);
+    width:30px; height:30px; border-radius:50%; color:var(--ink-muted); font-size:18px; cursor:pointer; font-family:var(--body);
+    display:flex; align-items:center; justify-content:center; z-index:5; line-height:1;
+  }
+  .modal .close:hover{ color:var(--ink); border-color:var(--brass); }
+  .modal .eyebrow{ margin-bottom:18px; padding-right:36px; }
+  .modal h3{ font-family:var(--disp); font-size:26px; margin-bottom:8px; padding-right:36px; }
+  .modal .sub{ color:var(--ink-muted); font-size:13.5px; margin-bottom:6px; }
   .field{ margin-bottom:20px; }
   .field label{ display:block; font-family:var(--mono); font-size:11px; letter-spacing:1.5px; color:var(--ink-muted); text-transform:uppercase; margin-bottom:8px; }
   .field input, .field select{
@@ -165,7 +171,9 @@
     padding:12px 14px; font-family:var(--body); font-size:14px; outline:none; transition:border-color .2s;
   }
   .field input:focus, .field select:focus{ border-color:var(--brass); }
-  .modal .btn-solid{ width:100%; padding:13px; margin-top:8px; }
+  .modal-actions{ display:flex; gap:12px; margin-top:8px; }
+  .modal-actions .btn-solid{ flex:1; padding:13px; }
+  .modal-actions .btn-ghost{ flex:0 0 auto; padding:13px 20px; }
   .hint{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin-top:18px; text-align:center; }
   .modal-error{ font-size:13px; color:var(--brick); margin-top:-8px; margin-bottom:14px; display:none; }
 
@@ -231,6 +239,9 @@
   tbody tr:hover td{ color:var(--ink); background:var(--surface-raised); }
   .row-del{ background:none; border:1px solid var(--line-strong); color:var(--ink-faint); font-family:var(--mono); font-size:11px; padding:5px 10px; cursor:pointer;}
   .row-del:hover{ border-color:var(--brick); color:var(--brick); }
+  .row-actions{ display:flex; gap:6px; }
+  .row-edit{ background:none; border:1px solid var(--line-strong); color:var(--ink-faint); font-family:var(--mono); font-size:11px; padding:5px 10px; cursor:pointer;}
+  .row-edit:hover{ border-color:var(--brass); color:var(--brass-bright); }
   .pill{ font-family:var(--mono); font-size:11px; padding:3px 9px; border:1px solid; display:inline-block; }
   .pill.buy{ color:var(--sage); border-color:var(--sage); }
   .pill.sell{ color:var(--brick); border-color:var(--brick); }
@@ -386,86 +397,113 @@
 <!-- ============ LOGIN MODAL ============ -->
 <div id="loginModal" class="modal-overlay hidden">
   <div class="modal">
-    <button class="close" onclick="closeLogin()">&times;</button>
-    <div class="eyebrow">Accès réservé</div>
-    <h3>Espace collaborateurs</h3>
-    <p class="sub">Connectez-vous pour accéder à votre journal, vos outils et l'historique P2P.</p>
-    <div class="modal-error" id="loginError">Identifiants incorrects. Réessayez.</div>
-    <div class="field">
-      <label>Identifiant</label>
-      <input type="text" id="loginUser" placeholder="prenom.nom">
+    <div class="modal-head">
+      <button class="close" onclick="closeLogin()">&times;</button>
+      <div class="eyebrow">Accès réservé</div>
+      <h3>Espace collaborateurs</h3>
+      <p class="sub">Connectez-vous pour accéder à votre journal, vos outils et l'historique P2P.</p>
     </div>
-    <div class="field">
-      <label>Mot de passe</label>
-      <input type="password" id="loginPass" placeholder="••••••••">
+    <div class="modal-body">
+      <div class="modal-error" id="loginError">Identifiants incorrects. Réessayez.</div>
+      <div class="field">
+        <label>Identifiant</label>
+        <input type="text" id="loginUser" placeholder="prenom.nom">
+      </div>
+      <div class="field">
+        <label>Mot de passe</label>
+        <input type="password" id="loginPass" placeholder="••••••••">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-solid" onclick="attemptLogin()">Connexion</button>
+      </div>
+      <div class="hint">Démo — tout identifiant / mot de passe non vide fonctionne</div>
     </div>
-    <button class="btn btn-solid" onclick="attemptLogin()">Connexion</button>
-    <div class="hint">Démo — tout identifiant / mot de passe non vide fonctionne</div>
   </div>
 </div>
 
 <!-- ============ ADD TRADE MODAL ============ -->
 <div id="tradeModal" class="modal-overlay hidden">
   <div class="modal wide">
-    <button class="close" onclick="closeTradeModal()">&times;</button>
-    <div class="eyebrow">Journal</div>
-    <h3>Ajouter un trade</h3>
-    <div class="form-grid">
-      <div class="field"><label>Date</label><input type="date" id="tDate"></div>
-      <div class="field"><label>Instrument</label>
-        <select id="tInstrument"></select>
+    <div class="modal-head">
+      <button class="close" onclick="closeTradeModal()">&times;</button>
+      <div class="eyebrow">Journal</div>
+      <h3 id="tradeModalTitle">Ajouter un trade</h3>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Date</label><input type="date" id="tDate"></div>
+        <div class="field"><label>Instrument</label>
+          <select id="tInstrument"></select>
+        </div>
+        <div class="field"><label>Sens</label>
+          <select id="tDirection"><option>Buy</option><option>Sell</option></select>
+        </div>
+        <div class="field"><label>Broker / Compte</label>
+          <select id="tBroker"></select>
+        </div>
+        <div class="field"><label>Prix d'entrée</label><input type="number" step="any" id="tEntry"></div>
+        <div class="field"><label>Prix de sortie</label><input type="number" step="any" id="tExit"></div>
+        <div class="field"><label>Stop loss (pts)</label><input type="number" step="any" id="tSL"></div>
+        <div class="field"><label>Target (pts)</label><input type="number" step="any" id="tTP"></div>
+        <div class="field"><label>Résultat</label>
+          <select id="tOutcome"><option value="">—</option><option>Win</option><option>Loss</option><option>Breakeven</option></select>
+        </div>
+        <div class="field"><label>R réalisé</label><input type="number" step="any" id="tR"></div>
+        <div class="field"><label>P&amp;L ($)</label><input type="number" step="any" id="tPnl"></div>
+        <div class="field"><label>Stratégie</label>
+          <select id="tStrategy"></select>
+        </div>
       </div>
-      <div class="field"><label>Sens</label>
-        <select id="tDirection"><option>Buy</option><option>Sell</option></select>
-      </div>
-      <div class="field"><label>Broker / Compte</label>
-        <select id="tBroker"></select>
-      </div>
-      <div class="field"><label>Prix d'entrée</label><input type="number" step="any" id="tEntry"></div>
-      <div class="field"><label>Prix de sortie</label><input type="number" step="any" id="tExit"></div>
-      <div class="field"><label>Stop loss (pts)</label><input type="number" step="any" id="tSL"></div>
-      <div class="field"><label>Target (pts)</label><input type="number" step="any" id="tTP"></div>
-      <div class="field"><label>Résultat</label>
-        <select id="tOutcome"><option value="">—</option><option>Win</option><option>Loss</option><option>Breakeven</option></select>
-      </div>
-      <div class="field"><label>R réalisé</label><input type="number" step="any" id="tR"></div>
-      <div class="field"><label>P&amp;L ($)</label><input type="number" step="any" id="tPnl"></div>
-      <div class="field"><label>Stratégie</label>
-        <select id="tStrategy"></select>
+      <div class="field"><label>Notes</label><input type="text" id="tNotes" placeholder="Contexte, setup, leçon retenue…"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeTradeModal()">Annuler</button>
+        <button class="btn btn-solid" onclick="saveTrade()">Enregistrer le trade</button>
       </div>
     </div>
-    <div class="field"><label>Notes</label><input type="text" id="tNotes" placeholder="Contexte, setup, leçon retenue…"></div>
-    <button class="btn btn-solid" onclick="saveTrade()">Enregistrer le trade</button>
   </div>
 </div>
 
 <!-- ============ ADD OBJECTIF ENTRY MODAL ============ -->
 <div id="objModal" class="modal-overlay hidden">
   <div class="modal">
-    <button class="close" onclick="closeObjModal()">&times;</button>
-    <div class="eyebrow">Objectif</div>
-    <h3>Ajouter une entrée</h3>
-    <div class="field"><label>Date</label><input type="date" id="oDate"></div>
-    <div class="field"><label>Compte</label>
-      <select id="oCompte"><option>FTMO</option><option>Funding Pips</option></select>
+    <div class="modal-head">
+      <button class="close" onclick="closeObjModal()">&times;</button>
+      <div class="eyebrow">Objectif</div>
+      <h3 id="objModalTitle">Ajouter une entrée</h3>
     </div>
-    <div class="field"><label>Montant ($)</label><input type="number" step="any" id="oMontant"></div>
-    <div class="field"><label>Fréquence</label><input type="text" id="oFreq" placeholder="Hebdo, Mensuel…"></div>
-    <div class="field"><label>Note</label><input type="text" id="oNote"></div>
-    <button class="btn btn-solid" onclick="saveObjEntry()">Enregistrer</button>
+    <div class="modal-body">
+      <div class="field"><label>Date</label><input type="date" id="oDate"></div>
+      <div class="field"><label>Compte</label>
+        <select id="oCompte"><option>FTMO</option><option>Funding Pips</option></select>
+      </div>
+      <div class="field"><label>Montant ($)</label><input type="number" step="any" id="oMontant"></div>
+      <div class="field"><label>Fréquence</label><input type="text" id="oFreq" placeholder="Hebdo, Mensuel…"></div>
+      <div class="field"><label>Note</label><input type="text" id="oNote"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeObjModal()">Annuler</button>
+        <button class="btn btn-solid" onclick="saveObjEntry()">Enregistrer</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- ============ OBJECTIF PARAMS MODAL ============ -->
 <div id="paramsModal" class="modal-overlay hidden">
   <div class="modal">
-    <button class="close" onclick="closeParamsModal()">&times;</button>
-    <div class="eyebrow">Objectif</div>
-    <h3>Paramètres</h3>
-    <div class="field"><label>Date de début</label><input type="date" id="pDateDebut"></div>
-    <div class="field"><label>Capital initial / compte ($)</label><input type="number" step="any" id="pCapital"></div>
-    <div class="field"><label>Objectif / compte ($)</label><input type="number" step="any" id="pObjectif"></div>
-    <button class="btn btn-solid" onclick="saveParams()">Enregistrer</button>
+    <div class="modal-head">
+      <button class="close" onclick="closeParamsModal()">&times;</button>
+      <div class="eyebrow">Objectif</div>
+      <h3>Paramètres</h3>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label>Date de début</label><input type="date" id="pDateDebut"></div>
+      <div class="field"><label>Capital initial / compte ($)</label><input type="number" step="any" id="pCapital"></div>
+      <div class="field"><label>Objectif / compte ($)</label><input type="number" step="any" id="pObjectif"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeParamsModal()">Annuler</button>
+        <button class="btn btn-solid" onclick="saveParams()">Enregistrer</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -551,7 +589,7 @@
         <div class="panel-head"><h3>Trades</h3></div>
         <div class="table-wrap">
         <table>
-          <thead><tr><th>#</th><th>Date</th><th>Instrument</th><th>Sens</th><th>Broker</th><th>Stratégie</th><th>Résultat</th><th>R</th><th>P&amp;L</th><th></th></tr></thead>
+          <thead><tr><th>#</th><th>Date</th><th>Instrument</th><th>Sens</th><th>Broker</th><th>Stratégie</th><th>Résultat</th><th>R</th><th>P&amp;L</th><th>Actions</th></tr></thead>
           <tbody id="journalBody"></tbody>
         </table>
         </div>
@@ -577,7 +615,7 @@
         <h3>Entrées</h3>
         <div class="table-wrap">
         <table>
-          <thead><tr><th>Date</th><th>Compte</th><th>Montant</th><th>Fréquence</th><th>Note</th><th></th></tr></thead>
+          <thead><tr><th>Date</th><th>Compte</th><th>Montant</th><th>Fréquence</th><th>Note</th><th>Actions</th></tr></thead>
           <tbody id="objBody"></tbody>
         </table>
         </div>
@@ -754,11 +792,16 @@
     fillSelect('cBroker', BROKERS);
     fillSelect('oCompte', BROKERS, true);
     onBrokerChange();
-    renderOverviewStats();
-    renderJournal();
-    renderObjectif();
-    renderP2P();
-    calculateLotSize();
+    safe(renderOverviewStats, 'overview');
+    safe(renderJournal, 'journal');
+    safe(renderObjectif, 'objectif');
+    safe(renderP2P, 'p2p');
+    safe(calculateLotSize, 'calculator');
+  }
+
+  function safe(fn, label){
+    try{ fn(); }
+    catch(err){ console.error('Erreur dans la section "'+label+'":', err); }
   }
 
   function fillSelect(id, values, keepExisting){
@@ -834,11 +877,11 @@
         '<td>'+(t.outcome ? '<span class="pill '+outcomeClass+'">'+t.outcome+'</span>' : '—')+'</td>'+
         '<td>'+(t.r_realized!=null ? t.r_realized.toFixed(2) : '—')+'</td>'+
         '<td '+pnlColor+'>'+((t.pnl||0)>=0?'+':'')+(t.pnl||0).toFixed(2)+' $</td>'+
-        '<td><button class="row-del" onclick="deleteTrade('+idx+')">Suppr.</button></td>';
+        '<td><div class="row-actions"><button class="row-edit" onclick="editTrade('+idx+')">Modifier</button><button class="row-del" onclick="deleteTrade('+idx+')">Suppr.</button></div></td>';
       body.appendChild(tr);
     });
 
-    renderEquityChart();
+    safe(renderEquityChart, 'equity-chart');
     renderOverviewStats();
   }
 
@@ -861,18 +904,40 @@
     });
   }
 
-  function openTradeModal(){
-    document.getElementById('tDate').value = new Date().toISOString().slice(0,10);
+  var editingTradeIdx = null;
+
+  function openTradeModal(idx){
+    editingTradeIdx = (typeof idx === 'number') ? idx : null;
+    if(editingTradeIdx !== null){
+      var t = trades[editingTradeIdx];
+      document.getElementById('tradeModalTitle').textContent = 'Modifier le trade';
+      document.getElementById('tDate').value = t.date;
+      document.getElementById('tInstrument').value = t.instrument;
+      document.getElementById('tDirection').value = t.direction;
+      document.getElementById('tBroker').value = t.broker;
+      document.getElementById('tEntry').value = t.entry_price != null ? t.entry_price : '';
+      document.getElementById('tExit').value = t.exit_price != null ? t.exit_price : '';
+      document.getElementById('tSL').value = t.sl_pts != null ? t.sl_pts : '';
+      document.getElementById('tTP').value = t.tp_pts != null ? t.tp_pts : '';
+      document.getElementById('tOutcome').value = t.outcome || '';
+      document.getElementById('tR').value = t.r_realized != null ? t.r_realized : '';
+      document.getElementById('tPnl').value = t.pnl != null ? t.pnl : '';
+      document.getElementById('tStrategy').value = t.strategy || '';
+      document.getElementById('tNotes').value = t.notes === '—' ? '' : (t.notes || '');
+    } else {
+      document.getElementById('tradeModalTitle').textContent = 'Ajouter un trade';
+      document.getElementById('tDate').value = new Date().toISOString().slice(0,10);
+      ['tEntry','tExit','tSL','tTP','tR','tPnl','tNotes','tOutcome'].forEach(function(id){ document.getElementById(id).value=''; });
+    }
     document.getElementById('tradeModal').classList.remove('hidden');
   }
-  function closeTradeModal(){ document.getElementById('tradeModal').classList.add('hidden'); }
+  function editTrade(idx){ openTradeModal(idx); }
+  function closeTradeModal(){ document.getElementById('tradeModal').classList.add('hidden'); editingTradeIdx = null; }
 
   function saveTrade(){
     var instrument = document.getElementById('tInstrument').value;
     if(!instrument){ return; }
-    var nextNum = trades.length ? Math.max.apply(null, trades.map(function(t){return t.trade_num;})) + 1 : 1;
-    trades.push({
-      trade_num: nextNum,
+    var data = {
       date: document.getElementById('tDate').value || new Date().toISOString().slice(0,10),
       instrument: instrument,
       direction: document.getElementById('tDirection').value,
@@ -886,9 +951,15 @@
       pnl: parseFloat(document.getElementById('tPnl').value) || 0,
       strategy: document.getElementById('tStrategy').value,
       notes: document.getElementById('tNotes').value.trim() || '—'
-    });
+    };
+    if(editingTradeIdx !== null){
+      data.trade_num = trades[editingTradeIdx].trade_num;
+      trades[editingTradeIdx] = data;
+    } else {
+      data.trade_num = trades.length ? Math.max.apply(null, trades.map(function(t){return t.trade_num;})) + 1 : 1;
+      trades.push(data);
+    }
     closeTradeModal();
-    ['tEntry','tExit','tSL','tTP','tR','tPnl','tNotes'].forEach(function(id){ document.getElementById(id).value=''; });
     renderJournal();
   }
 
@@ -949,11 +1020,11 @@
       tr.innerHTML = '<td>'+e.date+'</td><td>'+e.compte+'</td>'+
         '<td '+mColor+'>'+((e.montant||0)>=0?'+':'')+(e.montant||0).toFixed(2)+' $</td>'+
         '<td>'+(e.frequence||'—')+'</td><td>'+(e.note||'—')+'</td>'+
-        '<td><button class="row-del" onclick="deleteObjEntry('+idx+')">Suppr.</button></td>';
+        '<td><div class="row-actions"><button class="row-edit" onclick="editObjEntry('+idx+')">Modifier</button><button class="row-del" onclick="deleteObjEntry('+idx+')">Suppr.</button></div></td>';
       body.appendChild(tr);
     });
 
-    renderObjChart();
+    safe(renderObjChart, 'objectif-chart');
     renderOverviewStats();
   }
 
@@ -987,18 +1058,38 @@
     });
   }
 
-  function openObjModal(){ document.getElementById('oDate').value = new Date().toISOString().slice(0,10); document.getElementById('objModal').classList.remove('hidden'); }
-  function closeObjModal(){ document.getElementById('objModal').classList.add('hidden'); }
+  var editingObjIdx = null;
+
+  function openObjModal(idx){
+    editingObjIdx = (typeof idx === 'number') ? idx : null;
+    if(editingObjIdx !== null){
+      var e = objectifEntries[editingObjIdx];
+      document.getElementById('objModalTitle').textContent = "Modifier l'entrée";
+      document.getElementById('oDate').value = e.date;
+      document.getElementById('oCompte').value = e.compte;
+      document.getElementById('oMontant').value = e.montant;
+      document.getElementById('oFreq').value = e.frequence || '';
+      document.getElementById('oNote').value = e.note || '';
+    } else {
+      document.getElementById('objModalTitle').textContent = 'Ajouter une entrée';
+      document.getElementById('oDate').value = new Date().toISOString().slice(0,10);
+      ['oMontant','oFreq','oNote'].forEach(function(id){ document.getElementById(id).value=''; });
+    }
+    document.getElementById('objModal').classList.remove('hidden');
+  }
+  function editObjEntry(idx){ openObjModal(idx); }
+  function closeObjModal(){ document.getElementById('objModal').classList.add('hidden'); editingObjIdx = null; }
   function saveObjEntry(){
-    objectifEntries.push({
+    var data = {
       date: document.getElementById('oDate').value || new Date().toISOString().slice(0,10),
       compte: document.getElementById('oCompte').value,
       montant: parseFloat(document.getElementById('oMontant').value) || 0,
       frequence: document.getElementById('oFreq').value.trim(),
       note: document.getElementById('oNote').value.trim()
-    });
+    };
+    if(editingObjIdx !== null){ objectifEntries[editingObjIdx] = data; }
+    else { objectifEntries.push(data); }
     closeObjModal();
-    ['oMontant','oFreq','oNote'].forEach(function(id){ document.getElementById(id).value=''; });
     renderObjectif();
   }
   function deleteObjEntry(idx){ objectifEntries.splice(idx,1); renderObjectif(); }

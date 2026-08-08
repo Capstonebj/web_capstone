@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAPSTONE — Solidité. Vision. Performance.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+  :root{
+    --void:#10131a;
+    --surface:#181c25;
+    --surface-raised:#1f2430;
+    --line: rgba(176,141,87,0.16);
+    --line-strong: rgba(176,141,87,0.32);
+    --ink:#ece7dd;
+    --ink-muted:#9aa3b2;
+    --ink-faint:#5d6474;
+    --brass:#b08d57;
+    --brass-bright:#d3b485;
+    --sage:#7f9c86;
+    --brick:#b06a5f;
+    --disp: 'Fraunces', serif;
+    --body: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, var(--line) 39px, var(--line) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, var(--line) 39px, var(--line) 40px),
+      var(--void);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.5;
+    min-height:100vh;
+  }
+  .hidden{display:none !important;}
+  a{color:inherit;}
+  ::selection{background:var(--brass); color:var(--void);}
+
+  .bracket{position:relative;}
+  .bracket::before, .bracket::after{
+    content:''; position:absolute; width:14px; height:14px;
+    border:1.5px solid var(--brass); opacity:.55; pointer-events:none;
+  }
+  .bracket::before{ top:-1px; left:-1px; border-right:none; border-bottom:none; }
+  .bracket::after{ bottom:-1px; right:-1px; border-left:none; border-top:none; }
+
+  /* ================= NAV ================= */
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px 6vw;
+    position:sticky; top:0; z-index:50;
+    background:rgba(16,19,26,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; font-family:var(--disp); font-size:22px; letter-spacing:0.5px; }
+  .brand small{ font-family:var(--mono); font-size:11px; color:var(--brass); letter-spacing:2px; }
+  .navlinks{ display:flex; align-items:center; gap:36px; font-size:14px; color:var(--ink-muted); }
+  .navlinks a{ text-decoration:none; transition:color .2s; }
+  .navlinks a:hover{ color:var(--brass-bright); }
+  .btn{
+    font-family:var(--mono); font-size:13px; letter-spacing:.5px;
+    padding:11px 22px; border:1px solid var(--brass); color:var(--brass-bright);
+    background:transparent; cursor:pointer; transition:all .2s;
+    text-decoration:none; display:inline-block;
+  }
+  .btn:hover{ background:var(--brass); color:var(--void); }
+  .btn-solid{ background:var(--brass); color:var(--void); border:1px solid var(--brass); }
+  .btn-solid:hover{ background:var(--brass-bright); border-color:var(--brass-bright); }
+  .btn-ghost{ border-color:var(--line-strong); color:var(--ink-muted); }
+  .btn-ghost:hover{ background:var(--surface-raised); color:var(--ink); border-color:var(--brass); }
+  .btn-sm{ padding:8px 14px; font-size:12px; }
+
+  /* ================= HERO ================= */
+  .hero{
+    display:flex; align-items:center; justify-content:space-between; gap:40px;
+    padding:8vh 6vw 10vh; max-width:1400px; margin:0 auto; flex-wrap:wrap;
+  }
+  .hero-text{ flex:1 1 460px; min-width:300px; }
+  .eyebrow{ font-family:var(--mono); font-size:12px; letter-spacing:3px; color:var(--brass); text-transform:uppercase; margin-bottom:22px; display:flex; align-items:center; gap:10px;}
+  .eyebrow::before{content:''; width:28px; height:1px; background:var(--brass);}
+  h1{ font-family:var(--disp); font-weight:600; font-size:clamp(40px, 5.2vw, 68px); line-height:1.05; letter-spacing:-0.5px; margin-bottom:26px;}
+  h1 em{ font-style:italic; color:var(--brass-bright); font-weight:500; }
+  .lede{ color:var(--ink-muted); font-size:17px; max-width:520px; margin-bottom:38px; }
+  .hero-cta{ display:flex; gap:16px; flex-wrap:wrap; }
+
+  .arch-wrap{ flex:1 1 380px; min-width:280px; display:flex; justify-content:center; }
+  .arch-wrap svg{ width:100%; max-width:460px; height:auto; }
+  .voussoir{
+    fill:var(--surface-raised); stroke:var(--brass); stroke-width:1; stroke-opacity:.4;
+    opacity:0; transform:translateY(-70px);
+    animation:drop .7s cubic-bezier(.2,.8,.25,1) forwards;
+    animation-delay: calc(var(--i) * 90ms);
+  }
+  .voussoir.keystone{ fill:var(--brass); stroke:var(--brass-bright); opacity:0; transform:translateY(-120px) scale(.7);
+    animation: dropKey .8s cubic-bezier(.34,1.56,.64,1) forwards;
+    animation-delay: 900ms;
+  }
+  .pier{ fill:var(--surface); stroke:var(--brass); stroke-width:1; stroke-opacity:.28; }
+  @keyframes drop{ to{ opacity:1; transform:translateY(0);} }
+  @keyframes dropKey{ to{ opacity:1; transform:translateY(0) scale(1);} }
+  @media (prefers-reduced-motion: reduce){
+    .voussoir, .voussoir.keystone{ animation:none; opacity:1; transform:none; }
+  }
+
+  /* ================= SECTION SHELL ================= */
+  section{ padding:9vh 6vw; max-width:1400px; margin:0 auto; }
+  .section-head{ margin-bottom:52px; }
+  .section-head .eyebrow{ margin-bottom:14px; }
+  .section-head h2{ font-family:var(--disp); font-size:clamp(28px,3vw,38px); font-weight:600; max-width:640px; }
+  .section-head p{ color:var(--ink-muted); margin-top:14px; max-width:560px; }
+
+  .activities{ display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .activity{ background:var(--void); padding:40px 32px; position:relative; }
+  .fig{ font-family:var(--mono); font-size:12px; color:var(--brass); letter-spacing:2px; margin-bottom:26px; }
+  .activity h3{ font-family:var(--disp); font-size:22px; font-weight:600; margin-bottom:14px; }
+  .activity p{ color:var(--ink-muted); font-size:14.5px; }
+  .glyph{ width:38px; height:38px; margin-bottom:20px; }
+  .glyph svg{ width:100%; height:100%; }
+
+  .about{ display:flex; gap:60px; flex-wrap:wrap; align-items:flex-start; }
+  .about-copy{ flex:1 1 480px; }
+  .about-copy p{ color:var(--ink-muted); margin-bottom:18px; max-width:600px; }
+  .about-copy p:first-of-type{ color:var(--ink); font-size:18px; font-family:var(--disp); font-style:italic; }
+  .taglist{ flex:1 1 320px; display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line); }
+  .tagrow{ display:flex; justify-content:space-between; padding:18px 4px; border-bottom:1px solid var(--line); font-size:14px; gap:16px;}
+  .tagrow span:first-child{ color:var(--ink-muted); flex-shrink:0; }
+  .tagrow span:last-child{ font-family:var(--mono); color:var(--brass-bright); text-align:right; }
+
+  footer{
+    border-top:1px solid var(--line); padding:52px 6vw 40px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:40px;
+    font-size:13px; color:var(--ink-faint);
+  }
+  footer strong{ color:var(--ink-muted); font-family:var(--mono); letter-spacing:1px; display:block; margin-bottom:14px; font-size:11px; text-transform:uppercase;}
+  footer .fcol{ min-width:220px; }
+  footer .fcol div{ margin-bottom:6px; line-height:1.6; }
+  footer .fcol a{ text-decoration:none; }
+  footer .fcol a:hover{ color:var(--brass-bright); }
+  .copyright{ width:100%; border-top:1px solid var(--line); margin-top:14px; padding-top:20px; }
+
+  /* ================= MODAL LOGIN ================= */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(8,10,14,0.78); backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:center; z-index:100; padding:20px; overflow-y:auto;
+  }
+  .modal{
+    background:var(--surface); border:1px solid var(--line-strong); width:100%; max-width:400px; padding:44px 38px;
+    position:relative;
+  }
+  .modal.wide{ max-width:520px; }
+  .modal .close{ position:absolute; top:16px; right:18px; background:none; border:none; color:var(--ink-faint); font-size:20px; cursor:pointer; font-family:var(--body); }
+  .modal .close:hover{ color:var(--ink); }
+  .modal .eyebrow{ margin-bottom:18px; }
+  .modal h3{ font-family:var(--disp); font-size:26px; margin-bottom:8px; }
+  .modal .sub{ color:var(--ink-muted); font-size:13.5px; margin-bottom:30px; }
+  .field{ margin-bottom:20px; }
+  .field label{ display:block; font-family:var(--mono); font-size:11px; letter-spacing:1.5px; color:var(--ink-muted); text-transform:uppercase; margin-bottom:8px; }
+  .field input, .field select{
+    width:100%; background:var(--void); border:1px solid var(--line-strong); color:var(--ink);
+    padding:12px 14px; font-family:var(--body); font-size:14px; outline:none; transition:border-color .2s;
+  }
+  .field input:focus, .field select:focus{ border-color:var(--brass); }
+  .modal .btn-solid{ width:100%; padding:13px; margin-top:8px; }
+  .hint{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin-top:18px; text-align:center; }
+  .modal-error{ font-size:13px; color:var(--brick); margin-top:-8px; margin-bottom:14px; display:none; }
+
+  /* ================= DASHBOARD ================= */
+  #dashboard{ display:flex; min-height:100vh; }
+  .sidebar{
+    width:250px; flex-shrink:0; border-right:1px solid var(--line);
+    padding:28px 0; display:flex; flex-direction:column; position:sticky; top:0; height:100vh;
+  }
+  .sidebar .brand{ padding:0 26px 30px; }
+  .sidenav{ display:flex; flex-direction:column; gap:2px; padding:0 14px; }
+  .sidenav button{
+    display:flex; align-items:center; gap:12px; background:none; border:none; color:var(--ink-muted);
+    font-family:var(--body); font-size:14px; text-align:left; padding:12px 12px; cursor:pointer; width:100%;
+    border-left:2px solid transparent; transition:all .15s;
+  }
+  .sidenav button svg{ width:16px; height:16px; opacity:.75; flex-shrink:0; }
+  .sidenav button:hover{ color:var(--ink); background:var(--surface); }
+  .sidenav button.active{ color:var(--brass-bright); border-left-color:var(--brass); background:var(--surface); }
+  .sidebar-foot{ margin-top:auto; padding:0 26px; }
+  .userchip{ font-family:var(--mono); font-size:12px; color:var(--ink-faint); margin-bottom:14px; }
+  .logout{ font-family:var(--mono); font-size:12px; color:var(--ink-muted); background:none; border:1px solid var(--line-strong); padding:9px 14px; cursor:pointer; width:100%; }
+  .logout:hover{ border-color:var(--brick); color:var(--brick); }
+
+  .dash-main{ flex:1; padding:44px 5vw; max-width:1240px; }
+  .dash-head{ margin-bottom:36px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;}
+  .dash-head .eyebrow{ margin-bottom:12px; }
+  .dash-head h2{ font-family:var(--disp); font-size:32px; font-weight:600; }
+
+  .tile-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:10px; }
+  .tile{ background:var(--surface); padding:28px; cursor:pointer; transition:background .15s; }
+  .tile:hover{ background:var(--surface-raised); }
+  .tile .glyph{ margin-bottom:16px; }
+  .tile h4{ font-family:var(--disp); font-size:18px; margin-bottom:8px; }
+  .tile p{ color:var(--ink-muted); font-size:13px; }
+
+  .stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-bottom:44px; }
+  .stat{ background:var(--void); padding:22px 24px; }
+  .stat .label{ font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
+  .stat .value{ font-family:var(--mono); font-size:23px; color:var(--brass-bright); }
+  .stat .value.pos{ color:var(--sage); }
+  .stat .value.neg{ color:var(--brick); }
+
+  .panel{ background:var(--surface); border:1px solid var(--line); padding:32px; margin-bottom:28px; }
+  .panel-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:12px;}
+  .panel h3{ font-family:var(--disp); font-size:19px; }
+  .panel-toolbar{ display:flex; gap:10px; }
+  .form-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:18px; margin-bottom:22px; }
+  .form-grid.cols-4{ grid-template-columns:repeat(4, 1fr); }
+  .form-grid .field{ margin-bottom:0; }
+  select{
+    width:100%; background:var(--void); border:1px solid var(--line-strong); color:var(--ink);
+    padding:12px 14px; font-family:var(--body); font-size:14px; outline:none;
+  }
+
+  .table-wrap{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; font-size:13px; min-width:640px;}
+  thead th{
+    text-align:left; font-family:var(--mono); font-size:10.5px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--ink-faint); padding:10px 12px; border-bottom:1px solid var(--line-strong); white-space:nowrap;
+  }
+  tbody td{ padding:12px; border-bottom:1px solid var(--line); color:var(--ink-muted); white-space:nowrap;}
+  tbody tr:hover td{ color:var(--ink); background:var(--surface-raised); }
+  .row-del{ background:none; border:1px solid var(--line-strong); color:var(--ink-faint); font-family:var(--mono); font-size:11px; padding:5px 10px; cursor:pointer;}
+  .row-del:hover{ border-color:var(--brick); color:var(--brick); }
+  .pill{ font-family:var(--mono); font-size:11px; padding:3px 9px; border:1px solid; display:inline-block; }
+  .pill.buy{ color:var(--sage); border-color:var(--sage); }
+  .pill.sell{ color:var(--brick); border-color:var(--brick); }
+  .pill.ok{ color:var(--sage); border-color:var(--sage); }
+  .pill.pending{ color:var(--brass-bright); border-color:var(--brass); }
+  .pill.loss{ color:var(--brick); border-color:var(--brick); }
+  .pill.be{ color:var(--ink-muted); border-color:var(--line-strong); }
+
+  .calc-result{ background:var(--void); border:1px solid var(--brass); padding:26px; margin-top:6px; }
+  .calc-result .value{ font-family:var(--mono); font-size:32px; color:var(--brass-bright); }
+  .calc-result .label{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+  .calc-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:18px; margin-top:20px; }
+  .calc-mini{ background:var(--void); border:1px solid var(--line-strong); padding:16px 18px; }
+  .calc-mini .label{ font-family:var(--mono); font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;}
+  .calc-mini .value{ font-family:var(--mono); font-size:17px; color:var(--ink); }
+  .note{ font-size:12px; color:var(--ink-faint); margin-top:16px; }
+  .warn{ font-size:12.5px; color:var(--brick); margin-top:14px; }
+
+  .chart-box{ position:relative; height:260px; margin-top:10px;}
+
+  .progress-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-bottom:28px;}
+  .progress-card{ background:var(--void); padding:22px; }
+  .progress-card h4{ font-family:var(--mono); font-size:12px; letter-spacing:1px; text-transform:uppercase; color:var(--brass-bright); margin-bottom:16px;}
+  .progress-bar-track{ height:6px; background:var(--surface-raised); margin-bottom:12px; }
+  .progress-bar-fill{ height:100%; background:var(--brass); transition:width .4s; }
+  .progress-card .pct{ font-family:var(--mono); font-size:20px; color:var(--ink); margin-bottom:8px;}
+  .progress-card .sub{ font-size:12px; color:var(--ink-muted); display:flex; justify-content:space-between; }
+
+  .params-strip{ font-family:var(--mono); font-size:12.5px; color:var(--ink-muted); background:var(--void); border:1px solid var(--line-strong); padding:16px 20px; margin-bottom:28px; display:flex; gap:28px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+  .params-strip span b{ color:var(--brass-bright); font-weight:500; }
+
+  @media (max-width:860px){
+    #dashboard{ flex-direction:column; }
+    .sidebar{ position:relative; width:100%; height:auto; flex-direction:row; align-items:center; padding:16px; border-right:none; border-bottom:1px solid var(--line); overflow-x:auto; }
+    .sidebar .brand{ padding:0 16px 0 0; }
+    .sidenav{ flex-direction:row; padding:0; }
+    .sidenav button{ border-left:none; border-bottom:2px solid transparent; white-space:nowrap; }
+    .sidenav button.active{ border-bottom-color:var(--brass); }
+    .sidebar-foot{ display:none; }
+    .activities{ grid-template-columns:1fr; }
+    .form-grid.cols-4{ grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LANDING ============ -->
+<div id="landing">
+  <nav>
+    <div class="brand">CAPSTONE <small>CSBJ</small></div>
+    <div class="navlinks">
+      <a href="#activites">Activités</a>
+      <a href="#a-propos">À propos</a>
+      <a href="#contact">Contact</a>
+      <button class="btn" onclick="openLogin()">Se connecter</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">Capstone bj — Bénin</div>
+      <h1>Solidité.<br>Vision.<br><em>Performance.</em></h1>
+      <p class="lede">Intermédiaire financier basé à Parakou, spécialisé dans le trading pour compte propre sur les marchés internationaux et l'échange d'actifs numériques de pair à pair.</p>
+      <div class="hero-cta">
+        <a href="#activites" class="btn btn-ghost">Découvrir nos activités</a>
+        <button class="btn btn-solid" onclick="openLogin()">Espace collaborateurs</button>
+      </div>
+    </div>
+    <div class="arch-wrap">
+      <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+        <rect class="pier" x="40" y="210" width="96" height="172"/>
+        <rect class="pier" x="464" y="210" width="96" height="172"/>
+        <path class="voussoir" style="--i:0" d="M 551.14 232.71 A 260 260 0 0 0 521.29 163.51 L 444.69 210.75 A 170 170 0 0 1 464.21 256.00 Z" />
+        <path class="voussoir" style="--i:1" d="M 521.29 163.51 A 260 260 0 0 0 472.85 105.77 L 413.02 173.01 A 170 170 0 0 1 444.69 210.75 Z" />
+        <path class="voussoir" style="--i:2" d="M 472.85 105.77 A 260 260 0 0 0 409.88 64.36 L 371.85 145.93 A 170 170 0 0 1 413.02 173.01 Z" />
+        <path class="voussoir" style="--i:3" d="M 409.88 64.36 A 260 260 0 0 0 337.68 42.75 L 324.64 131.79 A 170 170 0 0 1 371.85 145.93 Z" />
+        <path class="voussoir keystone" d="M 337.68 42.75 A 260 260 0 0 0 262.32 42.75 L 275.36 131.79 A 170 170 0 0 1 324.64 131.79 Z" />
+        <path class="voussoir" style="--i:5" d="M 262.32 42.75 A 260 260 0 0 0 190.12 64.36 L 228.15 145.93 A 170 170 0 0 1 275.36 131.79 Z" />
+        <path class="voussoir" style="--i:6" d="M 190.12 64.36 A 260 260 0 0 0 127.15 105.77 L 186.98 173.01 A 170 170 0 0 1 228.15 145.93 Z" />
+        <path class="voussoir" style="--i:7" d="M 127.15 105.77 A 260 260 0 0 0 78.71 163.51 L 155.31 210.75 A 170 170 0 0 1 186.98 173.01 Z" />
+        <path class="voussoir" style="--i:8" d="M 78.71 163.51 A 260 260 0 0 0 48.86 232.71 L 135.79 256.00 A 170 170 0 0 1 155.31 210.75 Z" />
+      </svg>
+    </div>
+  </section>
+
+  <section id="activites">
+    <div class="section-head">
+      <div class="eyebrow">Champ d'activité</div>
+      <h2>Trois piliers, une même exigence de rigueur.</h2>
+    </div>
+    <div class="activities">
+      <div class="activity bracket">
+        <div class="fig">FIG. 01</div>
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></div>
+        <h3>Intermédiation financière</h3>
+        <p>Notre cœur de métier : l'intermédiation financière non monétaire, au service d'une gestion rigoureuse des flux et des risques pour nos clients institutionnels et privés.</p>
+      </div>
+      <div class="activity bracket">
+        <div class="fig">FIG. 02</div>
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 17l5-5 4 4 8-8M20 8V4h-4"/></svg></div>
+        <h3>Trading pour compte propre</h3>
+        <p>Opérations de trading sur les marchés financiers internationaux — marché des changes, indices et instruments dérivés — exécutées pour compte propre.</p>
+      </div>
+      <div class="activity bracket">
+        <div class="fig">FIG. 03</div>
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg></div>
+        <h3>Échange P2P d'actifs numériques</h3>
+        <p>Échange de pair à pair d'actifs numériques, pour compte propre, à la croisée de la finance traditionnelle et des marchés digitaux émergents.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="a-propos">
+    <div class="about">
+      <div class="about-copy">
+        <p>« Une pierre de couronnement ne se contente pas de fermer un édifice — elle en absorbe toute la charge. »</p>
+        <p>C'est cette exigence structurelle que CAPSTONE applique à la finance : chaque position, chaque opération, chaque contrepartie est pensée pour tenir sous pression.</p>
+        <p>Basée à Parakou, l'entreprise opère à l'intersection de l'intermédiation financière classique et des marchés numériques émergents, avec la même discipline dans les deux univers.</p>
+      </div>
+      <div class="taglist">
+        <div class="tagrow"><span>Nom commercial</span><span>CAPSTONE</span></div>
+        <div class="tagrow"><span>Enseigne</span><span>Capstone bj</span></div>
+        <div class="tagrow"><span>Activité principale</span><span>Intermédiation fin. non monétaire</span></div>
+        <div class="tagrow"><span>Marchés couverts</span><span>Change · Indices · Dérivés</span></div>
+        <div class="tagrow"><span>Actifs numériques</span><span>Échange P2P</span></div>
+        <div class="tagrow"><span>Implantation</span><span>Parakou, Bénin</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="fcol">
+      <strong>Capstone</strong>
+      <div>CAPSTONE — CSBJ</div>
+      <div>Capstone bj</div>
+      <div><a href="http://www.capstone.bj">www.capstone.bj</a></div>
+    </div>
+    <div class="fcol">
+      <strong>Adresse de l'établissement</strong>
+      <div>3ème Arrondissement, Zongo</div>
+      <div>Îlot 563, Parcelle U</div>
+      <div>Parakou, Borgou — Bénin</div>
+    </div>
+    <div class="fcol">
+      <strong>Contact</strong>
+      <div><a href="tel:+22901950054 83">+229 01 95 00 54 83</a></div>
+      <div><a href="mailto:oroumoussab@gmail.com">oroumoussab@gmail.com</a></div>
+    </div>
+    <div class="copyright">© 2026 Capstone. Tous droits réservés.</div>
+  </footer>
+</div>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div id="loginModal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="close" onclick="closeLogin()">&times;</button>
+    <div class="eyebrow">Accès réservé</div>
+    <h3>Espace collaborateurs</h3>
+    <p class="sub">Connectez-vous pour accéder à votre journal, vos outils et l'historique P2P.</p>
+    <div class="modal-error" id="loginError">Identifiants incorrects. Réessayez.</div>
+    <div class="field">
+      <label>Identifiant</label>
+      <input type="text" id="loginUser" placeholder="prenom.nom">
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input type="password" id="loginPass" placeholder="••••••••">
+    </div>
+    <button class="btn btn-solid" onclick="attemptLogin()">Connexion</button>
+    <div class="hint">Démo — tout identifiant / mot de passe non vide fonctionne</div>
+  </div>
+</div>
+
+<!-- ============ ADD TRADE MODAL ============ -->
+<div id="tradeModal" class="modal-overlay hidden">
+  <div class="modal wide">
+    <button class="close" onclick="closeTradeModal()">&times;</button>
+    <div class="eyebrow">Journal</div>
+    <h3>Ajouter un trade</h3>
+    <div class="form-grid">
+      <div class="field"><label>Date</label><input type="date" id="tDate"></div>
+      <div class="field"><label>Instrument</label>
+        <select id="tInstrument"></select>
+      </div>
+      <div class="field"><label>Sens</label>
+        <select id="tDirection"><option>Buy</option><option>Sell</option></select>
+      </div>
+      <div class="field"><label>Broker / Compte</label>
+        <select id="tBroker"></select>
+      </div>
+      <div class="field"><label>Prix d'entrée</label><input type="number" step="any" id="tEntry"></div>
+      <div class="field"><label>Prix de sortie</label><input type="number" step="any" id="tExit"></div>
+      <div class="field"><label>Stop loss (pts)</label><input type="number" step="any" id="tSL"></div>
+      <div class="field"><label>Target (pts)</label><input type="number" step="any" id="tTP"></div>
+      <div class="field"><label>Résultat</label>
+        <select id="tOutcome"><option value="">—</option><option>Win</option><option>Loss</option><option>Breakeven</option></select>
+      </div>
+      <div class="field"><label>R réalisé</label><input type="number" step="any" id="tR"></div>
+      <div class="field"><label>P&amp;L ($)</label><input type="number" step="any" id="tPnl"></div>
+      <div class="field"><label>Stratégie</label>
+        <select id="tStrategy"></select>
+      </div>
+    </div>
+    <div class="field"><label>Notes</label><input type="text" id="tNotes" placeholder="Contexte, setup, leçon retenue…"></div>
+    <button class="btn btn-solid" onclick="saveTrade()">Enregistrer le trade</button>
+  </div>
+</div>
+
+<!-- ============ ADD OBJECTIF ENTRY MODAL ============ -->
+<div id="objModal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="close" onclick="closeObjModal()">&times;</button>
+    <div class="eyebrow">Objectif</div>
+    <h3>Ajouter une entrée</h3>
+    <div class="field"><label>Date</label><input type="date" id="oDate"></div>
+    <div class="field"><label>Compte</label>
+      <select id="oCompte"><option>FTMO</option><option>Funding Pips</option></select>
+    </div>
+    <div class="field"><label>Montant ($)</label><input type="number" step="any" id="oMontant"></div>
+    <div class="field"><label>Fréquence</label><input type="text" id="oFreq" placeholder="Hebdo, Mensuel…"></div>
+    <div class="field"><label>Note</label><input type="text" id="oNote"></div>
+    <button class="btn btn-solid" onclick="saveObjEntry()">Enregistrer</button>
+  </div>
+</div>
+
+<!-- ============ OBJECTIF PARAMS MODAL ============ -->
+<div id="paramsModal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="close" onclick="closeParamsModal()">&times;</button>
+    <div class="eyebrow">Objectif</div>
+    <h3>Paramètres</h3>
+    <div class="field"><label>Date de début</label><input type="date" id="pDateDebut"></div>
+    <div class="field"><label>Capital initial / compte ($)</label><input type="number" step="any" id="pCapital"></div>
+    <div class="field"><label>Objectif / compte ($)</label><input type="number" step="any" id="pObjectif"></div>
+    <button class="btn btn-solid" onclick="saveParams()">Enregistrer</button>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="dashboard" class="hidden">
+  <aside class="sidebar">
+    <div class="brand">CAPSTONE <small>CSBJ</small></div>
+    <nav class="sidenav">
+      <button class="nav-btn active" data-tab="overview" onclick="showTab('overview')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Vue d'ensemble
+      </button>
+      <button class="nav-btn" data-tab="journal" onclick="showTab('journal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h9M8 13h9M8 17h5"/></svg>
+        Journal
+      </button>
+      <button class="nav-btn" data-tab="objectif" onclick="showTab('objectif')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>
+        Objectif
+      </button>
+      <button class="nav-btn" data-tab="calculator" onclick="showTab('calculator')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 11h2M12 11h2M16 11h2M8 15h2M12 15h2M16 15h2"/></svg>
+        Lot Size Calculator
+      </button>
+      <button class="nav-btn" data-tab="p2p" onclick="showTab('p2p')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg>
+        Historique P2P
+      </button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="userchip" id="userchip">CONNECTÉ · —</div>
+      <button class="logout" onclick="logout()">Déconnexion</button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+
+    <!-- OVERVIEW -->
+    <div class="tab-panel" id="tab-overview">
+      <div class="dash-head">
+        <div><div class="eyebrow">Espace collaborateurs</div><h2 id="welcomeMsg">Bienvenue</h2></div>
+      </div>
+      <div class="stat-row" id="overviewStats"></div>
+      <div class="section-head" style="margin-bottom:20px;">
+        <h2 style="font-size:20px;">Vos outils</h2>
+      </div>
+      <div class="tile-grid">
+        <div class="tile" onclick="showTab('journal')">
+          <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M4 4h13l3 3v13H4z"/><path d="M8 9h9M8 13h9M8 17h5"/></svg></div>
+          <h4>Journal de trading</h4>
+          <p>Enregistrez et consultez vos trades.</p>
+        </div>
+        <div class="tile" onclick="showTab('objectif')">
+          <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div>
+          <h4>Objectif</h4>
+          <p>Suivez la progression FTMO / Funding Pips.</p>
+        </div>
+        <div class="tile" onclick="showTab('calculator')">
+          <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 11h2M12 11h2M16 11h2M8 15h2M12 15h2M16 15h2"/></svg></div>
+          <h4>Lot Size Calculator</h4>
+          <p>Calculez la taille de position selon votre risque.</p>
+        </div>
+        <div class="tile" onclick="showTab('p2p')">
+          <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg></div>
+          <h4>Historique P2P</h4>
+          <p>Suivez vos transactions d'actifs numériques.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOURNAL -->
+    <div class="tab-panel hidden" id="tab-journal">
+      <div class="dash-head">
+        <div><div class="eyebrow">Outil · Journal</div><h2>Journal de trading</h2></div>
+        <button class="btn btn-solid btn-sm" onclick="openTradeModal()">+ Ajouter un trade</button>
+      </div>
+      <div class="stat-row" id="journalStats"></div>
+      <div class="panel">
+        <h3>Courbe d'equity (P&amp;L cumulé)</h3>
+        <div class="chart-box"><canvas id="equityChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Trades</h3></div>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Date</th><th>Instrument</th><th>Sens</th><th>Broker</th><th>Stratégie</th><th>Résultat</th><th>R</th><th>P&amp;L</th><th></th></tr></thead>
+          <tbody id="journalBody"></tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- OBJECTIF -->
+    <div class="tab-panel hidden" id="tab-objectif">
+      <div class="dash-head">
+        <div><div class="eyebrow">Outil · Objectif +% par compte</div><h2>Objectif</h2></div>
+        <div class="panel-toolbar">
+          <button class="btn btn-ghost btn-sm" onclick="openParamsModal()">Paramètres</button>
+          <button class="btn btn-solid btn-sm" onclick="openObjModal()">+ Ajouter une entrée</button>
+        </div>
+      </div>
+      <div class="params-strip" id="paramsStrip"></div>
+      <div class="progress-grid" id="progressGrid"></div>
+      <div class="panel">
+        <h3>Progression du solde par compte</h3>
+        <div class="chart-box"><canvas id="objChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Entrées</h3>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Compte</th><th>Montant</th><th>Fréquence</th><th>Note</th><th></th></tr></thead>
+          <tbody id="objBody"></tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALCULATOR -->
+    <div class="tab-panel hidden" id="tab-calculator">
+      <div class="dash-head">
+        <div><div class="eyebrow">Outil · Gestion du risque</div><h2>Lot Size Calculator</h2></div>
+      </div>
+      <div class="panel">
+        <h3>Paramètres</h3>
+        <div class="form-grid cols-4">
+          <div class="field"><label>Capital du compte ($)</label><input type="number" id="cBalance" value="5000"></div>
+          <div class="field"><label>Risque par trade (%)</label><input type="number" step="0.1" id="cRisk" value="0.5"></div>
+          <div class="field"><label>Broker / Compte</label>
+            <select id="cBroker" onchange="onBrokerChange()"></select>
+          </div>
+          <div class="field"><label>Instrument</label>
+            <select id="cInstrument"></select>
+          </div>
+        </div>
+        <div class="form-grid cols-4">
+          <div class="field"><label>Stop loss (points/pips)</label><input type="number" id="cSL" value="50"></div>
+        </div>
+        <button class="btn btn-solid" onclick="calculateLotSize()">Calculer</button>
+
+        <div class="calc-result">
+          <div class="label">Lot à utiliser (arrondi au pas de 0.01)</div>
+          <div class="value" id="calcLotBas">0.00</div>
+        </div>
+        <div class="calc-grid">
+          <div class="calc-mini"><div class="label">Montant risqué</div><div class="value" id="calcRiskAmt">$0.00</div></div>
+          <div class="calc-mini"><div class="label">Valeur / point à 0.01 lot</div><div class="value" id="calcV001">$0.00</div></div>
+          <div class="calc-mini"><div class="label">Valeur / point à 1.00 lot</div><div class="value" id="calcV100">$0.00</div></div>
+          <div class="calc-mini"><div class="label">Lot brut (non arrondi)</div><div class="value" id="calcLotBrut">0.0000</div></div>
+          <div class="calc-mini"><div class="label">Perte réelle si SL touché</div><div class="value" id="calcPerteBas">$0.00</div></div>
+          <div class="calc-mini"><div class="label">% de risque réel pris</div><div class="value" id="calcPctBas">0.00%</div></div>
+        </div>
+        <p class="note">Arrondi supérieur (si le lot brut est trop petit pour un pas de 0.01) :</p>
+        <div class="calc-grid">
+          <div class="calc-mini"><div class="label">Lot arrondi supérieur (min 0.01)</div><div class="value" id="calcLotHaut">0.01</div></div>
+          <div class="calc-mini"><div class="label">Perte réelle (lot arrondi sup.)</div><div class="value" id="calcPerteHaut">$0.00</div></div>
+          <div class="calc-mini"><div class="label">% de risque réel pris</div><div class="value" id="calcPctHaut">0.00%</div></div>
+        </div>
+        <div class="warn hidden" id="calcWarning">Le lot brut est trop petit pour un pas de 0.01 : utilise la section « arrondi supérieur » ci-dessus (le risque réel dépassera légèrement ta cible).</div>
+        <p class="note">Valeurs de pip par défaut (indicatives) — à remplacer par tes valeurs réelles issues de l'onglet Hypothèses une fois la synchronisation activée. Lot standard = 100 000 unités.</p>
+      </div>
+    </div>
+
+    <!-- P2P -->
+    <div class="tab-panel hidden" id="tab-p2p">
+      <div class="dash-head">
+        <div><div class="eyebrow">Outil · Actifs numériques</div><h2>Historique des transactions P2P</h2></div>
+      </div>
+      <div class="panel">
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Type</th><th>Actif</th><th>Quantité</th><th>Prix unitaire</th><th>Montant</th><th>Contrepartie</th><th>Statut</th></tr></thead>
+          <tbody id="p2pBody"></tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  /* =========================================================
+     Reference: modele aligne sur l'app desktop Trading Journal
+     (db.py / trade_form.py / lot_size_tab.py / objectif_tab.py)
+     ========================================================= */
+
+  var BROKERS = ["FTMO", "Funding Pips"];
+  var INSTRUMENTS_JOURNAL = ["US30","EURUSD","GBPUSD","USDJPY","USDCHF","AUDUSD","USDCAD","NZDUSD"];
+  var INSTRUMENTS_CALC_ONLY = ["XAUUSD","US100","US500"];
+  var STRATEGIES = ["Supply","Demand","Equal low","Equal high","Imbalance"];
+
+  // pip values par défaut (identiques pour les deux brokers tant que non synchronisées) :
+  // { instrument: { v001: valeur par point a 0.01 lot, v100: valeur par point a 1.00 lot } }
+  var PIP_VALUES = {
+    "EURUSD": {v001:0.10, v100:10.0},
+    "GBPUSD": {v001:0.10, v100:10.0},
+    "USDJPY": {v001:0.093, v100:9.3},
+    "USDCHF": {v001:0.11, v100:11.0},
+    "AUDUSD": {v001:0.10, v100:10.0},
+    "USDCAD": {v001:0.074, v100:7.4},
+    "NZDUSD": {v001:0.10, v100:10.0},
+    "US30":   {v001:0.10, v100:10.0},
+    "XAUUSD": {v001:0.01, v100:1.0},
+    "US100":  {v001:0.10, v100:10.0},
+    "US500":  {v001:0.10, v100:10.0}
+  };
+
+  var trades = [
+    {trade_num:1, date:'2026-08-01', instrument:'EURUSD', direction:'Buy', broker:'FTMO', entry_price:1.0842, exit_price:1.0876, sl_pts:25, tp_pts:50, outcome:'Win', r_realized:1.4, pnl:142.30, strategy:'Demand', notes:"Cassure de range, tenue jusqu'à la résistance H4."},
+    {trade_num:2, date:'2026-08-03', instrument:'US30', direction:'Sell', broker:'FTMO', entry_price:40120, exit_price:40180, sl_pts:60, tp_pts:120, outcome:'Loss', r_realized:-1.0, pnl:-58.10, strategy:'Supply', notes:'Stop touché sur retournement de tendance.'},
+    {trade_num:3, date:'2026-08-05', instrument:'GBPUSD', direction:'Buy', broker:'Funding Pips', entry_price:1.2710, exit_price:1.2755, sl_pts:30, tp_pts:60, outcome:'Win', r_realized:1.5, pnl:96.75, strategy:'Equal low', notes:'Suivi du plan, sortie partielle à mi-parcours.'},
+    {trade_num:4, date:'2026-08-06', instrument:'USDJPY', direction:'Sell', broker:'FTMO', entry_price:151.20, exit_price:151.20, sl_pts:20, tp_pts:40, outcome:'Breakeven', r_realized:0, pnl:0, strategy:'Imbalance', notes:'Sorti à breakeven après nouvelles macro.'}
+  ];
+
+  var objectifParams = { date_debut:'2026-07-01', capital_initial:10000, objectif_par_compte:5000 };
+  var objectifEntries = [
+    {date:'2026-07-10', compte:'FTMO', montant:820, frequence:'Hebdo', note:'Semaine 1'},
+    {date:'2026-07-17', compte:'FTMO', montant:640, frequence:'Hebdo', note:'Semaine 2'},
+    {date:'2026-07-24', compte:'FTMO', montant:-210, frequence:'Hebdo', note:'Semaine rouge'},
+    {date:'2026-07-10', compte:'Funding Pips', montant:510, frequence:'Hebdo', note:'Semaine 1'},
+    {date:'2026-07-17', compte:'Funding Pips', montant:730, frequence:'Hebdo', note:'Semaine 2'}
+  ];
+
+  var p2pHistory = [
+    {date:'2026-08-01', type:'Achat', asset:'USDT', qty:'5,000.00', price:'1.00 $', amount:'5,000.00 $', counter:'@martine_b', status:'Terminée'},
+    {date:'2026-08-02', type:'Vente', asset:'BTC', qty:'0.045', price:'64,200 $', amount:'2,889.00 $', counter:'@yao_trade', status:'Terminée'},
+    {date:'2026-08-03', type:'Achat', asset:'USDT', qty:'2,000.00', price:'1.00 $', amount:'2,000.00 $', counter:'@fx_kofi', status:'Terminée'},
+    {date:'2026-08-05', type:'Vente', asset:'ETH', qty:'0.80', price:'3,150 $', amount:'2,520.00 $', counter:'@didier_p2p', status:'En cours'},
+    {date:'2026-08-06', type:'Achat', asset:'USDT', qty:'1,200.00', price:'1.00 $', amount:'1,200.00 $', counter:'@martine_b', status:'Terminée'},
+    {date:'2026-08-07', type:'Vente', asset:'BTC', qty:'0.012', price:'64,900 $', amount:'778.80 $', counter:'@sarah_crypto', status:'En cours'}
+  ];
+
+  var equityChart, objChart;
+
+  // ---------- Login ----------
+  function openLogin(){ document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginError').style.display='none'; }
+  function closeLogin(){ document.getElementById('loginModal').classList.add('hidden'); }
+
+  function attemptLogin(){
+    var user = document.getElementById('loginUser').value.trim();
+    var pass = document.getElementById('loginPass').value.trim();
+    if(!user || !pass){ document.getElementById('loginError').style.display='block'; return; }
+    document.getElementById('landing').classList.add('hidden');
+    document.getElementById('loginModal').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    document.getElementById('userchip').textContent = 'CONNECTÉ · ' + user;
+    document.getElementById('welcomeMsg').textContent = 'Bienvenue, ' + user;
+    initDashboard();
+  }
+
+  function logout(){
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('landing').classList.remove('hidden');
+    document.getElementById('loginUser').value=''; document.getElementById('loginPass').value='';
+  }
+
+  // ---------- Tabs ----------
+  function showTab(name){
+    document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.add('hidden'); });
+    document.getElementById('tab-'+name).classList.remove('hidden');
+    document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelector('.nav-btn[data-tab="'+name+'"]').classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // ---------- init dashboard (dropdowns, first render) ----------
+  function initDashboard(){
+    fillSelect('tInstrument', INSTRUMENTS_JOURNAL);
+    fillSelect('tBroker', BROKERS);
+    fillSelect('tStrategy', STRATEGIES);
+    fillSelect('cBroker', BROKERS);
+    fillSelect('oCompte', BROKERS, true);
+    onBrokerChange();
+    renderOverviewStats();
+    renderJournal();
+    renderObjectif();
+    renderP2P();
+    calculateLotSize();
+  }
+
+  function fillSelect(id, values, keepExisting){
+    var sel = document.getElementById(id);
+    if(keepExisting) return;
+    sel.innerHTML = '';
+    values.forEach(function(v){
+      var o = document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o);
+    });
+  }
+
+  function onBrokerChange(){
+    fillSelect('cInstrument', INSTRUMENTS_JOURNAL.concat(INSTRUMENTS_CALC_ONLY));
+  }
+
+  // ---------- Overview ----------
+  function renderOverviewStats(){
+    var s = tradingStats();
+    var el = document.getElementById('overviewStats');
+    el.innerHTML =
+      stat('Trades', s.total) +
+      stat('Win rate', s.winRate.toFixed(1)+'%') +
+      stat('R moyen', s.avgR.toFixed(2)+' R') +
+      stat('P&L total', (s.totalPnl>=0?'+':'')+s.totalPnl.toFixed(2)+' $', s.totalPnl>=0?'pos':'neg') +
+      stat('Objectif — meilleur compte', bestObjPct().toFixed(1)+'%');
+  }
+  function stat(label, value, cls){
+    return '<div class="stat"><div class="label">'+label+'</div><div class="value '+(cls||'')+'">'+value+'</div></div>';
+  }
+  function bestObjPct(){
+    var progress = objectifProgress();
+    var accounts = progress.filter(function(p){ return p.compte !== 'Combiné'; });
+    if(!accounts.length) return 0;
+    return Math.max.apply(null, accounts.map(function(p){ return p.pct; }));
+  }
+
+  // ---------- Journal / Trading ----------
+  function tradingStats(){
+    var closed = trades.filter(function(t){ return t.pnl !== null && t.pnl !== undefined; });
+    var total = closed.length;
+    var wins = closed.filter(function(t){ return (t.pnl||0) > 0; }).length;
+    var totalR = closed.reduce(function(a,t){ return a + (t.r_realized||0); }, 0);
+    var totalPnl = closed.reduce(function(a,t){ return a + (t.pnl||0); }, 0);
+    return {
+      total: total, wins: wins,
+      winRate: total ? (wins/total*100) : 0,
+      avgR: total ? (totalR/total) : 0,
+      totalR: totalR, totalPnl: totalPnl
+    };
+  }
+
+  function renderJournal(){
+    var s = tradingStats();
+    document.getElementById('journalStats').innerHTML =
+      stat('Trades', s.total) +
+      stat('Win rate', s.winRate.toFixed(1)+'%') +
+      stat('R moyen', s.avgR.toFixed(2)+' R') +
+      stat('R total', s.totalR.toFixed(2)+' R') +
+      stat('P&L total', (s.totalPnl>=0?'+':'')+s.totalPnl.toFixed(2)+' $', s.totalPnl>=0?'pos':'neg');
+
+    var body = document.getElementById('journalBody');
+    body.innerHTML = '';
+    trades.forEach(function(t, idx){
+      var tr = document.createElement('tr');
+      var outcomeClass = t.outcome==='Win' ? 'ok' : t.outcome==='Loss' ? 'loss' : t.outcome==='Breakeven' ? 'be' : 'be';
+      var dirClass = t.direction === 'Buy' ? 'buy' : 'sell';
+      var pnlColor = (t.pnl||0) >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
+      tr.innerHTML =
+        '<td>'+t.trade_num+'</td><td>'+t.date+'</td><td>'+t.instrument+'</td>'+
+        '<td><span class="pill '+dirClass+'">'+t.direction+'</span></td>'+
+        '<td>'+t.broker+'</td><td>'+(t.strategy||'—')+'</td>'+
+        '<td>'+(t.outcome ? '<span class="pill '+outcomeClass+'">'+t.outcome+'</span>' : '—')+'</td>'+
+        '<td>'+(t.r_realized!=null ? t.r_realized.toFixed(2) : '—')+'</td>'+
+        '<td '+pnlColor+'>'+((t.pnl||0)>=0?'+':'')+(t.pnl||0).toFixed(2)+' $</td>'+
+        '<td><button class="row-del" onclick="deleteTrade('+idx+')">Suppr.</button></td>';
+      body.appendChild(tr);
+    });
+
+    renderEquityChart();
+    renderOverviewStats();
+  }
+
+  function renderEquityChart(){
+    var ctx = document.getElementById('equityChart').getContext('2d');
+    var running = 0;
+    var labels = [], data = [];
+    trades.forEach(function(t){ running += t.pnl||0; labels.push('#'+t.trade_num); data.push(running); });
+    if(equityChart) equityChart.destroy();
+    equityChart = new Chart(ctx, {
+      type:'line',
+      data:{ labels:labels, datasets:[{ label:'P&L cumulé ($)', data:data, borderColor:'#d3b485', backgroundColor:'rgba(176,141,87,0.12)', fill:true, tension:0.25, pointBackgroundColor:'#b08d57' }] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{
+          x:{ ticks:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } },
+          y:{ ticks:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } }
+        }
+      }
+    });
+  }
+
+  function openTradeModal(){
+    document.getElementById('tDate').value = new Date().toISOString().slice(0,10);
+    document.getElementById('tradeModal').classList.remove('hidden');
+  }
+  function closeTradeModal(){ document.getElementById('tradeModal').classList.add('hidden'); }
+
+  function saveTrade(){
+    var instrument = document.getElementById('tInstrument').value;
+    if(!instrument){ return; }
+    var nextNum = trades.length ? Math.max.apply(null, trades.map(function(t){return t.trade_num;})) + 1 : 1;
+    trades.push({
+      trade_num: nextNum,
+      date: document.getElementById('tDate').value || new Date().toISOString().slice(0,10),
+      instrument: instrument,
+      direction: document.getElementById('tDirection').value,
+      broker: document.getElementById('tBroker').value,
+      entry_price: parseFloat(document.getElementById('tEntry').value) || null,
+      exit_price: parseFloat(document.getElementById('tExit').value) || null,
+      sl_pts: parseFloat(document.getElementById('tSL').value) || null,
+      tp_pts: parseFloat(document.getElementById('tTP').value) || null,
+      outcome: document.getElementById('tOutcome').value || null,
+      r_realized: parseFloat(document.getElementById('tR').value) || 0,
+      pnl: parseFloat(document.getElementById('tPnl').value) || 0,
+      strategy: document.getElementById('tStrategy').value,
+      notes: document.getElementById('tNotes').value.trim() || '—'
+    });
+    closeTradeModal();
+    ['tEntry','tExit','tSL','tTP','tR','tPnl','tNotes'].forEach(function(id){ document.getElementById(id).value=''; });
+    renderJournal();
+  }
+
+  function deleteTrade(idx){
+    trades.splice(idx,1);
+    renderJournal();
+  }
+
+  // ---------- Objectif ----------
+  function objectifProgress(){
+    var comptes = BROKERS.slice();
+    var results = [];
+    var combineSolde = 0, combineGain = 0;
+    comptes.forEach(function(compte){
+      var gain = objectifEntries.filter(function(e){ return e.compte===compte; })
+                                 .reduce(function(a,e){ return a + (e.montant||0); }, 0);
+      var solde = (objectifParams.capital_initial||0) + gain;
+      var pct = objectifParams.objectif_par_compte ? (gain/objectifParams.objectif_par_compte*100) : 0;
+      var restant = Math.max(0, (objectifParams.objectif_par_compte||0) - gain);
+      results.push({compte:compte, solde:solde, gain:gain, pct:pct, restant:restant});
+      combineSolde += solde; combineGain += gain;
+    });
+    var objectifCombine = (objectifParams.objectif_par_compte||0) * comptes.length;
+    results.push({
+      compte:'Combiné', solde:combineSolde, gain:combineGain,
+      pct: objectifCombine ? (combineGain/objectifCombine*100) : 0,
+      restant: Math.max(0, objectifCombine - combineGain)
+    });
+    return results;
+  }
+
+  function renderObjectif(){
+    document.getElementById('paramsStrip').innerHTML =
+      '<span>Début : <b>'+(objectifParams.date_debut||'—')+'</b></span>'+
+      '<span>Capital initial / compte : <b>'+(objectifParams.capital_initial||0).toLocaleString()+' $</b></span>'+
+      '<span>Objectif / compte : <b>+'+(objectifParams.objectif_par_compte||0).toLocaleString()+' $</b></span>';
+
+    var progress = objectifProgress();
+    var grid = document.getElementById('progressGrid');
+    grid.innerHTML = '';
+    progress.forEach(function(p){
+      var pct = Math.max(0, Math.min(100, p.pct));
+      var div = document.createElement('div');
+      div.className = 'progress-card';
+      div.innerHTML =
+        '<h4>'+p.compte+'</h4>'+
+        '<div class="pct">'+p.pct.toFixed(1)+'%</div>'+
+        '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div>'+
+        '<div class="sub"><span>Gain : '+p.gain.toFixed(0)+' $</span><span>Restant : '+p.restant.toFixed(0)+' $</span></div>';
+      grid.appendChild(div);
+    });
+
+    var body = document.getElementById('objBody');
+    body.innerHTML = '';
+    objectifEntries.forEach(function(e, idx){
+      var tr = document.createElement('tr');
+      var mColor = (e.montant||0) >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
+      tr.innerHTML = '<td>'+e.date+'</td><td>'+e.compte+'</td>'+
+        '<td '+mColor+'>'+((e.montant||0)>=0?'+':'')+(e.montant||0).toFixed(2)+' $</td>'+
+        '<td>'+(e.frequence||'—')+'</td><td>'+(e.note||'—')+'</td>'+
+        '<td><button class="row-del" onclick="deleteObjEntry('+idx+')">Suppr.</button></td>';
+      body.appendChild(tr);
+    });
+
+    renderObjChart();
+    renderOverviewStats();
+  }
+
+  function renderObjChart(){
+    var ctx = document.getElementById('objChart').getContext('2d');
+    var comptes = BROKERS.slice();
+    var colors = {'FTMO':'#d3b485','Funding Pips':'#7f9c86'};
+    var allDates = Array.from(new Set(objectifEntries.map(function(e){return e.date;}))).sort();
+    var datasets = comptes.map(function(compte){
+      var running = objectifParams.capital_initial||0;
+      var byDate = {};
+      objectifEntries.filter(function(e){return e.compte===compte;})
+        .sort(function(a,b){return (a.date>b.date?1:-1);})
+        .forEach(function(e){ running += e.montant||0; byDate[e.date]=running; });
+      var data = [];
+      var last = objectifParams.capital_initial||0;
+      allDates.forEach(function(d){ if(byDate[d]!==undefined) last=byDate[d]; data.push(last); });
+      return { label:compte, data:data, borderColor:colors[compte]||'#b08d57', backgroundColor:'transparent', tension:0.25 };
+    });
+    if(objChart) objChart.destroy();
+    objChart = new Chart(ctx, {
+      type:'line',
+      data:{ labels:allDates, datasets:datasets },
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ labels:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} } } },
+        scales:{
+          x:{ ticks:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } },
+          y:{ ticks:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } }
+        }
+      }
+    });
+  }
+
+  function openObjModal(){ document.getElementById('oDate').value = new Date().toISOString().slice(0,10); document.getElementById('objModal').classList.remove('hidden'); }
+  function closeObjModal(){ document.getElementById('objModal').classList.add('hidden'); }
+  function saveObjEntry(){
+    objectifEntries.push({
+      date: document.getElementById('oDate').value || new Date().toISOString().slice(0,10),
+      compte: document.getElementById('oCompte').value,
+      montant: parseFloat(document.getElementById('oMontant').value) || 0,
+      frequence: document.getElementById('oFreq').value.trim(),
+      note: document.getElementById('oNote').value.trim()
+    });
+    closeObjModal();
+    ['oMontant','oFreq','oNote'].forEach(function(id){ document.getElementById(id).value=''; });
+    renderObjectif();
+  }
+  function deleteObjEntry(idx){ objectifEntries.splice(idx,1); renderObjectif(); }
+
+  function openParamsModal(){
+    document.getElementById('pDateDebut').value = objectifParams.date_debut;
+    document.getElementById('pCapital').value = objectifParams.capital_initial;
+    document.getElementById('pObjectif').value = objectifParams.objectif_par_compte;
+    document.getElementById('paramsModal').classList.remove('hidden');
+  }
+  function closeParamsModal(){ document.getElementById('paramsModal').classList.add('hidden'); }
+  function saveParams(){
+    objectifParams.date_debut = document.getElementById('pDateDebut').value;
+    objectifParams.capital_initial = parseFloat(document.getElementById('pCapital').value) || 0;
+    objectifParams.objectif_par_compte = parseFloat(document.getElementById('pObjectif').value) || 0;
+    closeParamsModal();
+    renderObjectif();
+  }
+
+  // ---------- Lot Size Calculator ----------
+  function calculateLotSize(){
+    var capital = parseFloat(document.getElementById('cBalance').value) || 0;
+    var riskPct = (parseFloat(document.getElementById('cRisk').value) || 0) / 100;
+    var slPts = parseFloat(document.getElementById('cSL').value) || 0;
+    var instrument = document.getElementById('cInstrument').value;
+    var pip = PIP_VALUES[instrument];
+
+    if(!pip || slPts <= 0){
+      document.getElementById('calcWarning').classList.remove('hidden');
+      document.getElementById('calcWarning').textContent = 'Renseigne un stop loss valide et sélectionne un instrument.';
+      return;
+    }
+    document.getElementById('calcWarning').classList.add('hidden');
+
+    var v001 = pip.v001, v100 = pip.v100;
+    var montantRisque = capital * riskPct;
+    var lotBrut = montantRisque / (slPts * v100);
+    var lotBas = Math.floor(lotBrut * 100) / 100;
+    var perteBas = lotBas * slPts * v100;
+    var pctBas = capital ? (perteBas / capital) : 0;
+    var lotHaut = Math.max(Math.ceil(lotBrut * 100) / 100, 0.01);
+    var perteHaut = lotHaut * slPts * v100;
+    var pctHaut = capital ? (perteHaut / capital) : 0;
+
+    document.getElementById('calcLotBas').textContent = lotBas.toFixed(2) + ' lot';
+    document.getElementById('calcRiskAmt').textContent = '$' + montantRisque.toFixed(2);
+    document.getElementById('calcV001').textContent = '$' + v001.toFixed(4);
+    document.getElementById('calcV100').textContent = '$' + v100.toFixed(4);
+    document.getElementById('calcLotBrut').textContent = lotBrut.toFixed(4);
+    document.getElementById('calcPerteBas').textContent = '$' + perteBas.toFixed(2);
+    document.getElementById('calcPctBas').textContent = (pctBas*100).toFixed(2) + '%';
+    document.getElementById('calcLotHaut').textContent = lotHaut.toFixed(2);
+    document.getElementById('calcPerteHaut').textContent = '$' + perteHaut.toFixed(2);
+    document.getElementById('calcPctHaut').textContent = (pctHaut*100).toFixed(2) + '%';
+
+    if(lotBas <= 0){
+      document.getElementById('calcWarning').classList.remove('hidden');
+      document.getElementById('calcWarning').textContent = "Le lot brut est trop petit pour un pas de 0.01 : utilise la section « arrondi supérieur » ci-dessus (le risque réel dépassera légèrement ta cible).";
+    }
+  }
+
+  // ---------- P2P history ----------
+  function renderP2P(){
+    var body = document.getElementById('p2pBody');
+    body.innerHTML = '';
+    p2pHistory.slice().reverse().forEach(function(t){
+      var typeClass = t.type === 'Achat' ? 'buy' : 'sell';
+      var statusClass = t.status === 'Terminée' ? 'ok' : 'pending';
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>'+t.date+'</td>' +
+        '<td><span class="pill '+typeClass+'">'+t.type+'</span></td>' +
+        '<td>'+t.asset+'</td><td>'+t.qty+'</td><td>'+t.price+'</td><td>'+t.amount+'</td><td>'+t.counter+'</td>' +
+        '<td><span class="pill '+statusClass+'">'+t.status+'</span></td>';
+      body.appendChild(tr);
+    });
+  }
+</script>
+</body>
+</html>

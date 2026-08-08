@@ -249,6 +249,8 @@
   .pill.pending{ color:var(--brass-bright); border-color:var(--brass); }
   .pill.loss{ color:var(--brick); border-color:var(--brick); }
   .pill.be{ color:var(--ink-muted); border-color:var(--line-strong); }
+  .status-toggle{ cursor:pointer; user-select:none; transition:opacity .15s; }
+  .status-toggle:hover{ opacity:0.65; }
 
   .calc-result{ background:var(--void); border:1px solid var(--brass); padding:26px; margin-top:6px; }
   .calc-result .value{ font-family:var(--mono); font-size:32px; color:var(--brass-bright); }
@@ -671,11 +673,12 @@
     <div class="tab-panel hidden" id="tab-p2p">
       <div class="dash-head">
         <div><div class="eyebrow">Outil · Actifs numériques</div><h2>Historique des transactions P2P</h2></div>
+        <button class="btn btn-solid btn-sm" onclick="openP2PModal()">+ Ajouter une transaction</button>
       </div>
       <div class="panel">
         <div class="table-wrap">
         <table>
-          <thead><tr><th>Date</th><th>Type</th><th>Actif</th><th>Quantité</th><th>Prix unitaire</th><th>Montant</th><th>Contrepartie</th><th>Statut</th></tr></thead>
+          <thead><tr><th>Date</th><th>Type</th><th>Actif</th><th>Quantité</th><th>Prix unitaire</th><th>Montant</th><th>Contrepartie</th><th>Statut</th><th>Actions</th></tr></thead>
           <tbody id="p2pBody"></tbody>
         </table>
         </div>
@@ -683,6 +686,37 @@
     </div>
 
   </main>
+</div>
+
+<!-- ============ P2P TRANSACTION MODAL ============ -->
+<div id="p2pModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-head">
+      <button class="close" onclick="closeP2PModal()">&times;</button>
+      <div class="eyebrow">Historique P2P</div>
+      <h3 id="p2pModalTitle">Ajouter une transaction</h3>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label>Date</label><input type="date" id="pxDate"></div>
+      <div class="field"><label>Type</label>
+        <select id="pxType"><option value="Achat">Achat</option><option value="Vente">Vente</option></select>
+      </div>
+      <div class="field"><label>Actif</label>
+        <select id="pxAsset"><option>USDT</option><option>BTC</option><option>ETH</option></select>
+      </div>
+      <div class="field"><label>Quantité</label><input type="number" step="any" id="pxQty"></div>
+      <div class="field"><label>Prix unitaire ($)</label><input type="number" step="any" id="pxPrice"></div>
+      <div class="field"><label>Montant total ($)</label><input type="number" step="any" id="pxAmount" placeholder="Auto si laissé vide"></div>
+      <div class="field"><label>Contrepartie</label><input type="text" id="pxCounter" placeholder="@pseudo"></div>
+      <div class="field"><label>Statut</label>
+        <select id="pxStatus"><option value="Terminée">Terminée</option><option value="En cours">En cours</option></select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeP2PModal()">Annuler</button>
+        <button class="btn btn-solid" onclick="saveP2P()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -743,12 +777,12 @@
   ];
 
   var p2pHistory = [
-    {date:'2026-08-01', type:'Achat', asset:'USDT', qty:'5,000.00', price:'1.00 $', amount:'5,000.00 $', counter:'@martine_b', status:'Terminée'},
-    {date:'2026-08-02', type:'Vente', asset:'BTC', qty:'0.045', price:'64,200 $', amount:'2,889.00 $', counter:'@yao_trade', status:'Terminée'},
-    {date:'2026-08-03', type:'Achat', asset:'USDT', qty:'2,000.00', price:'1.00 $', amount:'2,000.00 $', counter:'@fx_kofi', status:'Terminée'},
-    {date:'2026-08-05', type:'Vente', asset:'ETH', qty:'0.80', price:'3,150 $', amount:'2,520.00 $', counter:'@didier_p2p', status:'En cours'},
-    {date:'2026-08-06', type:'Achat', asset:'USDT', qty:'1,200.00', price:'1.00 $', amount:'1,200.00 $', counter:'@martine_b', status:'Terminée'},
-    {date:'2026-08-07', type:'Vente', asset:'BTC', qty:'0.012', price:'64,900 $', amount:'778.80 $', counter:'@sarah_crypto', status:'En cours'}
+    {date:'2026-08-01', type:'Achat', asset:'USDT', qty:5000, price:1.00, amount:5000.00, counter:'@martine_b', status:'Terminée'},
+    {date:'2026-08-02', type:'Vente', asset:'BTC', qty:0.045, price:64200, amount:2889.00, counter:'@yao_trade', status:'Terminée'},
+    {date:'2026-08-03', type:'Achat', asset:'USDT', qty:2000, price:1.00, amount:2000.00, counter:'@fx_kofi', status:'Terminée'},
+    {date:'2026-08-05', type:'Vente', asset:'ETH', qty:0.80, price:3150, amount:2520.00, counter:'@didier_p2p', status:'En cours'},
+    {date:'2026-08-06', type:'Achat', asset:'USDT', qty:1200, price:1.00, amount:1200.00, counter:'@martine_b', status:'Terminée'},
+    {date:'2026-08-07', type:'Vente', asset:'BTC', qty:0.012, price:64900, amount:778.80, counter:'@sarah_crypto', status:'En cours'}
   ];
 
   var equityChart, objChart;
@@ -1153,19 +1187,84 @@
   }
 
   // ---------- P2P history ----------
+  var editingP2PIdx = null;
+
   function renderP2P(){
     var body = document.getElementById('p2pBody');
     body.innerHTML = '';
-    p2pHistory.slice().reverse().forEach(function(t){
+    // on garde les index d'origine pour edit/delete tout en affichant du plus recent au plus ancien
+    var indexed = p2pHistory.map(function(t, i){ return {t:t, i:i}; }).reverse();
+    indexed.forEach(function(item){
+      var t = item.t, idx = item.i;
       var typeClass = t.type === 'Achat' ? 'buy' : 'sell';
       var statusClass = t.status === 'Terminée' ? 'ok' : 'pending';
       var tr = document.createElement('tr');
       tr.innerHTML = '<td>'+t.date+'</td>' +
         '<td><span class="pill '+typeClass+'">'+t.type+'</span></td>' +
-        '<td>'+t.asset+'</td><td>'+t.qty+'</td><td>'+t.price+'</td><td>'+t.amount+'</td><td>'+t.counter+'</td>' +
-        '<td><span class="pill '+statusClass+'">'+t.status+'</span></td>';
+        '<td>'+t.asset+'</td>'+
+        '<td>'+Number(t.qty).toLocaleString(undefined,{maximumFractionDigits:8})+'</td>'+
+        '<td>'+Number(t.price).toLocaleString(undefined,{maximumFractionDigits:2})+' $</td>'+
+        '<td>'+Number(t.amount).toLocaleString(undefined,{maximumFractionDigits:2})+' $</td>'+
+        '<td>'+t.counter+'</td>' +
+        '<td><span class="pill '+statusClass+' status-toggle" onclick="toggleP2PStatus('+idx+')" title="Cliquer pour changer le statut">'+t.status+'</span></td>'+
+        '<td><div class="row-actions"><button class="row-edit" onclick="editP2P('+idx+')">Modifier</button><button class="row-del" onclick="deleteP2P('+idx+')">Suppr.</button></div></td>';
       body.appendChild(tr);
     });
+  }
+
+  function toggleP2PStatus(idx){
+    p2pHistory[idx].status = p2pHistory[idx].status === 'Terminée' ? 'En cours' : 'Terminée';
+    renderP2P();
+  }
+
+  function openP2PModal(idx){
+    editingP2PIdx = (typeof idx === 'number') ? idx : null;
+    if(editingP2PIdx !== null){
+      var t = p2pHistory[editingP2PIdx];
+      document.getElementById('p2pModalTitle').textContent = 'Modifier la transaction';
+      document.getElementById('pxDate').value = t.date;
+      document.getElementById('pxType').value = t.type;
+      document.getElementById('pxAsset').value = t.asset;
+      document.getElementById('pxQty').value = t.qty;
+      document.getElementById('pxPrice').value = t.price;
+      document.getElementById('pxAmount').value = t.amount;
+      document.getElementById('pxCounter').value = t.counter;
+      document.getElementById('pxStatus').value = t.status;
+    } else {
+      document.getElementById('p2pModalTitle').textContent = 'Ajouter une transaction';
+      document.getElementById('pxDate').value = new Date().toISOString().slice(0,10);
+      ['pxQty','pxPrice','pxAmount','pxCounter'].forEach(function(id){ document.getElementById(id).value=''; });
+      document.getElementById('pxStatus').value = 'Terminée';
+    }
+    document.getElementById('p2pModal').classList.remove('hidden');
+  }
+  function editP2P(idx){ openP2PModal(idx); }
+  function closeP2PModal(){ document.getElementById('p2pModal').classList.add('hidden'); editingP2PIdx = null; }
+
+  function saveP2P(){
+    var qty = parseFloat(document.getElementById('pxQty').value) || 0;
+    var price = parseFloat(document.getElementById('pxPrice').value) || 0;
+    var amountInput = document.getElementById('pxAmount').value;
+    var amount = amountInput !== '' ? (parseFloat(amountInput) || 0) : (qty * price);
+    var data = {
+      date: document.getElementById('pxDate').value || new Date().toISOString().slice(0,10),
+      type: document.getElementById('pxType').value,
+      asset: document.getElementById('pxAsset').value,
+      qty: qty,
+      price: price,
+      amount: amount,
+      counter: document.getElementById('pxCounter').value.trim() || '—',
+      status: document.getElementById('pxStatus').value
+    };
+    if(editingP2PIdx !== null){ p2pHistory[editingP2PIdx] = data; }
+    else { p2pHistory.push(data); }
+    closeP2PModal();
+    renderP2P();
+  }
+
+  function deleteP2P(idx){
+    p2pHistory.splice(idx,1);
+    renderP2P();
   }
 </script>
 </body>

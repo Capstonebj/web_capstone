@@ -407,19 +407,18 @@
       <p class="sub">Connectez-vous pour accéder à votre journal, vos outils et l'historique P2P.</p>
     </div>
     <div class="modal-body">
-      <div class="modal-error" id="loginError">Identifiants incorrects. Réessayez.</div>
+      <div class="modal-error" id="loginError">Email ou mot de passe incorrect.</div>
       <div class="field">
-        <label>Identifiant</label>
-        <input type="text" id="loginUser" placeholder="prenom.nom">
+        <label>Email</label>
+        <input type="email" id="loginUser" placeholder="prenom.nom@capstone.bj" autocomplete="username">
       </div>
       <div class="field">
         <label>Mot de passe</label>
-        <input type="password" id="loginPass" placeholder="••••••••">
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
       </div>
       <div class="modal-actions">
-        <button class="btn btn-solid" onclick="attemptLogin()">Connexion</button>
+        <button class="btn btn-solid" id="loginBtn" onclick="attemptLogin()">Connexion</button>
       </div>
-      <div class="hint">Démo — tout identifiant / mot de passe non vide fonctionne</div>
     </div>
   </div>
 </div>
@@ -732,9 +731,10 @@
   var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtYnV6bmFidWJjd2ljd3RveG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwOTU5MTIsImV4cCI6MjEwMTY3MTkxMn0.fJOLqUHRmCD-Ak9L_zH2p23pxyb8ESn80waEMejCbks';
 
   function sbHeaders(prefer){
+    var token = (currentSession && currentSession.access_token) || SUPABASE_KEY;
     var h = {
       'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Authorization': 'Bearer ' + token,
       'Content-Type': 'application/json'
     };
     if(prefer) h['Prefer'] = prefer;
@@ -821,27 +821,63 @@
   var p2pHistory = [];
 
   var equityChart, objChart;
+  var currentSession = null; // { access_token, user } une fois connecte
 
-  // ---------- Login ----------
+  // ---------- Login (Supabase Auth reel) ----------
   function openLogin(){ document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginError').style.display='none'; }
   function closeLogin(){ document.getElementById('loginModal').classList.add('hidden'); }
 
   function attemptLogin(){
-    var user = document.getElementById('loginUser').value.trim();
+    var email = document.getElementById('loginUser').value.trim();
     var pass = document.getElementById('loginPass').value.trim();
-    if(!user || !pass){ document.getElementById('loginError').style.display='block'; return; }
-    document.getElementById('landing').classList.add('hidden');
-    document.getElementById('loginModal').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-    document.getElementById('userchip').textContent = 'CONNECTÉ · ' + user;
-    document.getElementById('welcomeMsg').textContent = 'Bienvenue, ' + user;
-    initDashboard();
+    var errEl = document.getElementById('loginError');
+    var btn = document.getElementById('loginBtn');
+    errEl.style.display = 'none';
+    if(!email || !pass){ errEl.textContent = 'Renseigne ton email et ton mot de passe.'; errEl.style.display='block'; return; }
+
+    btn.disabled = true; btn.textContent = 'Connexion…';
+
+    fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: pass })
+    }).then(function(r){
+      return r.json().then(function(body){ return { ok:r.ok, body:body }; });
+    }).then(function(res){
+      btn.disabled = false; btn.textContent = 'Connexion';
+      if(!res.ok || !res.body.access_token){
+        errEl.textContent = 'Email ou mot de passe incorrect.';
+        errEl.style.display = 'block';
+        return;
+      }
+      currentSession = { access_token: res.body.access_token, refresh_token: res.body.refresh_token, user: res.body.user };
+      document.getElementById('landing').classList.add('hidden');
+      document.getElementById('loginModal').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      var label = (currentSession.user && currentSession.user.email) || email;
+      document.getElementById('userchip').textContent = 'CONNECTÉ · ' + label;
+      document.getElementById('welcomeMsg').textContent = 'Bienvenue, ' + label.split('@')[0];
+      document.getElementById('loginUser').value=''; document.getElementById('loginPass').value='';
+      initDashboard();
+    }).catch(function(err){
+      btn.disabled = false; btn.textContent = 'Connexion';
+      errEl.textContent = 'Connexion impossible (réseau). Réessaie.';
+      errEl.style.display = 'block';
+      console.error(err);
+    });
   }
 
   function logout(){
+    var token = currentSession && currentSession.access_token;
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('landing').classList.remove('hidden');
-    document.getElementById('loginUser').value=''; document.getElementById('loginPass').value='';
+    currentSession = null;
+    if(token){
+      fetch(SUPABASE_URL + '/auth/v1/logout', {
+        method:'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + token }
+      }).catch(function(){});
+    }
   }
 
   // ---------- Tabs ----------

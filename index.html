@@ -840,7 +840,7 @@
   function sbUrl(table){ return SUPABASE_URL + '/rest/v1/' + table; }
 
   function sbSelect(table, query){
-    var q = query || 'or=(deleted.is.null,deleted.eq.false)&order=date.desc.nullslast';
+    var q = query || 'or=(deleted.is.null,deleted.eq.false)&order=updated_at.desc.nullslast';
     return fetch(sbUrl(table) + '?' + q, { headers: sbHeaders() }).then(function(r){
       if(!r.ok) return r.text().then(function(t){ throw new Error(table+' ('+r.status+') '+t); });
       return r.json();

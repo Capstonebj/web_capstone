@@ -306,7 +306,7 @@
     <div class="hero-text">
       <div class="eyebrow">Capstone bj — Bénin</div>
       <h1>Solidité.<br>Vision.<br><em>Performance.</em></h1>
-      <p class="lede">Intermédiaire financier basé à Parakou, spécialisé dans le trading pour compte propre sur les marchés internationaux et l'échange d'actifs numériques de pair à pair.</p>
+      <p class="lede">Intermédiaire financier basé à Parakou, spécialisé dans le trading pour compte propre sur les marchés internationaux, l'échange de pair à pair d'actifs numériques et l'investissement immobilier.</p>
       <div class="hero-cta">
         <a href="#activites" class="btn btn-ghost">Découvrir nos activités</a>
         <button class="btn btn-solid" onclick="openLogin()">Espace collaborateurs</button>
@@ -337,21 +337,21 @@
     <div class="activities">
       <div class="activity bracket">
         <div class="fig">FIG. 01</div>
-        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></div>
-        <h3>Intermédiation financière</h3>
-        <p>Notre cœur de métier : l'intermédiation financière non monétaire, au service d'une gestion rigoureuse des flux et des risques pour nos clients institutionnels et privés.</p>
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 17l5-5 4 4 8-8M20 8V4h-4"/></svg></div>
+        <h3>Trading pour compte propre</h3>
+        <p>Opérations de trading pour compte propre exclusivement, portant sur les marchés financiers internationaux (marché des changes, indices, instruments dérivés), réalisées avec les fonds propres de l'établissement, sans collecte de fonds auprès du public ni gestion pour le compte de tiers.</p>
       </div>
       <div class="activity bracket">
         <div class="fig">FIG. 02</div>
-        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 17l5-5 4 4 8-8M20 8V4h-4"/></svg></div>
-        <h3>Trading pour compte propre</h3>
-        <p>Opérations de trading sur les marchés financiers internationaux — marché des changes, indices et instruments dérivés — exécutées pour compte propre.</p>
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg></div>
+        <h3>Échange P2P d'actifs numériques</h3>
+        <p>Échange de pair à pair (P2P) d'actifs numériques, pour compte propre exclusivement, sans intermédiation ni détention de fonds de tiers.</p>
       </div>
       <div class="activity bracket">
         <div class="fig">FIG. 03</div>
-        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg></div>
-        <h3>Échange P2P d'actifs numériques</h3>
-        <p>Échange de pair à pair d'actifs numériques, pour compte propre, à la croisée de la finance traditionnelle et des marchés digitaux émergents.</p>
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M9 13h.01M15 13h.01M9 9h.01M15 9h.01"/></svg></div>
+        <h3>Investissement immobilier</h3>
+        <p>Investissement immobilier pour compte propre : acquisition, gestion locative et valorisation de biens immobiliers (terrains, immeubles résidentiels et commerciaux), au moyen des ressources propres de l'établissement.</p>
       </div>
     </div>
   </section>
@@ -361,14 +361,15 @@
       <div class="about-copy">
         <p>« Une pierre de couronnement ne se contente pas de fermer un édifice — elle en absorbe toute la charge. »</p>
         <p>C'est cette exigence structurelle que CAPSTONE applique à la finance : chaque position, chaque opération, chaque contrepartie est pensée pour tenir sous pression.</p>
-        <p>Basée à Parakou, l'entreprise opère à l'intersection de l'intermédiation financière classique et des marchés numériques émergents, avec la même discipline dans les deux univers.</p>
+        <p>Basée à Parakou, l'entreprise opère à l'intersection de la finance de marché, des actifs numériques et de l'immobilier, avec la même exigence de rigueur dans chacun de ces univers.</p>
       </div>
       <div class="taglist">
         <div class="tagrow"><span>Nom commercial</span><span>CAPSTONE</span></div>
         <div class="tagrow"><span>Enseigne</span><span>Capstone bj</span></div>
         <div class="tagrow"><span>Activité principale</span><span>Intermédiation fin. non monétaire</span></div>
-        <div class="tagrow"><span>Marchés couverts</span><span>Change · Indices · Dérivés</span></div>
+        <div class="tagrow"><span>Trading</span><span>Change · Indices · Dérivés</span></div>
         <div class="tagrow"><span>Actifs numériques</span><span>Échange P2P</span></div>
+        <div class="tagrow"><span>Immobilier</span><span>Terrains · Résidentiel · Commercial</span></div>
         <div class="tagrow"><span>Implantation</span><span>Parakou, Bénin</span></div>
       </div>
     </div>
@@ -537,6 +538,7 @@
     </nav>
     <div class="sidebar-foot">
       <div class="userchip" id="userchip">CONNECTÉ · —</div>
+      <div class="userchip" id="syncStatus" onclick="reloadAll()" style="cursor:pointer;" title="Cliquer pour resynchroniser">—</div>
       <button class="logout" onclick="logout()">Déconnexion</button>
     </div>
   </aside>
@@ -723,14 +725,67 @@
   /* =========================================================
      Reference: modele aligne sur l'app desktop Trading Journal
      (db.py / trade_form.py / lot_size_tab.py / objectif_tab.py)
+     Donnees persistees dans Supabase (meme projet que l'app desktop).
      ========================================================= */
+
+  var SUPABASE_URL = 'https://xmbuznabubcwicwtoxmv.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtYnV6bmFidWJjd2ljd3RveG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwOTU5MTIsImV4cCI6MjEwMTY3MTkxMn0.fJOLqUHRmCD-Ak9L_zH2p23pxyb8ESn80waEMejCbks';
+
+  function sbHeaders(prefer){
+    var h = {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json'
+    };
+    if(prefer) h['Prefer'] = prefer;
+    return h;
+  }
+  function sbUrl(table){ return SUPABASE_URL + '/rest/v1/' + table; }
+
+  function sbSelect(table, query){
+    var q = query || 'or=(deleted.is.null,deleted.eq.false)&order=date.desc.nullslast';
+    return fetch(sbUrl(table) + '?' + q, { headers: sbHeaders() }).then(function(r){
+      if(!r.ok) return r.text().then(function(t){ throw new Error(table+' ('+r.status+') '+t); });
+      return r.json();
+    });
+  }
+  function sbUpsert(table, row){
+    return fetch(sbUrl(table), {
+      method:'POST',
+      headers: sbHeaders('resolution=merge-duplicates,return=representation'),
+      body: JSON.stringify([row])
+    }).then(function(r){
+      if(!r.ok) return r.text().then(function(t){ throw new Error(table+' ('+r.status+') '+t); });
+      return r.json();
+    });
+  }
+  function sbSoftDelete(table, id){
+    return fetch(sbUrl(table) + '?id=eq.' + encodeURIComponent(id), {
+      method:'PATCH',
+      headers: sbHeaders('return=representation'),
+      body: JSON.stringify({ deleted: true })
+    }).then(function(r){
+      if(!r.ok) return r.text().then(function(t){ throw new Error(table+' ('+r.status+') '+t); });
+      return r.json();
+    });
+  }
+  function genId(){
+    if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'id-' + Date.now() + '-' + Math.random().toString(16).slice(2);
+  }
+
+  function setSyncStatus(msg, kind){
+    var el = document.getElementById('syncStatus');
+    if(!el) return;
+    el.textContent = msg;
+    el.style.color = kind==='error' ? 'var(--brick)' : kind==='ok' ? 'var(--sage)' : 'var(--ink-faint)';
+  }
 
   var BROKERS = ["FTMO", "Funding Pips"];
   var INSTRUMENTS_JOURNAL = ["US30","EURUSD","GBPUSD","USDJPY","USDCHF","AUDUSD","USDCAD","NZDUSD"];
   var STRATEGIES = ["Supply","Demand","Equal low","Equal high","Imbalance"];
 
   // Valeurs de pip reelles, issues de l'onglet "Hypotheses" (specifiques a chaque broker)
-  // { broker: { instrument: { v001: valeur par point a 0.01 lot, v100: valeur par point a 1.00 lot } } }
   var PIP_VALUES = {
     "FTMO": {
       "AUDUSD": {v001:0.10, v100:10},
@@ -754,36 +809,16 @@
     }
   };
 
-  // Taille du point par instrument (reference, issue de l'onglet Hypotheses)
   var POINT_SIZE = {
     "AUDUSD":0.0001, "EURUSD":0.0001, "GBPUSD":0.0001, "NZDUSD":0.0001,
     "US30":1, "USDCAD":0.0001, "USDCHF":0.0001, "USDJPY":0.01
   };
 
-  var trades = [
-    {trade_num:1, date:'2026-08-01', instrument:'EURUSD', direction:'Buy', broker:'FTMO', entry_price:1.0842, exit_price:1.0876, sl_pts:25, tp_pts:50, outcome:'Win', r_realized:1.4, pnl:142.30, strategy:'Demand', notes:"Cassure de range, tenue jusqu'à la résistance H4."},
-    {trade_num:2, date:'2026-08-03', instrument:'US30', direction:'Sell', broker:'FTMO', entry_price:40120, exit_price:40180, sl_pts:60, tp_pts:120, outcome:'Loss', r_realized:-1.0, pnl:-58.10, strategy:'Supply', notes:'Stop touché sur retournement de tendance.'},
-    {trade_num:3, date:'2026-08-05', instrument:'GBPUSD', direction:'Buy', broker:'Funding Pips', entry_price:1.2710, exit_price:1.2755, sl_pts:30, tp_pts:60, outcome:'Win', r_realized:1.5, pnl:96.75, strategy:'Equal low', notes:'Suivi du plan, sortie partielle à mi-parcours.'},
-    {trade_num:4, date:'2026-08-06', instrument:'USDJPY', direction:'Sell', broker:'FTMO', entry_price:151.20, exit_price:151.20, sl_pts:20, tp_pts:40, outcome:'Breakeven', r_realized:0, pnl:0, strategy:'Imbalance', notes:'Sorti à breakeven après nouvelles macro.'}
-  ];
-
+  // Donnees chargees depuis Supabase (vides tant que non connecte / non charge)
+  var trades = [];
   var objectifParams = { date_debut:'2026-08-07', capital_initial:100000, objectif_par_compte:50000 };
-  var objectifEntries = [
-    {date:'2026-07-10', compte:'FTMO', montant:820, frequence:'Hebdo', note:'Semaine 1'},
-    {date:'2026-07-17', compte:'FTMO', montant:640, frequence:'Hebdo', note:'Semaine 2'},
-    {date:'2026-07-24', compte:'FTMO', montant:-210, frequence:'Hebdo', note:'Semaine rouge'},
-    {date:'2026-07-10', compte:'Funding Pips', montant:510, frequence:'Hebdo', note:'Semaine 1'},
-    {date:'2026-07-17', compte:'Funding Pips', montant:730, frequence:'Hebdo', note:'Semaine 2'}
-  ];
-
-  var p2pHistory = [
-    {date:'2026-08-01', type:'Achat', asset:'USDT', qty:5000, price:1.00, amount:5000.00, counter:'@martine_b', status:'Terminée'},
-    {date:'2026-08-02', type:'Vente', asset:'BTC', qty:0.045, price:64200, amount:2889.00, counter:'@yao_trade', status:'Terminée'},
-    {date:'2026-08-03', type:'Achat', asset:'USDT', qty:2000, price:1.00, amount:2000.00, counter:'@fx_kofi', status:'Terminée'},
-    {date:'2026-08-05', type:'Vente', asset:'ETH', qty:0.80, price:3150, amount:2520.00, counter:'@didier_p2p', status:'En cours'},
-    {date:'2026-08-06', type:'Achat', asset:'USDT', qty:1200, price:1.00, amount:1200.00, counter:'@martine_b', status:'Terminée'},
-    {date:'2026-08-07', type:'Vente', asset:'BTC', qty:0.012, price:64900, amount:778.80, counter:'@sarah_crypto', status:'En cours'}
-  ];
+  var objectifEntries = [];
+  var p2pHistory = [];
 
   var equityChart, objChart;
 
@@ -818,7 +853,7 @@
     window.scrollTo({top:0, behavior:'smooth'});
   }
 
-  // ---------- init dashboard (dropdowns, first render) ----------
+  // ---------- init dashboard : charge tout depuis Supabase puis affiche ----------
   function initDashboard(){
     fillSelect('tInstrument', INSTRUMENTS_JOURNAL);
     fillSelect('tBroker', BROKERS);
@@ -826,6 +861,27 @@
     fillSelect('cBroker', BROKERS);
     fillSelect('oCompte', BROKERS, true);
     onBrokerChange();
+    reloadAll();
+  }
+
+  function reloadAll(){
+    setSyncStatus('Synchronisation…', null);
+    return Promise.all([
+      sbSelect('trades').then(function(rows){ trades = rows; }),
+      sbSelect('objectif_entrees').then(function(rows){ objectifEntries = rows; }),
+      sbSelect('objectif_parametres', 'id=eq.1').then(function(rows){ if(rows && rows[0]) objectifParams = rows[0]; }),
+      sbSelect('p2p_transactions').then(function(rows){ p2pHistory = rows; })
+    ]).then(function(){
+      renderAll();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      renderAll();
+      setSyncStatus('⚠ Erreur de synchro (voir console)', 'error');
+    });
+  }
+
+  function renderAll(){
     safe(renderOverviewStats, 'overview');
     safe(renderJournal, 'journal');
     safe(renderObjectif, 'objectif');
@@ -897,21 +953,22 @@
       stat('R total', s.totalR.toFixed(2)+' R') +
       stat('P&L total', (s.totalPnl>=0?'+':'')+s.totalPnl.toFixed(2)+' $', s.totalPnl>=0?'pos':'neg');
 
+    var sorted = trades.slice().sort(function(a,b){ return (a.trade_num||0) - (b.trade_num||0); });
     var body = document.getElementById('journalBody');
     body.innerHTML = '';
-    trades.forEach(function(t, idx){
+    sorted.forEach(function(t){
       var tr = document.createElement('tr');
       var outcomeClass = t.outcome==='Win' ? 'ok' : t.outcome==='Loss' ? 'loss' : t.outcome==='Breakeven' ? 'be' : 'be';
       var dirClass = t.direction === 'Buy' ? 'buy' : 'sell';
       var pnlColor = (t.pnl||0) >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
       tr.innerHTML =
-        '<td>'+t.trade_num+'</td><td>'+t.date+'</td><td>'+t.instrument+'</td>'+
+        '<td>'+(t.trade_num||'—')+'</td><td>'+t.date+'</td><td>'+t.instrument+'</td>'+
         '<td><span class="pill '+dirClass+'">'+t.direction+'</span></td>'+
         '<td>'+t.broker+'</td><td>'+(t.strategy||'—')+'</td>'+
         '<td>'+(t.outcome ? '<span class="pill '+outcomeClass+'">'+t.outcome+'</span>' : '—')+'</td>'+
-        '<td>'+(t.r_realized!=null ? t.r_realized.toFixed(2) : '—')+'</td>'+
-        '<td '+pnlColor+'>'+((t.pnl||0)>=0?'+':'')+(t.pnl||0).toFixed(2)+' $</td>'+
-        '<td><div class="row-actions"><button class="row-edit" onclick="editTrade('+idx+')">Modifier</button><button class="row-del" onclick="deleteTrade('+idx+')">Suppr.</button></div></td>';
+        '<td>'+(t.r_realized!=null ? Number(t.r_realized).toFixed(2) : '—')+'</td>'+
+        '<td '+pnlColor+'>'+((t.pnl||0)>=0?'+':'')+Number(t.pnl||0).toFixed(2)+' $</td>'+
+        '<td><div class="row-actions"><button class="row-edit" onclick="editTrade(\''+t.id+'\')">Modifier</button><button class="row-del" onclick="deleteTrade(\''+t.id+'\')">Suppr.</button></div></td>';
       body.appendChild(tr);
     });
 
@@ -921,9 +978,10 @@
 
   function renderEquityChart(){
     var ctx = document.getElementById('equityChart').getContext('2d');
+    var sorted = trades.slice().sort(function(a,b){ return (a.trade_num||0) - (b.trade_num||0); });
     var running = 0;
     var labels = [], data = [];
-    trades.forEach(function(t){ running += t.pnl||0; labels.push('#'+t.trade_num); data.push(running); });
+    sorted.forEach(function(t){ running += t.pnl||0; labels.push('#'+(t.trade_num||'?')); data.push(running); });
     if(equityChart) equityChart.destroy();
     equityChart = new Chart(ctx, {
       type:'line',
@@ -938,12 +996,13 @@
     });
   }
 
-  var editingTradeIdx = null;
+  var editingTradeId = null;
 
-  function openTradeModal(idx){
-    editingTradeIdx = (typeof idx === 'number') ? idx : null;
-    if(editingTradeIdx !== null){
-      var t = trades[editingTradeIdx];
+  function openTradeModal(id){
+    editingTradeId = id || null;
+    if(editingTradeId){
+      var t = trades.find(function(x){ return x.id === editingTradeId; });
+      if(!t) return;
       document.getElementById('tradeModalTitle').textContent = 'Modifier le trade';
       document.getElementById('tDate').value = t.date;
       document.getElementById('tInstrument').value = t.instrument;
@@ -965,13 +1024,24 @@
     }
     document.getElementById('tradeModal').classList.remove('hidden');
   }
-  function editTrade(idx){ openTradeModal(idx); }
-  function closeTradeModal(){ document.getElementById('tradeModal').classList.add('hidden'); editingTradeIdx = null; }
+  function editTrade(id){ openTradeModal(id); }
+  function closeTradeModal(){ document.getElementById('tradeModal').classList.add('hidden'); editingTradeId = null; }
 
   function saveTrade(){
     var instrument = document.getElementById('tInstrument').value;
     if(!instrument){ return; }
+    var isEdit = !!editingTradeId;
+    var id = editingTradeId || genId();
+    var nextNum;
+    if(isEdit){
+      var existing = trades.find(function(x){ return x.id === id; });
+      nextNum = existing ? existing.trade_num : 1;
+    } else {
+      nextNum = trades.length ? Math.max.apply(null, trades.map(function(t){return t.trade_num||0;})) + 1 : 1;
+    }
     var data = {
+      id: id,
+      trade_num: nextNum,
       date: document.getElementById('tDate').value || new Date().toISOString().slice(0,10),
       instrument: instrument,
       direction: document.getElementById('tDirection').value,
@@ -984,22 +1054,36 @@
       r_realized: parseFloat(document.getElementById('tR').value) || 0,
       pnl: parseFloat(document.getElementById('tPnl').value) || 0,
       strategy: document.getElementById('tStrategy').value,
-      notes: document.getElementById('tNotes').value.trim() || '—'
+      notes: document.getElementById('tNotes').value.trim() || '—',
+      deleted: false
     };
-    if(editingTradeIdx !== null){
-      data.trade_num = trades[editingTradeIdx].trade_num;
-      trades[editingTradeIdx] = data;
-    } else {
-      data.trade_num = trades.length ? Math.max.apply(null, trades.map(function(t){return t.trade_num;})) + 1 : 1;
-      trades.push(data);
-    }
     closeTradeModal();
-    renderJournal();
+    setSyncStatus('Enregistrement…', null);
+    sbUpsert('trades', data).then(function(){
+      return sbSelect('trades');
+    }).then(function(rows){
+      trades = rows;
+      renderJournal();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
+      alert("Le trade n'a pas pu être enregistré sur Supabase :\n" + err.message);
+    });
   }
 
-  function deleteTrade(idx){
-    trades.splice(idx,1);
-    renderJournal();
+  function deleteTrade(id){
+    if(!confirm('Supprimer ce trade ?')) return;
+    setSyncStatus('Suppression…', null);
+    sbSoftDelete('trades', id).then(function(){
+      trades = trades.filter(function(t){ return t.id !== id; });
+      renderJournal();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de la suppression', 'error');
+      alert("La suppression a échoué :\n" + err.message);
+    });
   }
 
   // ---------- Objectif ----------
@@ -1028,8 +1112,8 @@
   function renderObjectif(){
     document.getElementById('paramsStrip').innerHTML =
       '<span>Début : <b>'+(objectifParams.date_debut||'—')+'</b></span>'+
-      '<span>Capital initial / compte : <b>'+(objectifParams.capital_initial||0).toLocaleString()+' $</b></span>'+
-      '<span>Objectif / compte : <b>+'+(objectifParams.objectif_par_compte||0).toLocaleString()+' $</b></span>';
+      '<span>Capital initial / compte : <b>'+Number(objectifParams.capital_initial||0).toLocaleString()+' $</b></span>'+
+      '<span>Objectif / compte : <b>+'+Number(objectifParams.objectif_par_compte||0).toLocaleString()+' $</b></span>';
 
     var progress = objectifProgress();
     var grid = document.getElementById('progressGrid');
@@ -1046,15 +1130,16 @@
       grid.appendChild(div);
     });
 
+    var sorted = objectifEntries.slice().sort(function(a,b){ return (a.date||'') < (b.date||'') ? 1 : -1; });
     var body = document.getElementById('objBody');
     body.innerHTML = '';
-    objectifEntries.forEach(function(e, idx){
+    sorted.forEach(function(e){
       var tr = document.createElement('tr');
       var mColor = (e.montant||0) >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
       tr.innerHTML = '<td>'+e.date+'</td><td>'+e.compte+'</td>'+
-        '<td '+mColor+'>'+((e.montant||0)>=0?'+':'')+(e.montant||0).toFixed(2)+' $</td>'+
+        '<td '+mColor+'>'+((e.montant||0)>=0?'+':'')+Number(e.montant||0).toFixed(2)+' $</td>'+
         '<td>'+(e.frequence||'—')+'</td><td>'+(e.note||'—')+'</td>'+
-        '<td><div class="row-actions"><button class="row-edit" onclick="editObjEntry('+idx+')">Modifier</button><button class="row-del" onclick="deleteObjEntry('+idx+')">Suppr.</button></div></td>';
+        '<td><div class="row-actions"><button class="row-edit" onclick="editObjEntry(\''+e.id+'\')">Modifier</button><button class="row-del" onclick="deleteObjEntry(\''+e.id+'\')">Suppr.</button></div></td>';
       body.appendChild(tr);
     });
 
@@ -1068,11 +1153,14 @@
     var colors = {'FTMO':'#d3b485','Funding Pips':'#7f9c86'};
     var allDates = Array.from(new Set(objectifEntries.map(function(e){return e.date;}))).sort();
     var datasets = comptes.map(function(compte){
-      var running = objectifParams.capital_initial||0;
       var byDate = {};
       objectifEntries.filter(function(e){return e.compte===compte;})
         .sort(function(a,b){return (a.date>b.date?1:-1);})
-        .forEach(function(e){ running += e.montant||0; byDate[e.date]=running; });
+        .reduce(function(running, e){
+          running += e.montant||0;
+          byDate[e.date] = running;
+          return running;
+        }, objectifParams.capital_initial||0);
       var data = [];
       var last = objectifParams.capital_initial||0;
       allDates.forEach(function(d){ if(byDate[d]!==undefined) last=byDate[d]; data.push(last); });
@@ -1092,12 +1180,13 @@
     });
   }
 
-  var editingObjIdx = null;
+  var editingObjId = null;
 
-  function openObjModal(idx){
-    editingObjIdx = (typeof idx === 'number') ? idx : null;
-    if(editingObjIdx !== null){
-      var e = objectifEntries[editingObjIdx];
+  function openObjModal(id){
+    editingObjId = id || null;
+    if(editingObjId){
+      var e = objectifEntries.find(function(x){ return x.id === editingObjId; });
+      if(!e) return;
       document.getElementById('objModalTitle').textContent = "Modifier l'entrée";
       document.getElementById('oDate').value = e.date;
       document.getElementById('oCompte').value = e.compte;
@@ -1111,22 +1200,46 @@
     }
     document.getElementById('objModal').classList.remove('hidden');
   }
-  function editObjEntry(idx){ openObjModal(idx); }
-  function closeObjModal(){ document.getElementById('objModal').classList.add('hidden'); editingObjIdx = null; }
+  function editObjEntry(id){ openObjModal(id); }
+  function closeObjModal(){ document.getElementById('objModal').classList.add('hidden'); editingObjId = null; }
   function saveObjEntry(){
+    var id = editingObjId || genId();
     var data = {
+      id: id,
       date: document.getElementById('oDate').value || new Date().toISOString().slice(0,10),
       compte: document.getElementById('oCompte').value,
       montant: parseFloat(document.getElementById('oMontant').value) || 0,
       frequence: document.getElementById('oFreq').value.trim(),
-      note: document.getElementById('oNote').value.trim()
+      note: document.getElementById('oNote').value.trim(),
+      deleted: false
     };
-    if(editingObjIdx !== null){ objectifEntries[editingObjIdx] = data; }
-    else { objectifEntries.push(data); }
     closeObjModal();
-    renderObjectif();
+    setSyncStatus('Enregistrement…', null);
+    sbUpsert('objectif_entrees', data).then(function(){
+      return sbSelect('objectif_entrees');
+    }).then(function(rows){
+      objectifEntries = rows;
+      renderObjectif();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
+      alert("L'entrée n'a pas pu être enregistrée sur Supabase :\n" + err.message);
+    });
   }
-  function deleteObjEntry(idx){ objectifEntries.splice(idx,1); renderObjectif(); }
+  function deleteObjEntry(id){
+    if(!confirm('Supprimer cette entrée ?')) return;
+    setSyncStatus('Suppression…', null);
+    sbSoftDelete('objectif_entrees', id).then(function(){
+      objectifEntries = objectifEntries.filter(function(e){ return e.id !== id; });
+      renderObjectif();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de la suppression', 'error');
+      alert("La suppression a échoué :\n" + err.message);
+    });
+  }
 
   function openParamsModal(){
     document.getElementById('pDateDebut').value = objectifParams.date_debut;
@@ -1136,14 +1249,26 @@
   }
   function closeParamsModal(){ document.getElementById('paramsModal').classList.add('hidden'); }
   function saveParams(){
-    objectifParams.date_debut = document.getElementById('pDateDebut').value;
-    objectifParams.capital_initial = parseFloat(document.getElementById('pCapital').value) || 0;
-    objectifParams.objectif_par_compte = parseFloat(document.getElementById('pObjectif').value) || 0;
+    var data = {
+      id: 1,
+      date_debut: document.getElementById('pDateDebut').value,
+      capital_initial: parseFloat(document.getElementById('pCapital').value) || 0,
+      objectif_par_compte: parseFloat(document.getElementById('pObjectif').value) || 0
+    };
     closeParamsModal();
-    renderObjectif();
+    setSyncStatus('Enregistrement…', null);
+    sbUpsert('objectif_parametres', data).then(function(){
+      objectifParams = data;
+      renderObjectif();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
+      alert("Les paramètres n'ont pas pu être enregistrés sur Supabase :\n" + err.message);
+    });
   }
 
-  // ---------- Lot Size Calculator ----------
+  // ---------- Lot Size Calculator (calcul pur, pas de reseau) ----------
   function calculateLotSize(){
     var capital = parseFloat(document.getElementById('cBalance').value) || 0;
     var riskPct = (parseFloat(document.getElementById('cRisk').value) || 0) / 100;
@@ -1187,15 +1312,11 @@
   }
 
   // ---------- P2P history ----------
-  var editingP2PIdx = null;
-
   function renderP2P(){
+    var sorted = p2pHistory.slice().sort(function(a,b){ return (a.date||'') < (b.date||'') ? 1 : -1; });
     var body = document.getElementById('p2pBody');
     body.innerHTML = '';
-    // on garde les index d'origine pour edit/delete tout en affichant du plus recent au plus ancien
-    var indexed = p2pHistory.map(function(t, i){ return {t:t, i:i}; }).reverse();
-    indexed.forEach(function(item){
-      var t = item.t, idx = item.i;
+    sorted.forEach(function(t){
       var typeClass = t.type === 'Achat' ? 'buy' : 'sell';
       var statusClass = t.status === 'Terminée' ? 'ok' : 'pending';
       var tr = document.createElement('tr');
@@ -1206,21 +1327,35 @@
         '<td>'+Number(t.price).toLocaleString(undefined,{maximumFractionDigits:2})+' $</td>'+
         '<td>'+Number(t.amount).toLocaleString(undefined,{maximumFractionDigits:2})+' $</td>'+
         '<td>'+t.counter+'</td>' +
-        '<td><span class="pill '+statusClass+' status-toggle" onclick="toggleP2PStatus('+idx+')" title="Cliquer pour changer le statut">'+t.status+'</span></td>'+
-        '<td><div class="row-actions"><button class="row-edit" onclick="editP2P('+idx+')">Modifier</button><button class="row-del" onclick="deleteP2P('+idx+')">Suppr.</button></div></td>';
+        '<td><span class="pill '+statusClass+' status-toggle" onclick="toggleP2PStatus(\''+t.id+'\')" title="Cliquer pour changer le statut">'+t.status+'</span></td>'+
+        '<td><div class="row-actions"><button class="row-edit" onclick="editP2P(\''+t.id+'\')">Modifier</button><button class="row-del" onclick="deleteP2P(\''+t.id+'\')">Suppr.</button></div></td>';
       body.appendChild(tr);
     });
   }
 
-  function toggleP2PStatus(idx){
-    p2pHistory[idx].status = p2pHistory[idx].status === 'Terminée' ? 'En cours' : 'Terminée';
-    renderP2P();
+  function toggleP2PStatus(id){
+    var t = p2pHistory.find(function(x){ return x.id === id; });
+    if(!t) return;
+    var newStatus = t.status === 'Terminée' ? 'En cours' : 'Terminée';
+    setSyncStatus('Mise à jour…', null);
+    sbUpsert('p2p_transactions', Object.assign({}, t, {status:newStatus})).then(function(){
+      t.status = newStatus;
+      renderP2P();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de la mise à jour', 'error');
+      alert("Le statut n'a pas pu être mis à jour :\n" + err.message);
+    });
   }
 
-  function openP2PModal(idx){
-    editingP2PIdx = (typeof idx === 'number') ? idx : null;
-    if(editingP2PIdx !== null){
-      var t = p2pHistory[editingP2PIdx];
+  var editingP2PId = null;
+
+  function openP2PModal(id){
+    editingP2PId = id || null;
+    if(editingP2PId){
+      var t = p2pHistory.find(function(x){ return x.id === editingP2PId; });
+      if(!t) return;
       document.getElementById('p2pModalTitle').textContent = 'Modifier la transaction';
       document.getElementById('pxDate').value = t.date;
       document.getElementById('pxType').value = t.type;
@@ -1238,15 +1373,17 @@
     }
     document.getElementById('p2pModal').classList.remove('hidden');
   }
-  function editP2P(idx){ openP2PModal(idx); }
-  function closeP2PModal(){ document.getElementById('p2pModal').classList.add('hidden'); editingP2PIdx = null; }
+  function editP2P(id){ openP2PModal(id); }
+  function closeP2PModal(){ document.getElementById('p2pModal').classList.add('hidden'); editingP2PId = null; }
 
   function saveP2P(){
     var qty = parseFloat(document.getElementById('pxQty').value) || 0;
     var price = parseFloat(document.getElementById('pxPrice').value) || 0;
     var amountInput = document.getElementById('pxAmount').value;
     var amount = amountInput !== '' ? (parseFloat(amountInput) || 0) : (qty * price);
+    var id = editingP2PId || genId();
     var data = {
+      id: id,
       date: document.getElementById('pxDate').value || new Date().toISOString().slice(0,10),
       type: document.getElementById('pxType').value,
       asset: document.getElementById('pxAsset').value,
@@ -1254,17 +1391,36 @@
       price: price,
       amount: amount,
       counter: document.getElementById('pxCounter').value.trim() || '—',
-      status: document.getElementById('pxStatus').value
+      status: document.getElementById('pxStatus').value,
+      deleted: false
     };
-    if(editingP2PIdx !== null){ p2pHistory[editingP2PIdx] = data; }
-    else { p2pHistory.push(data); }
     closeP2PModal();
-    renderP2P();
+    setSyncStatus('Enregistrement…', null);
+    sbUpsert('p2p_transactions', data).then(function(){
+      return sbSelect('p2p_transactions');
+    }).then(function(rows){
+      p2pHistory = rows;
+      renderP2P();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
+      alert("La transaction n'a pas pu être enregistrée sur Supabase :\n" + err.message);
+    });
   }
 
-  function deleteP2P(idx){
-    p2pHistory.splice(idx,1);
-    renderP2P();
+  function deleteP2P(id){
+    if(!confirm('Supprimer cette transaction ?')) return;
+    setSyncStatus('Suppression…', null);
+    sbSoftDelete('p2p_transactions', id).then(function(){
+      p2pHistory = p2pHistory.filter(function(t){ return t.id !== id; });
+      renderP2P();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de la suppression', 'error');
+      alert("La suppression a échoué :\n" + err.message);
+    });
   }
 </script>
 </body>

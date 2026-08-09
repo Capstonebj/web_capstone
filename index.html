@@ -534,6 +534,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg>
         Historique P2P
       </button>
+      <button class="nav-btn" data-tab="immobilier" onclick="showTab('immobilier')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M9 13h.01M15 13h.01M9 9h.01M15 9h.01"/></svg>
+        Immobilier
+      </button>
     </nav>
     <div class="sidebar-foot">
       <div class="userchip" id="userchip">CONNECTÉ · —</div>
@@ -573,6 +577,11 @@
           <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg></div>
           <h4>Historique P2P</h4>
           <p>Suivez vos transactions d'actifs numériques.</p>
+        </div>
+        <div class="tile" onclick="showTab('immobilier')">
+          <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M9 13h.01M15 13h.01M9 9h.01M15 9h.01"/></svg></div>
+          <h4>Immobilier</h4>
+          <p>Portefeuille de biens, loyers et rendement.</p>
         </div>
       </div>
     </div>
@@ -676,17 +685,104 @@
         <div><div class="eyebrow">Outil · Actifs numériques</div><h2>Historique des transactions P2P</h2></div>
         <button class="btn btn-solid btn-sm" onclick="openP2PModal()">+ Ajouter une transaction</button>
       </div>
+      <div class="stat-row" id="p2pStats"></div>
       <div class="panel">
         <div class="table-wrap">
         <table>
-          <thead><tr><th>Date</th><th>Type</th><th>Actif</th><th>Quantité</th><th>Prix unitaire</th><th>Montant</th><th>Contrepartie</th><th>Statut</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Date</th><th>Type</th><th>Actif</th><th>Quantité</th><th>Prix unitaire</th><th>Montant</th><th>Profit</th><th>Contrepartie</th><th>Statut</th><th>Actions</th></tr></thead>
           <tbody id="p2pBody"></tbody>
         </table>
         </div>
       </div>
     </div>
 
+    <!-- IMMOBILIER -->
+    <div class="tab-panel hidden" id="tab-immobilier">
+      <div class="dash-head">
+        <div><div class="eyebrow">Outil · Investissement immobilier</div><h2>Portefeuille immobilier</h2></div>
+        <button class="btn btn-solid btn-sm" onclick="openBienModal()">+ Ajouter un bien</button>
+      </div>
+      <div class="stat-row" id="immoStats"></div>
+      <div class="panel">
+        <div class="panel-head"><h3>Biens</h3></div>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nom</th><th>Type</th><th>Adresse</th><th>Acquisition</th><th>Prix d'achat</th><th>Valeur actuelle</th><th>Plus-value</th><th>Rendement locatif</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="biensBody"></tbody>
+        </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Loyers perçus</h3>
+          <button class="btn btn-solid btn-sm" onclick="openLoyerModal()">+ Ajouter un loyer</button>
+        </div>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Bien</th><th>Montant</th><th>Charges</th><th>Net</th><th>Locataire</th><th>Note</th><th>Actions</th></tr></thead>
+          <tbody id="loyersBody"></tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
   </main>
+</div>
+
+<!-- ============ BIEN MODAL ============ -->
+<div id="bienModal" class="modal-overlay hidden">
+  <div class="modal wide">
+    <div class="modal-head">
+      <button class="close" onclick="closeBienModal()">&times;</button>
+      <div class="eyebrow">Immobilier</div>
+      <h3 id="bienModalTitle">Ajouter un bien</h3>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Nom / désignation</label><input type="text" id="bNom" placeholder="Villa Zongo, Terrain Titre 1234…"></div>
+        <div class="field"><label>Type</label>
+          <select id="bType"><option>Terrain</option><option>Résidentiel</option><option>Commercial</option></select>
+        </div>
+        <div class="field"><label>Date d'acquisition</label><input type="date" id="bDate"></div>
+        <div class="field"><label>Statut</label>
+          <select id="bStatut"><option>Loué</option><option>Vacant</option><option>En travaux</option><option>Vendu</option></select>
+        </div>
+        <div class="field"><label>Prix d'acquisition ($)</label><input type="number" step="any" id="bPrixAcq"></div>
+        <div class="field"><label>Valeur actuelle estimée ($)</label><input type="number" step="any" id="bValeur"></div>
+      </div>
+      <div class="field"><label>Adresse</label><input type="text" id="bAdresse" placeholder="Quartier, ville…"></div>
+      <div class="field"><label>Notes</label><input type="text" id="bNotes"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeBienModal()">Annuler</button>
+        <button class="btn btn-solid" onclick="saveBien()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOYER MODAL ============ -->
+<div id="loyerModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-head">
+      <button class="close" onclick="closeLoyerModal()">&times;</button>
+      <div class="eyebrow">Immobilier</div>
+      <h3 id="loyerModalTitle">Ajouter un loyer</h3>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label>Date</label><input type="date" id="lDate"></div>
+      <div class="field"><label>Bien</label>
+        <select id="lBien"></select>
+      </div>
+      <div class="field"><label>Montant perçu ($)</label><input type="number" step="any" id="lMontant"></div>
+      <div class="field"><label>Charges ($)</label><input type="number" step="any" id="lCharges" placeholder="0 si aucune"></div>
+      <div class="field"><label>Locataire</label><input type="text" id="lLocataire"></div>
+      <div class="field"><label>Note</label><input type="text" id="lNote"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeLoyerModal()">Annuler</button>
+        <button class="btn btn-solid" onclick="saveLoyer()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ============ P2P TRANSACTION MODAL ============ -->
@@ -708,6 +804,7 @@
       <div class="field"><label>Quantité</label><input type="number" step="any" id="pxQty"></div>
       <div class="field"><label>Prix unitaire ($)</label><input type="number" step="any" id="pxPrice"></div>
       <div class="field"><label>Montant total ($)</label><input type="number" step="any" id="pxAmount" placeholder="Auto si laissé vide"></div>
+      <div class="field"><label>Profit réalisé ($)</label><input type="number" step="any" id="pxProfit" placeholder="Laisser vide si non applicable"></div>
       <div class="field"><label>Contrepartie</label><input type="text" id="pxCounter" placeholder="@pseudo"></div>
       <div class="field"><label>Statut</label>
         <select id="pxStatus"><option value="Terminée">Terminée</option><option value="En cours">En cours</option></select>
@@ -819,6 +916,8 @@
   var objectifParams = { date_debut:'2026-08-07', capital_initial:100000, objectif_par_compte:50000 };
   var objectifEntries = [];
   var p2pHistory = [];
+  var biens = [];
+  var loyers = [];
 
   var equityChart, objChart;
   var currentSession = null; // { access_token, user } une fois connecte
@@ -906,7 +1005,9 @@
       sbSelect('trades').then(function(rows){ trades = rows; }),
       sbSelect('objectif_entrees').then(function(rows){ objectifEntries = rows; }),
       sbSelect('objectif_parametres', 'id=eq.1').then(function(rows){ if(rows && rows[0]) objectifParams = rows[0]; }),
-      sbSelect('p2p_transactions').then(function(rows){ p2pHistory = rows; })
+      sbSelect('p2p_transactions').then(function(rows){ p2pHistory = rows; }),
+      sbSelect('immo_biens').then(function(rows){ biens = rows; }),
+      sbSelect('immo_loyers').then(function(rows){ loyers = rows; })
     ]).then(function(){
       renderAll();
       setSyncStatus('✓ Synchronisé', 'ok');
@@ -922,6 +1023,7 @@
     safe(renderJournal, 'journal');
     safe(renderObjectif, 'objectif');
     safe(renderP2P, 'p2p');
+    safe(renderImmobilier, 'immobilier');
     safe(calculateLotSize, 'calculator');
   }
 
@@ -1348,13 +1450,29 @@
   }
 
   // ---------- P2P history ----------
+  function p2pStats(){
+    var withProfit = p2pHistory.filter(function(t){ return t.profit !== null && t.profit !== undefined; });
+    var totalProfit = withProfit.reduce(function(a,t){ return a + (t.profit||0); }, 0);
+    var totalVolume = p2pHistory.reduce(function(a,t){ return a + (t.amount||0); }, 0);
+    return { count: p2pHistory.length, totalProfit: totalProfit, hasProfit: withProfit.length>0, totalVolume: totalVolume };
+  }
+
   function renderP2P(){
+    var s = p2pStats();
+    document.getElementById('p2pStats').innerHTML =
+      stat('Transactions', s.count) +
+      stat('Volume total', Number(s.totalVolume).toLocaleString(undefined,{maximumFractionDigits:2})+' $') +
+      stat('Profit réalisé', (s.totalProfit>=0?'+':'')+s.totalProfit.toFixed(2)+' $', s.totalProfit>=0?'pos':'neg');
+
     var sorted = p2pHistory.slice().sort(function(a,b){ return (a.date||'') < (b.date||'') ? 1 : -1; });
     var body = document.getElementById('p2pBody');
     body.innerHTML = '';
     sorted.forEach(function(t){
       var typeClass = t.type === 'Achat' ? 'buy' : 'sell';
       var statusClass = t.status === 'Terminée' ? 'ok' : 'pending';
+      var hasProfit = t.profit !== null && t.profit !== undefined;
+      var profitColor = hasProfit ? (t.profit>=0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"') : '';
+      var profitText = hasProfit ? ((t.profit>=0?'+':'')+Number(t.profit).toFixed(2)+' $') : '—';
       var tr = document.createElement('tr');
       tr.innerHTML = '<td>'+t.date+'</td>' +
         '<td><span class="pill '+typeClass+'">'+t.type+'</span></td>' +
@@ -1362,6 +1480,7 @@
         '<td>'+Number(t.qty).toLocaleString(undefined,{maximumFractionDigits:8})+'</td>'+
         '<td>'+Number(t.price).toLocaleString(undefined,{maximumFractionDigits:2})+' $</td>'+
         '<td>'+Number(t.amount).toLocaleString(undefined,{maximumFractionDigits:2})+' $</td>'+
+        '<td '+profitColor+'>'+profitText+'</td>'+
         '<td>'+t.counter+'</td>' +
         '<td><span class="pill '+statusClass+' status-toggle" onclick="toggleP2PStatus(\''+t.id+'\')" title="Cliquer pour changer le statut">'+t.status+'</span></td>'+
         '<td><div class="row-actions"><button class="row-edit" onclick="editP2P(\''+t.id+'\')">Modifier</button><button class="row-del" onclick="deleteP2P(\''+t.id+'\')">Suppr.</button></div></td>';
@@ -1399,12 +1518,13 @@
       document.getElementById('pxQty').value = t.qty;
       document.getElementById('pxPrice').value = t.price;
       document.getElementById('pxAmount').value = t.amount;
+      document.getElementById('pxProfit').value = (t.profit !== null && t.profit !== undefined) ? t.profit : '';
       document.getElementById('pxCounter').value = t.counter;
       document.getElementById('pxStatus').value = t.status;
     } else {
       document.getElementById('p2pModalTitle').textContent = 'Ajouter une transaction';
       document.getElementById('pxDate').value = new Date().toISOString().slice(0,10);
-      ['pxQty','pxPrice','pxAmount','pxCounter'].forEach(function(id){ document.getElementById(id).value=''; });
+      ['pxQty','pxPrice','pxAmount','pxProfit','pxCounter'].forEach(function(id){ document.getElementById(id).value=''; });
       document.getElementById('pxStatus').value = 'Terminée';
     }
     document.getElementById('p2pModal').classList.remove('hidden');
@@ -1417,6 +1537,8 @@
     var price = parseFloat(document.getElementById('pxPrice').value) || 0;
     var amountInput = document.getElementById('pxAmount').value;
     var amount = amountInput !== '' ? (parseFloat(amountInput) || 0) : (qty * price);
+    var profitInput = document.getElementById('pxProfit').value;
+    var profit = profitInput !== '' ? (parseFloat(profitInput) || 0) : null;
     var id = editingP2PId || genId();
     var data = {
       id: id,
@@ -1426,6 +1548,7 @@
       qty: qty,
       price: price,
       amount: amount,
+      profit: profit,
       counter: document.getElementById('pxCounter').value.trim() || '—',
       status: document.getElementById('pxStatus').value,
       deleted: false
@@ -1451,6 +1574,238 @@
     sbSoftDelete('p2p_transactions', id).then(function(){
       p2pHistory = p2pHistory.filter(function(t){ return t.id !== id; });
       renderP2P();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de la suppression', 'error');
+      alert("La suppression a échoué :\n" + err.message);
+    });
+  }
+
+  // ---------- Immobilier ----------
+  function loyersNetsPourBien(bienId){
+    return loyers.filter(function(l){ return l.bien_id === bienId; })
+      .reduce(function(acc, l){
+        acc.loyers += l.montant || 0;
+        acc.charges += l.charges || 0;
+        return acc;
+      }, {loyers:0, charges:0});
+  }
+
+  function rendementLocatif(bien){
+    var net = loyersNetsPourBien(bien.id);
+    var netTotal = net.loyers - net.charges;
+    var base = bien.prix_acquisition;
+    if(!base) return null;
+    return (netTotal / base) * 100; // rendement cumule depuis l'acquisition (%)
+  }
+
+  function immoIndicateurs(){
+    var actifs = biens.filter(function(b){ return b.statut !== 'Vendu'; });
+    var valeurTotale = actifs.reduce(function(a,b){ return a + (b.valeur_actuelle||0); }, 0);
+    var coutTotal = actifs.reduce(function(a,b){ return a + (b.prix_acquisition||0); }, 0);
+    var plusValue = valeurTotale - coutTotal;
+    var loyersNets = loyers.reduce(function(a,l){ return a + (l.montant||0) - (l.charges||0); }, 0);
+    var rendementMoyen = coutTotal ? (loyersNets / coutTotal * 100) : 0;
+    return { valeurTotale:valeurTotale, plusValue:plusValue, loyersNets:loyersNets, rendementMoyen:rendementMoyen, nbBiens:actifs.length };
+  }
+
+  function renderImmobilier(){
+    var s = immoIndicateurs();
+    document.getElementById('immoStats').innerHTML =
+      stat('Biens actifs', s.nbBiens) +
+      stat('Valeur du portefeuille', Number(s.valeurTotale).toLocaleString(undefined,{maximumFractionDigits:0})+' $') +
+      stat('Plus-value latente', (s.plusValue>=0?'+':'')+Number(s.plusValue).toLocaleString(undefined,{maximumFractionDigits:0})+' $', s.plusValue>=0?'pos':'neg') +
+      stat('Loyers nets perçus', (s.loyersNets>=0?'+':'')+Number(s.loyersNets).toLocaleString(undefined,{maximumFractionDigits:0})+' $', s.loyersNets>=0?'pos':'neg') +
+      stat('Rendement locatif moyen', s.rendementMoyen.toFixed(1)+'%');
+
+    var biensBody = document.getElementById('biensBody');
+    biensBody.innerHTML = '';
+    biens.slice().sort(function(a,b){ return (a.date_acquisition||'') < (b.date_acquisition||'') ? 1 : -1; }).forEach(function(b){
+      var plusValue = (b.valeur_actuelle||0) - (b.prix_acquisition||0);
+      var pvColor = plusValue >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
+      var rendement = rendementLocatif(b);
+      var statutClass = b.statut === 'Loué' ? 'ok' : b.statut === 'Vendu' ? 'be' : b.statut === 'En travaux' ? 'pending' : 'loss';
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>'+(b.nom||'—')+'</td><td>'+(b.type||'—')+'</td><td>'+(b.adresse||'—')+'</td>'+
+        '<td>'+(b.date_acquisition||'—')+'</td>'+
+        '<td>'+Number(b.prix_acquisition||0).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
+        '<td>'+Number(b.valeur_actuelle||0).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
+        '<td '+pvColor+'>'+(plusValue>=0?'+':'')+Number(plusValue).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
+        '<td>'+(rendement!=null ? rendement.toFixed(1)+'%' : '—')+'</td>'+
+        '<td><span class="pill '+statutClass+'">'+(b.statut||'—')+'</span></td>'+
+        '<td><div class="row-actions"><button class="row-edit" onclick="editBien(\''+b.id+'\')">Modifier</button><button class="row-del" onclick="deleteBien(\''+b.id+'\')">Suppr.</button></div></td>';
+      biensBody.appendChild(tr);
+    });
+
+    fillLBienSelect();
+
+    var loyersBody = document.getElementById('loyersBody');
+    loyersBody.innerHTML = '';
+    loyers.slice().sort(function(a,b){ return (a.date||'') < (b.date||'') ? 1 : -1; }).forEach(function(l){
+      var bien = biens.find(function(b){ return b.id === l.bien_id; });
+      var net = (l.montant||0) - (l.charges||0);
+      var netColor = net >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>'+l.date+'</td><td>'+(bien ? bien.nom : '—')+'</td>'+
+        '<td>'+Number(l.montant||0).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
+        '<td>'+Number(l.charges||0).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
+        '<td '+netColor+'>'+(net>=0?'+':'')+Number(net).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
+        '<td>'+(l.locataire||'—')+'</td><td>'+(l.note||'—')+'</td>'+
+        '<td><div class="row-actions"><button class="row-edit" onclick="editLoyer(\''+l.id+'\')">Modifier</button><button class="row-del" onclick="deleteLoyer(\''+l.id+'\')">Suppr.</button></div></td>';
+      loyersBody.appendChild(tr);
+    });
+
+    renderOverviewStats();
+  }
+
+  function fillLBienSelect(){
+    var sel = document.getElementById('lBien');
+    var current = sel.value;
+    sel.innerHTML = '';
+    biens.forEach(function(b){
+      var o = document.createElement('option'); o.value = b.id; o.textContent = b.nom; sel.appendChild(o);
+    });
+    if(current) sel.value = current;
+  }
+
+  // ---- Biens ----
+  var editingBienId = null;
+
+  function openBienModal(id){
+    editingBienId = id || null;
+    if(editingBienId){
+      var b = biens.find(function(x){ return x.id === editingBienId; });
+      if(!b) return;
+      document.getElementById('bienModalTitle').textContent = 'Modifier le bien';
+      document.getElementById('bNom').value = b.nom || '';
+      document.getElementById('bType').value = b.type || 'Terrain';
+      document.getElementById('bDate').value = b.date_acquisition || '';
+      document.getElementById('bStatut').value = b.statut || 'Loué';
+      document.getElementById('bPrixAcq').value = b.prix_acquisition != null ? b.prix_acquisition : '';
+      document.getElementById('bValeur').value = b.valeur_actuelle != null ? b.valeur_actuelle : '';
+      document.getElementById('bAdresse').value = b.adresse || '';
+      document.getElementById('bNotes').value = b.notes || '';
+    } else {
+      document.getElementById('bienModalTitle').textContent = 'Ajouter un bien';
+      document.getElementById('bDate').value = new Date().toISOString().slice(0,10);
+      ['bNom','bAdresse','bPrixAcq','bValeur','bNotes'].forEach(function(id){ document.getElementById(id).value=''; });
+      document.getElementById('bStatut').value = 'Loué';
+    }
+    document.getElementById('bienModal').classList.remove('hidden');
+  }
+  function editBien(id){ openBienModal(id); }
+  function closeBienModal(){ document.getElementById('bienModal').classList.add('hidden'); editingBienId = null; }
+
+  function saveBien(){
+    var nom = document.getElementById('bNom').value.trim();
+    if(!nom){ return; }
+    var id = editingBienId || genId();
+    var data = {
+      id: id,
+      nom: nom,
+      type: document.getElementById('bType').value,
+      date_acquisition: document.getElementById('bDate').value || new Date().toISOString().slice(0,10),
+      statut: document.getElementById('bStatut').value,
+      prix_acquisition: parseFloat(document.getElementById('bPrixAcq').value) || 0,
+      valeur_actuelle: parseFloat(document.getElementById('bValeur').value) || 0,
+      adresse: document.getElementById('bAdresse').value.trim(),
+      notes: document.getElementById('bNotes').value.trim(),
+      deleted: false
+    };
+    closeBienModal();
+    setSyncStatus('Enregistrement…', null);
+    sbUpsert('immo_biens', data).then(function(){
+      return sbSelect('immo_biens');
+    }).then(function(rows){
+      biens = rows;
+      renderImmobilier();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
+      alert("Le bien n'a pas pu être enregistré sur Supabase :\n" + err.message);
+    });
+  }
+
+  function deleteBien(id){
+    if(!confirm('Supprimer ce bien ? Les loyers associés resteront mais ne seront plus rattachés à un bien visible.')) return;
+    setSyncStatus('Suppression…', null);
+    sbSoftDelete('immo_biens', id).then(function(){
+      biens = biens.filter(function(b){ return b.id !== id; });
+      renderImmobilier();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de la suppression', 'error');
+      alert("La suppression a échoué :\n" + err.message);
+    });
+  }
+
+  // ---- Loyers ----
+  var editingLoyerId = null;
+
+  function openLoyerModal(id){
+    if(!biens.length){ alert('Ajoute d\'abord au moins un bien avant d\'enregistrer un loyer.'); return; }
+    editingLoyerId = id || null;
+    fillLBienSelect();
+    if(editingLoyerId){
+      var l = loyers.find(function(x){ return x.id === editingLoyerId; });
+      if(!l) return;
+      document.getElementById('loyerModalTitle').textContent = 'Modifier le loyer';
+      document.getElementById('lDate').value = l.date;
+      document.getElementById('lBien').value = l.bien_id;
+      document.getElementById('lMontant').value = l.montant != null ? l.montant : '';
+      document.getElementById('lCharges').value = l.charges != null ? l.charges : '';
+      document.getElementById('lLocataire').value = l.locataire || '';
+      document.getElementById('lNote').value = l.note || '';
+    } else {
+      document.getElementById('loyerModalTitle').textContent = 'Ajouter un loyer';
+      document.getElementById('lDate').value = new Date().toISOString().slice(0,10);
+      ['lMontant','lCharges','lLocataire','lNote'].forEach(function(id){ document.getElementById(id).value=''; });
+    }
+    document.getElementById('loyerModal').classList.remove('hidden');
+  }
+  function editLoyer(id){ openLoyerModal(id); }
+  function closeLoyerModal(){ document.getElementById('loyerModal').classList.add('hidden'); editingLoyerId = null; }
+
+  function saveLoyer(){
+    var bienId = document.getElementById('lBien').value;
+    if(!bienId){ return; }
+    var id = editingLoyerId || genId();
+    var data = {
+      id: id,
+      bien_id: bienId,
+      date: document.getElementById('lDate').value || new Date().toISOString().slice(0,10),
+      montant: parseFloat(document.getElementById('lMontant').value) || 0,
+      charges: parseFloat(document.getElementById('lCharges').value) || 0,
+      locataire: document.getElementById('lLocataire').value.trim(),
+      note: document.getElementById('lNote').value.trim(),
+      deleted: false
+    };
+    closeLoyerModal();
+    setSyncStatus('Enregistrement…', null);
+    sbUpsert('immo_loyers', data).then(function(){
+      return sbSelect('immo_loyers');
+    }).then(function(rows){
+      loyers = rows;
+      renderImmobilier();
+      setSyncStatus('✓ Synchronisé', 'ok');
+    }).catch(function(err){
+      console.error(err);
+      setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
+      alert("Le loyer n'a pas pu être enregistré sur Supabase :\n" + err.message);
+    });
+  }
+
+  function deleteLoyer(id){
+    if(!confirm('Supprimer ce loyer ?')) return;
+    setSyncStatus('Suppression…', null);
+    sbSoftDelete('immo_loyers', id).then(function(){
+      loyers = loyers.filter(function(l){ return l.id !== id; });
+      renderImmobilier();
       setSyncStatus('✓ Synchronisé', 'ok');
     }).catch(function(err){
       console.error(err);

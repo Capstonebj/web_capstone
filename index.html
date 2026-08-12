@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CAPSTONE — Solidité. Vision. Performance.</title>
+<title>BAGNAN CAP ET FILS — Solidité. Vision. Performance.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
@@ -293,7 +293,7 @@
 <!-- ============ LANDING ============ -->
 <div id="landing">
   <nav>
-    <div class="brand">CAPSTONE <small>CSBJ</small></div>
+    <div class="brand">BAGNAN CAP ET FILS <small>BCF</small></div>
     <div class="navlinks">
       <a href="#activites">Activités</a>
       <a href="#a-propos">À propos</a>
@@ -304,7 +304,7 @@
 
   <section class="hero">
     <div class="hero-text">
-      <div class="eyebrow">Capstone bj — Bénin</div>
+      <div class="eyebrow">Bagnan Cap et Fils — Bénin</div>
       <h1>Solidité.<br>Vision.<br><em>Performance.</em></h1>
       <p class="lede">Intermédiaire financier basé à Parakou, spécialisé dans le trading pour compte propre sur les marchés internationaux, l'échange de pair à pair d'actifs numériques et l'investissement immobilier.</p>
       <div class="hero-cta">
@@ -360,12 +360,12 @@
     <div class="about">
       <div class="about-copy">
         <p>« Une pierre de couronnement ne se contente pas de fermer un édifice — elle en absorbe toute la charge. »</p>
-        <p>C'est cette exigence structurelle que CAPSTONE applique à la finance : chaque position, chaque opération, chaque contrepartie est pensée pour tenir sous pression.</p>
+        <p>C'est cette exigence structurelle que BAGNAN CAP ET FILS applique à la finance : chaque position, chaque opération, chaque contrepartie est pensée pour tenir sous pression.</p>
         <p>Basée à Parakou, l'entreprise opère à l'intersection de la finance de marché, des actifs numériques et de l'immobilier, avec la même exigence de rigueur dans chacun de ces univers.</p>
       </div>
       <div class="taglist">
-        <div class="tagrow"><span>Nom commercial</span><span>CAPSTONE</span></div>
-        <div class="tagrow"><span>Enseigne</span><span>Capstone bj</span></div>
+        <div class="tagrow"><span>Nom commercial</span><span>BAGNAN CAP ET FILS</span></div>
+        <div class="tagrow"><span>Enseigne</span><span>Bagnan Cap et Fils</span></div>
         <div class="tagrow"><span>Activité principale</span><span>Intermédiation fin. non monétaire</span></div>
         <div class="tagrow"><span>Trading</span><span>Change · Indices · Dérivés</span></div>
         <div class="tagrow"><span>Actifs numériques</span><span>Échange P2P</span></div>
@@ -377,9 +377,9 @@
 
   <footer id="contact">
     <div class="fcol">
-      <strong>Capstone</strong>
-      <div>CAPSTONE — CSBJ</div>
-      <div>Capstone bj</div>
+      <strong>Bagnan Cap et Fils</strong>
+      <div>BAGNAN CAP ET FILS — BCF</div>
+      <div>Bagnan Cap et Fils</div>
       <div><a href="http://www.capstone.bj">www.capstone.bj</a></div>
     </div>
     <div class="fcol">
@@ -393,7 +393,7 @@
       <div><a href="tel:+22901950054 83">+229 01 95 00 54 83</a></div>
       <div><a href="mailto:oroumoussab@gmail.com">oroumoussab@gmail.com</a></div>
     </div>
-    <div class="copyright">© 2026 Capstone. Tous droits réservés.</div>
+    <div class="copyright">© 2026 Bagnan Cap et Fils. Tous droits réservés.</div>
   </footer>
 </div>
 
@@ -512,7 +512,7 @@
 <!-- ============ DASHBOARD ============ -->
 <div id="dashboard" class="hidden">
   <aside class="sidebar">
-    <div class="brand">CAPSTONE <small>CSBJ</small></div>
+    <div class="brand">BAGNAN CAP ET FILS <small>BCF</small></div>
     <nav class="sidenav">
       <button class="nav-btn active" data-tab="overview" onclick="showTab('overview')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
@@ -1813,6 +1813,27 @@
       alert("La suppression a échoué :\n" + err.message);
     });
   }
+
+  // ---------- Validation au clavier (Entree) dans les fenetres modales ----------
+  var MODAL_SUBMIT_HANDLERS = {
+    loginModal: attemptLogin,
+    tradeModal: saveTrade,
+    objModal: saveObjEntry,
+    paramsModal: saveParams,
+    bienModal: saveBien,
+    loyerModal: saveLoyer,
+    p2pModal: saveP2P
+  };
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter') return;
+    if(e.target && e.target.tagName === 'TEXTAREA') return;
+    var openModal = document.querySelector('.modal-overlay:not(.hidden)');
+    if(!openModal) return;
+    var handler = MODAL_SUBMIT_HANDLERS[openModal.id];
+    if(!handler) return;
+    e.preventDefault();
+    handler();
+  });
 </script>
 </body>
 </html>

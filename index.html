@@ -177,6 +177,25 @@
   .hint{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin-top:18px; text-align:center; }
   .modal-error{ font-size:13px; color:var(--brick); margin-top:-8px; margin-bottom:14px; display:none; }
 
+  /* ================= LOGIN SCREEN (accueil = connexion) ================= */
+  #loginScreen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, var(--line) 39px, var(--line) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, var(--line) 39px, var(--line) 40px),
+      var(--void);
+  }
+  .login-card{
+    background:var(--surface); border:1px solid var(--line-strong); width:100%; max-width:400px;
+    padding:48px 40px; box-shadow:0 30px 80px -30px rgba(0,0,0,0.6);
+  }
+  .login-brand{ display:flex; align-items:center; gap:14px; margin-bottom:10px; }
+  .login-brand .brandmark{ width:44px; height:30px; flex-shrink:0; }
+  .login-brand .brandmark svg{ width:100%; height:100%; }
+  .login-brand .word{ font-family:var(--disp); font-weight:600; font-size:21px; letter-spacing:0.3px; }
+  .login-sub{ font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--brass); text-transform:uppercase; margin-bottom:32px; }
+  .login-card .btn-solid{ width:100%; padding:13px; margin-top:6px; }
+
   /* ================= DASHBOARD ================= */
   #dashboard{ display:flex; min-height:100vh; }
   .sidebar{
@@ -263,8 +282,6 @@
   .warn{ font-size:12.5px; color:var(--brick); margin-top:14px; }
 
   .chart-box{ position:relative; height:260px; margin-top:10px;}
-  .chart-sub{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin-top:2px;}
-  @media (max-width:640px){ .chart-box{ height:220px; } }
 
   .progress-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-bottom:28px;}
   .progress-card{ background:var(--void); padding:22px; }
@@ -293,135 +310,29 @@
 <body>
 
 <!-- ============ LANDING ============ -->
-<div id="landing">
-  <nav>
-    <div class="brand">BAGNAN CAP ET FILS <small>BCF</small></div>
-    <div class="navlinks">
-      <a href="#activites">Activités</a>
-      <a href="#a-propos">À propos</a>
-      <a href="#contact">Contact</a>
-      <button class="btn" onclick="openLogin()">Se connecter</button>
-    </div>
-  </nav>
-
-  <section class="hero">
-    <div class="hero-text">
-      <div class="eyebrow">Bagnan Cap et Fils — Bénin</div>
-      <h1>Solidité.<br>Vision.<br><em>Performance.</em></h1>
-      <p class="lede">Intermédiaire financier basé à Parakou, spécialisé dans le trading pour compte propre sur les marchés internationaux, l'échange de pair à pair d'actifs numériques et l'investissement immobilier.</p>
-      <div class="hero-cta">
-        <a href="#activites" class="btn btn-ghost">Découvrir nos activités</a>
-        <button class="btn btn-solid" onclick="openLogin()">Espace collaborateurs</button>
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="brandmark">
+        <svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="18" width="13" height="18" fill="#1F2430" stroke="#b08d57" stroke-width="1"/>
+          <rect x="43" y="18" width="13" height="18" fill="#1F2430" stroke="#b08d57" stroke-width="1"/>
+          <path d="M21 18 L25 3 L35 3 L39 18 Z" fill="#b08d57"/>
+        </svg>
       </div>
+      <div class="word">BAGNAN CAP ET FILS</div>
     </div>
-    <div class="arch-wrap">
-      <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
-        <rect class="pier" x="40" y="210" width="96" height="172"/>
-        <rect class="pier" x="464" y="210" width="96" height="172"/>
-        <path class="voussoir" style="--i:0" d="M 551.14 232.71 A 260 260 0 0 0 521.29 163.51 L 444.69 210.75 A 170 170 0 0 1 464.21 256.00 Z" />
-        <path class="voussoir" style="--i:1" d="M 521.29 163.51 A 260 260 0 0 0 472.85 105.77 L 413.02 173.01 A 170 170 0 0 1 444.69 210.75 Z" />
-        <path class="voussoir" style="--i:2" d="M 472.85 105.77 A 260 260 0 0 0 409.88 64.36 L 371.85 145.93 A 170 170 0 0 1 413.02 173.01 Z" />
-        <path class="voussoir" style="--i:3" d="M 409.88 64.36 A 260 260 0 0 0 337.68 42.75 L 324.64 131.79 A 170 170 0 0 1 371.85 145.93 Z" />
-        <path class="voussoir keystone" d="M 337.68 42.75 A 260 260 0 0 0 262.32 42.75 L 275.36 131.79 A 170 170 0 0 1 324.64 131.79 Z" />
-        <path class="voussoir" style="--i:5" d="M 262.32 42.75 A 260 260 0 0 0 190.12 64.36 L 228.15 145.93 A 170 170 0 0 1 275.36 131.79 Z" />
-        <path class="voussoir" style="--i:6" d="M 190.12 64.36 A 260 260 0 0 0 127.15 105.77 L 186.98 173.01 A 170 170 0 0 1 228.15 145.93 Z" />
-        <path class="voussoir" style="--i:7" d="M 127.15 105.77 A 260 260 0 0 0 78.71 163.51 L 155.31 210.75 A 170 170 0 0 1 186.98 173.01 Z" />
-        <path class="voussoir" style="--i:8" d="M 78.71 163.51 A 260 260 0 0 0 48.86 232.71 L 135.79 256.00 A 170 170 0 0 1 155.31 210.75 Z" />
-      </svg>
+    <div class="login-sub">BCF — Espace collaborateurs</div>
+    <div class="modal-error" id="loginError">Email ou mot de passe incorrect.</div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="loginUser" placeholder="prenom.nom@capstone.bj" autocomplete="username">
     </div>
-  </section>
-
-  <section id="activites">
-    <div class="section-head">
-      <div class="eyebrow">Champ d'activité</div>
-      <h2>Trois piliers, une même exigence de rigueur.</h2>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
     </div>
-    <div class="activities">
-      <div class="activity bracket">
-        <div class="fig">FIG. 01</div>
-        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 17l5-5 4 4 8-8M20 8V4h-4"/></svg></div>
-        <h3>Trading pour compte propre</h3>
-        <p>Opérations de trading pour compte propre exclusivement, portant sur les marchés financiers internationaux (marché des changes, indices, instruments dérivés), réalisées avec les fonds propres de l'établissement, sans collecte de fonds auprès du public ni gestion pour le compte de tiers.</p>
-      </div>
-      <div class="activity bracket">
-        <div class="fig">FIG. 02</div>
-        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg></div>
-        <h3>Échange P2P d'actifs numériques</h3>
-        <p>Échange de pair à pair (P2P) d'actifs numériques, pour compte propre exclusivement, sans intermédiation ni détention de fonds de tiers.</p>
-      </div>
-      <div class="activity bracket">
-        <div class="fig">FIG. 03</div>
-        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M9 13h.01M15 13h.01M9 9h.01M15 9h.01"/></svg></div>
-        <h3>Investissement immobilier</h3>
-        <p>Investissement immobilier pour compte propre : acquisition, gestion locative et valorisation de biens immobiliers (terrains, immeubles résidentiels et commerciaux), au moyen des ressources propres de l'établissement.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="a-propos">
-    <div class="about">
-      <div class="about-copy">
-        <p>« Une pierre de couronnement ne se contente pas de fermer un édifice — elle en absorbe toute la charge. »</p>
-        <p>C'est cette exigence structurelle que BAGNAN CAP ET FILS applique à la finance : chaque position, chaque opération, chaque contrepartie est pensée pour tenir sous pression.</p>
-        <p>Basée à Parakou, l'entreprise opère à l'intersection de la finance de marché, des actifs numériques et de l'immobilier, avec la même exigence de rigueur dans chacun de ces univers.</p>
-      </div>
-      <div class="taglist">
-        <div class="tagrow"><span>Nom commercial</span><span>BAGNAN CAP ET FILS</span></div>
-        <div class="tagrow"><span>Enseigne</span><span>Bagnan Cap et Fils</span></div>
-        <div class="tagrow"><span>Activité principale</span><span>Intermédiation fin. non monétaire</span></div>
-        <div class="tagrow"><span>Trading</span><span>Change · Indices · Dérivés</span></div>
-        <div class="tagrow"><span>Actifs numériques</span><span>Échange P2P</span></div>
-        <div class="tagrow"><span>Immobilier</span><span>Terrains · Résidentiel · Commercial</span></div>
-        <div class="tagrow"><span>Implantation</span><span>Parakou, Bénin</span></div>
-      </div>
-    </div>
-  </section>
-
-  <footer id="contact">
-    <div class="fcol">
-      <strong>Bagnan Cap et Fils</strong>
-      <div>BAGNAN CAP ET FILS — BCF</div>
-      <div>Bagnan Cap et Fils</div>
-      <div><a href="http://www.capstone.bj">www.capstone.bj</a></div>
-    </div>
-    <div class="fcol">
-      <strong>Adresse de l'établissement</strong>
-      <div>3ème Arrondissement, Zongo</div>
-      <div>Îlot 563, Parcelle U</div>
-      <div>Parakou, Borgou — Bénin</div>
-    </div>
-    <div class="fcol">
-      <strong>Contact</strong>
-      <div><a href="tel:+22901950054 83">+229 01 95 00 54 83</a></div>
-      <div><a href="mailto:oroumoussab@gmail.com">oroumoussab@gmail.com</a></div>
-    </div>
-    <div class="copyright">© 2026 Bagnan Cap et Fils. Tous droits réservés.</div>
-  </footer>
-</div>
-
-<!-- ============ LOGIN MODAL ============ -->
-<div id="loginModal" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-head">
-      <button class="close" onclick="closeLogin()">&times;</button>
-      <div class="eyebrow">Accès réservé</div>
-      <h3>Espace collaborateurs</h3>
-      <p class="sub">Connectez-vous pour accéder à votre journal, vos outils et l'historique P2P.</p>
-    </div>
-    <div class="modal-body">
-      <div class="modal-error" id="loginError">Email ou mot de passe incorrect.</div>
-      <div class="field">
-        <label>Email</label>
-        <input type="email" id="loginUser" placeholder="prenom.nom@capstone.bj" autocomplete="username">
-      </div>
-      <div class="field">
-        <label>Mot de passe</label>
-        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-solid" id="loginBtn" onclick="attemptLogin()">Connexion</button>
-      </div>
-    </div>
+    <button class="btn btn-solid" id="loginBtn" onclick="attemptLogin()">Connexion</button>
   </div>
 </div>
 
@@ -456,6 +367,9 @@
         <div class="field"><label>P&amp;L ($)</label><input type="number" step="any" id="tPnl"></div>
         <div class="field"><label>Stratégie</label>
           <select id="tStrategy"></select>
+        </div>
+        <div class="field"><label>H4 broke zone</label>
+          <select id="tH4Broke"><option value="">—</option><option value="Yes">Yes</option><option value="No">No</option></select>
         </div>
       </div>
       <div class="field"><label>Notes</label><input type="text" id="tNotes" placeholder="Contexte, setup, leçon retenue…"></div>
@@ -532,10 +446,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 11h2M12 11h2M16 11h2M8 15h2M12 15h2M16 15h2"/></svg>
         Lot Size Calculator
       </button>
-      <button class="nav-btn" data-tab="p2p" onclick="showTab('p2p')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg>
-        Historique P2P
-      </button>
       <button class="nav-btn" data-tab="immobilier" onclick="showTab('immobilier')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M9 13h.01M15 13h.01M9 9h.01M15 9h.01"/></svg>
         Immobilier
@@ -575,11 +485,6 @@
           <h4>Lot Size Calculator</h4>
           <p>Calculez la taille de position selon votre risque.</p>
         </div>
-        <div class="tile" onclick="showTab('p2p')">
-          <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M7 10l-4 4 4 4M3 14h13M17 6l4 4-4 4M21 10H8"/></svg></div>
-          <h4>Historique P2P</h4>
-          <p>Suivez vos transactions d'actifs numériques.</p>
-        </div>
         <div class="tile" onclick="showTab('immobilier')">
           <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M9 13h.01M15 13h.01M9 9h.01M15 9h.01"/></svg></div>
           <h4>Immobilier</h4>
@@ -597,14 +502,13 @@
       <div class="stat-row" id="journalStats"></div>
       <div class="panel">
         <h3>Courbe d'equity (P&amp;L cumulé)</h3>
-        <div class="chart-sub" id="equityChartSub"></div>
         <div class="chart-box"><canvas id="equityChart"></canvas></div>
       </div>
       <div class="panel">
         <div class="panel-head"><h3>Trades</h3></div>
         <div class="table-wrap">
         <table>
-          <thead><tr><th>#</th><th>Date</th><th>Instrument</th><th>Sens</th><th>Broker</th><th>Stratégie</th><th>Résultat</th><th>R</th><th>P&amp;L</th><th>Actions</th></tr></thead>
+          <thead><tr><th>#</th><th>Date</th><th>Instrument</th><th>Sens</th><th>Broker</th><th>Stratégie</th><th>H4 BZ</th><th>Résultat</th><th>R</th><th>P&amp;L</th><th>Actions</th></tr></thead>
           <tbody id="journalBody"></tbody>
         </table>
         </div>
@@ -624,7 +528,6 @@
       <div class="progress-grid" id="progressGrid"></div>
       <div class="panel">
         <h3>Progression du solde par compte</h3>
-        <div class="chart-sub" id="objChartSub"></div>
         <div class="chart-box"><canvas id="objChart"></canvas></div>
       </div>
       <div class="panel">
@@ -680,23 +583,6 @@
         </div>
         <div class="warn hidden" id="calcWarning">Le lot brut est trop petit pour un pas de 0.01 : utilise la section « arrondi supérieur » ci-dessus (le risque réel dépassera légèrement ta cible).</div>
         <p class="note">Valeurs de pip réelles issues de l'onglet Hypothèses (par broker). Lot standard = 100 000 unités.</p>
-      </div>
-    </div>
-
-    <!-- P2P -->
-    <div class="tab-panel hidden" id="tab-p2p">
-      <div class="dash-head">
-        <div><div class="eyebrow">Outil · Actifs numériques</div><h2>Historique des transactions P2P</h2></div>
-        <button class="btn btn-solid btn-sm" onclick="openP2PModal()">+ Ajouter une transaction</button>
-      </div>
-      <div class="stat-row" id="p2pStats"></div>
-      <div class="panel">
-        <div class="table-wrap">
-        <table>
-          <thead><tr><th>Date</th><th>Type</th><th>Actif</th><th>Quantité</th><th>Prix unitaire</th><th>Montant</th><th>Profit</th><th>Contrepartie</th><th>Statut</th><th>Actions</th></tr></thead>
-          <tbody id="p2pBody"></tbody>
-        </table>
-        </div>
       </div>
     </div>
 
@@ -789,38 +675,6 @@
   </div>
 </div>
 
-<!-- ============ P2P TRANSACTION MODAL ============ -->
-<div id="p2pModal" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-head">
-      <button class="close" onclick="closeP2PModal()">&times;</button>
-      <div class="eyebrow">Historique P2P</div>
-      <h3 id="p2pModalTitle">Ajouter une transaction</h3>
-    </div>
-    <div class="modal-body">
-      <div class="field"><label>Date</label><input type="date" id="pxDate"></div>
-      <div class="field"><label>Type</label>
-        <select id="pxType"><option value="Achat">Achat</option><option value="Vente">Vente</option></select>
-      </div>
-      <div class="field"><label>Actif</label>
-        <select id="pxAsset"><option>USDT</option><option>BTC</option><option>ETH</option></select>
-      </div>
-      <div class="field"><label>Quantité</label><input type="number" step="any" id="pxQty"></div>
-      <div class="field"><label>Prix unitaire ($)</label><input type="number" step="any" id="pxPrice"></div>
-      <div class="field"><label>Montant total ($)</label><input type="number" step="any" id="pxAmount" placeholder="Auto si laissé vide"></div>
-      <div class="field"><label>Profit réalisé ($)</label><input type="number" step="any" id="pxProfit" placeholder="Laisser vide si non applicable"></div>
-      <div class="field"><label>Contrepartie</label><input type="text" id="pxCounter" placeholder="@pseudo"></div>
-      <div class="field"><label>Statut</label>
-        <select id="pxStatus"><option value="Terminée">Terminée</option><option value="En cours">En cours</option></select>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-ghost" onclick="closeP2PModal()">Annuler</button>
-        <button class="btn btn-solid" onclick="saveP2P()">Enregistrer</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
   /* =========================================================
      Reference: modele aligne sur l'app desktop Trading Journal
@@ -882,32 +736,9 @@
     el.style.color = kind==='error' ? 'var(--brick)' : kind==='ok' ? 'var(--sage)' : 'var(--ink-faint)';
   }
 
-  // ---------- Thème des graphiques (lit les variables CSS du site) ----------
-  var CHART_THEME = (function(){
-    var cs = getComputedStyle(document.documentElement);
-    function v(name, fallback){ var val = cs.getPropertyValue(name); return val ? val.trim() : fallback; }
-    return {
-      brass: v('--brass', '#b08d57'),
-      brassBright: v('--brass-bright', '#d3b485'),
-      sage: v('--sage', '#7f9c86'),
-      brick: v('--brick', '#b06a5f'),
-      inkMuted: v('--ink-muted', '#9aa3b2'),
-      inkFaint: v('--ink-faint', '#5d6474'),
-      gridLine: 'rgba(176,141,87,0.08)',
-      mono: 'IBM Plex Mono',
-      // Palette de secours pour les datasets multi-comptes (au-delà de 2 brokers)
-      palette: ['#d3b485', '#7f9c86', '#8aa5c4', '#c48a8a', '#a892c9', '#7fb0a3']
-    };
-  })();
-
-  function fmtUSD(n){
-    n = Number(n)||0;
-    return (n<0?'-':'') + '$' + Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:0, maximumFractionDigits:0});
-  }
-
   var BROKERS = ["FTMO", "Funding Pips"];
   var INSTRUMENTS_JOURNAL = ["US30","EURUSD","GBPUSD","USDJPY","USDCHF","AUDUSD","USDCAD","NZDUSD"];
-  var STRATEGIES = ["Supply","Demand","Equal low","Equal high","Imbalance"];
+  var STRATEGIES = ["Imbalance Candle","Supply Candle","Demand Candle","High Candle","Low Candle"];
 
   // Valeurs de pip reelles, issues de l'onglet "Hypotheses" (specifiques a chaque broker)
   var PIP_VALUES = {
@@ -942,7 +773,6 @@
   var trades = [];
   var objectifParams = { date_debut:'2026-08-07', capital_initial:100000, objectif_par_compte:50000 };
   var objectifEntries = [];
-  var p2pHistory = [];
   var biens = [];
   var loyers = [];
 
@@ -950,9 +780,6 @@
   var currentSession = null; // { access_token, user } une fois connecte
 
   // ---------- Login (Supabase Auth reel) ----------
-  function openLogin(){ document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginError').style.display='none'; }
-  function closeLogin(){ document.getElementById('loginModal').classList.add('hidden'); }
-
   function attemptLogin(){
     var email = document.getElementById('loginUser').value.trim();
     var pass = document.getElementById('loginPass').value.trim();
@@ -977,8 +804,7 @@
         return;
       }
       currentSession = { access_token: res.body.access_token, refresh_token: res.body.refresh_token, user: res.body.user };
-      document.getElementById('landing').classList.add('hidden');
-      document.getElementById('loginModal').classList.add('hidden');
+      document.getElementById('loginScreen').classList.add('hidden');
       document.getElementById('dashboard').classList.remove('hidden');
       var label = (currentSession.user && currentSession.user.email) || email;
       document.getElementById('userchip').textContent = 'CONNECTÉ · ' + label;
@@ -996,7 +822,7 @@
   function logout(){
     var token = currentSession && currentSession.access_token;
     document.getElementById('dashboard').classList.add('hidden');
-    document.getElementById('landing').classList.remove('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
     currentSession = null;
     if(token){
       fetch(SUPABASE_URL + '/auth/v1/logout', {
@@ -1032,7 +858,6 @@
       sbSelect('trades').then(function(rows){ trades = rows; }),
       sbSelect('objectif_entrees').then(function(rows){ objectifEntries = rows; }),
       sbSelect('objectif_parametres', 'id=eq.1').then(function(rows){ if(rows && rows[0]) objectifParams = rows[0]; }),
-      sbSelect('p2p_transactions').then(function(rows){ p2pHistory = rows; }),
       sbSelect('immo_biens').then(function(rows){ biens = rows; }),
       sbSelect('immo_loyers').then(function(rows){ loyers = rows; })
     ]).then(function(){
@@ -1049,7 +874,6 @@
     safe(renderOverviewStats, 'overview');
     safe(renderJournal, 'journal');
     safe(renderObjectif, 'objectif');
-    safe(renderP2P, 'p2p');
     safe(renderImmobilier, 'immobilier');
     safe(calculateLotSize, 'calculator');
   }
@@ -1126,10 +950,13 @@
       var outcomeClass = t.outcome==='Win' ? 'ok' : t.outcome==='Loss' ? 'loss' : t.outcome==='Breakeven' ? 'be' : 'be';
       var dirClass = t.direction === 'Buy' ? 'buy' : 'sell';
       var pnlColor = (t.pnl||0) >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
+      var h4Text = t.h4_broke_zone === true ? 'Yes' : t.h4_broke_zone === false ? 'No' : '—';
+      var h4Class = t.h4_broke_zone === true ? 'ok' : t.h4_broke_zone === false ? 'loss' : 'be';
       tr.innerHTML =
         '<td>'+(t.trade_num||'—')+'</td><td>'+t.date+'</td><td>'+t.instrument+'</td>'+
         '<td><span class="pill '+dirClass+'">'+t.direction+'</span></td>'+
         '<td>'+t.broker+'</td><td>'+(t.strategy||'—')+'</td>'+
+        '<td><span class="pill '+h4Class+'">'+h4Text+'</span></td>'+
         '<td>'+(t.outcome ? '<span class="pill '+outcomeClass+'">'+t.outcome+'</span>' : '—')+'</td>'+
         '<td>'+(t.r_realized!=null ? Number(t.r_realized).toFixed(2) : '—')+'</td>'+
         '<td '+pnlColor+'>'+((t.pnl||0)>=0?'+':'')+Number(t.pnl||0).toFixed(2)+' $</td>'+
@@ -1142,78 +969,20 @@
   }
 
   function renderEquityChart(){
-    var th = CHART_THEME;
     var ctx = document.getElementById('equityChart').getContext('2d');
     var sorted = trades.slice().sort(function(a,b){ return (a.trade_num||0) - (b.trade_num||0); });
     var running = 0;
     var labels = [], data = [];
     sorted.forEach(function(t){ running += t.pnl||0; labels.push('#'+(t.trade_num||'?')); data.push(running); });
-
-    var sub = document.getElementById('equityChartSub');
-    if(sub){
-      var first = sorted[0], lastT = sorted[sorted.length-1];
-      sub.textContent = sorted.length
-        ? sorted.length+' trade'+(sorted.length>1?'s':'')+(first&&lastT ? ' · du '+first.date+' au '+lastT.date : '')
-        : 'Aucun trade enregistré';
-    }
-
-    // Couleur de segment conditionnelle : sage si la courbe monte/positive, brick si négative
-    function segColor(chartCtx, above, below){
-      var y0 = chartCtx.p0.parsed.y, y1 = chartCtx.p1.parsed.y;
-      return (y0<0 || y1<0) ? below : above;
-    }
-
     if(equityChart) equityChart.destroy();
     equityChart = new Chart(ctx, {
       type:'line',
-      data:{
-        labels:labels,
-        datasets:[
-          {
-            label:'P&L cumulé ($)',
-            data:data,
-            borderColor:th.brassBright,
-            backgroundColor:'rgba(176,141,87,0.12)',
-            fill:true,
-            tension:0.25,
-            pointBackgroundColor:th.brass,
-            pointRadius:3,
-            pointHoverRadius:6,
-            pointHitRadius:8,
-            segment:{
-              borderColor: function(c){ return segColor(c, th.sage, th.brick); },
-              backgroundColor: function(c){
-                var col = segColor(c, th.sage, th.brick);
-                return col===th.sage ? 'rgba(127,156,134,0.14)' : 'rgba(176,106,95,0.14)';
-              }
-            }
-          },
-          {
-            // Ligne zéro de référence
-            label:'Zéro',
-            data:labels.map(function(){ return 0; }),
-            borderColor:th.inkFaint,
-            borderDash:[4,4],
-            borderWidth:1,
-            pointRadius:0,
-            fill:false,
-            tension:0
-          }
-        ]
-      },
+      data:{ labels:labels, datasets:[{ label:'P&L cumulé ($)', data:data, borderColor:'#d3b485', backgroundColor:'rgba(176,141,87,0.12)', fill:true, tension:0.25, pointBackgroundColor:'#b08d57' }] },
       options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{
-          legend:{ display:false },
-          tooltip:{
-            filter:function(item){ return item.dataset.label !== 'Zéro'; },
-            callbacks:{
-              label:function(c){ return ' P&L cumulé : '+fmtUSD(c.parsed.y); }
-            }
-          }
-        },
+        plugins:{ legend:{ display:false } },
         scales:{
-          x:{ ticks:{ color:th.inkMuted, font:{family:th.mono, size:10}, maxTicksLimit:10, autoSkip:true }, grid:{ color:th.gridLine } },
-          y:{ ticks:{ color:th.inkMuted, font:{family:th.mono, size:10}, callback:function(v){ return fmtUSD(v); } }, grid:{ color:th.gridLine } }
+          x:{ ticks:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } },
+          y:{ ticks:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } }
         }
       }
     });
@@ -1239,11 +1008,13 @@
       document.getElementById('tR').value = t.r_realized != null ? t.r_realized : '';
       document.getElementById('tPnl').value = t.pnl != null ? t.pnl : '';
       document.getElementById('tStrategy').value = t.strategy || '';
+      document.getElementById('tH4Broke').value = t.h4_broke_zone === true ? 'Yes' : t.h4_broke_zone === false ? 'No' : '';
       document.getElementById('tNotes').value = t.notes === '—' ? '' : (t.notes || '');
     } else {
       document.getElementById('tradeModalTitle').textContent = 'Ajouter un trade';
       document.getElementById('tDate').value = new Date().toISOString().slice(0,10);
       ['tEntry','tExit','tSL','tTP','tR','tPnl','tNotes','tOutcome'].forEach(function(id){ document.getElementById(id).value=''; });
+      document.getElementById('tH4Broke').value = '';
     }
     document.getElementById('tradeModal').classList.remove('hidden');
   }
@@ -1277,6 +1048,7 @@
       r_realized: parseFloat(document.getElementById('tR').value) || 0,
       pnl: parseFloat(document.getElementById('tPnl').value) || 0,
       strategy: document.getElementById('tStrategy').value,
+      h4_broke_zone: document.getElementById('tH4Broke').value === '' ? null : document.getElementById('tH4Broke').value === 'Yes',
       notes: document.getElementById('tNotes').value.trim() || '—',
       deleted: false
     };
@@ -1371,19 +1143,11 @@
   }
 
   function renderObjChart(){
-    var th = CHART_THEME;
     var ctx = document.getElementById('objChart').getContext('2d');
     var comptes = BROKERS.slice();
-
-    var sub = document.getElementById('objChartSub');
-    if(sub){
-      sub.textContent = objectifEntries.length
-        ? objectifEntries.length+' entrée'+(objectifEntries.length>1?'s':'')+' · '+comptes.length+' compte'+(comptes.length>1?'s':'')
-        : 'Aucune entrée enregistrée';
-    }
-
+    var colors = {'FTMO':'#d3b485','Funding Pips':'#7f9c86'};
     var allDates = Array.from(new Set(objectifEntries.map(function(e){return e.date;}))).sort();
-    var datasets = comptes.map(function(compte, i){
+    var datasets = comptes.map(function(compte){
       var byDate = {};
       objectifEntries.filter(function(e){return e.compte===compte;})
         .sort(function(a,b){return (a.date>b.date?1:-1);})
@@ -1395,22 +1159,17 @@
       var data = [];
       var last = objectifParams.capital_initial||0;
       allDates.forEach(function(d){ if(byDate[d]!==undefined) last=byDate[d]; data.push(last); });
-      // Palette de secours : cycle sur th.palette dès qu'on dépasse les couleurs dédiées
-      var color = th.palette[i % th.palette.length];
-      return { label:compte, data:data, borderColor:color, backgroundColor:'transparent', tension:0.25, pointRadius:2, pointHoverRadius:5 };
+      return { label:compte, data:data, borderColor:colors[compte]||'#b08d57', backgroundColor:'transparent', tension:0.25 };
     });
     if(objChart) objChart.destroy();
     objChart = new Chart(ctx, {
       type:'line',
       data:{ labels:allDates, datasets:datasets },
       options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{
-          legend:{ labels:{ color:th.inkMuted, font:{family:th.mono, size:10} } },
-          tooltip:{ callbacks:{ label:function(c){ return ' '+c.dataset.label+' : '+fmtUSD(c.parsed.y); } } }
-        },
+        plugins:{ legend:{ labels:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} } } },
         scales:{
-          x:{ ticks:{ color:th.inkMuted, font:{family:th.mono, size:10}, maxTicksLimit:10, autoSkip:true }, grid:{ color:th.gridLine } },
-          y:{ ticks:{ color:th.inkMuted, font:{family:th.mono, size:10}, callback:function(v){ return fmtUSD(v); } }, grid:{ color:th.gridLine } }
+          x:{ ticks:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } },
+          y:{ ticks:{ color:'#9aa3b2', font:{family:"IBM Plex Mono", size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } }
         }
       }
     });
@@ -1545,139 +1304,6 @@
       document.getElementById('calcWarning').classList.remove('hidden');
       document.getElementById('calcWarning').textContent = "Le lot brut est trop petit pour un pas de 0.01 : utilise la section « arrondi supérieur » ci-dessus (le risque réel dépassera légèrement ta cible).";
     }
-  }
-
-  // ---------- P2P history ----------
-  function p2pStats(){
-    var withProfit = p2pHistory.filter(function(t){ return t.profit !== null && t.profit !== undefined; });
-    var totalProfit = withProfit.reduce(function(a,t){ return a + (t.profit||0); }, 0);
-    var totalVolume = p2pHistory.reduce(function(a,t){ return a + (t.amount||0); }, 0);
-    return { count: p2pHistory.length, totalProfit: totalProfit, hasProfit: withProfit.length>0, totalVolume: totalVolume };
-  }
-
-  function renderP2P(){
-    var s = p2pStats();
-    document.getElementById('p2pStats').innerHTML =
-      stat('Transactions', s.count) +
-      stat('Volume total', Number(s.totalVolume).toLocaleString(undefined,{maximumFractionDigits:2})+' $') +
-      stat('Profit réalisé', (s.totalProfit>=0?'+':'')+s.totalProfit.toFixed(2)+' $', s.totalProfit>=0?'pos':'neg');
-
-    var sorted = p2pHistory.slice().sort(function(a,b){ return (a.date||'') < (b.date||'') ? 1 : -1; });
-    var body = document.getElementById('p2pBody');
-    body.innerHTML = '';
-    sorted.forEach(function(t){
-      var typeClass = t.type === 'Achat' ? 'buy' : 'sell';
-      var statusClass = t.status === 'Terminée' ? 'ok' : 'pending';
-      var hasProfit = t.profit !== null && t.profit !== undefined;
-      var profitColor = hasProfit ? (t.profit>=0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"') : '';
-      var profitText = hasProfit ? ((t.profit>=0?'+':'')+Number(t.profit).toFixed(2)+' $') : '—';
-      var tr = document.createElement('tr');
-      tr.innerHTML = '<td>'+t.date+'</td>' +
-        '<td><span class="pill '+typeClass+'">'+t.type+'</span></td>' +
-        '<td>'+t.asset+'</td>'+
-        '<td>'+Number(t.qty).toLocaleString(undefined,{maximumFractionDigits:8})+'</td>'+
-        '<td>'+Number(t.price).toLocaleString(undefined,{maximumFractionDigits:2})+' $</td>'+
-        '<td>'+Number(t.amount).toLocaleString(undefined,{maximumFractionDigits:2})+' $</td>'+
-        '<td '+profitColor+'>'+profitText+'</td>'+
-        '<td>'+t.counter+'</td>' +
-        '<td><span class="pill '+statusClass+' status-toggle" onclick="toggleP2PStatus(\''+t.id+'\')" title="Cliquer pour changer le statut">'+t.status+'</span></td>'+
-        '<td><div class="row-actions"><button class="row-edit" onclick="editP2P(\''+t.id+'\')">Modifier</button><button class="row-del" onclick="deleteP2P(\''+t.id+'\')">Suppr.</button></div></td>';
-      body.appendChild(tr);
-    });
-  }
-
-  function toggleP2PStatus(id){
-    var t = p2pHistory.find(function(x){ return x.id === id; });
-    if(!t) return;
-    var newStatus = t.status === 'Terminée' ? 'En cours' : 'Terminée';
-    setSyncStatus('Mise à jour…', null);
-    sbUpsert('p2p_transactions', Object.assign({}, t, {status:newStatus})).then(function(){
-      t.status = newStatus;
-      renderP2P();
-      setSyncStatus('✓ Synchronisé', 'ok');
-    }).catch(function(err){
-      console.error(err);
-      setSyncStatus('⚠ Échec de la mise à jour', 'error');
-      alert("Le statut n'a pas pu être mis à jour :\n" + err.message);
-    });
-  }
-
-  var editingP2PId = null;
-
-  function openP2PModal(id){
-    editingP2PId = id || null;
-    if(editingP2PId){
-      var t = p2pHistory.find(function(x){ return x.id === editingP2PId; });
-      if(!t) return;
-      document.getElementById('p2pModalTitle').textContent = 'Modifier la transaction';
-      document.getElementById('pxDate').value = t.date;
-      document.getElementById('pxType').value = t.type;
-      document.getElementById('pxAsset').value = t.asset;
-      document.getElementById('pxQty').value = t.qty;
-      document.getElementById('pxPrice').value = t.price;
-      document.getElementById('pxAmount').value = t.amount;
-      document.getElementById('pxProfit').value = (t.profit !== null && t.profit !== undefined) ? t.profit : '';
-      document.getElementById('pxCounter').value = t.counter;
-      document.getElementById('pxStatus').value = t.status;
-    } else {
-      document.getElementById('p2pModalTitle').textContent = 'Ajouter une transaction';
-      document.getElementById('pxDate').value = new Date().toISOString().slice(0,10);
-      ['pxQty','pxPrice','pxAmount','pxProfit','pxCounter'].forEach(function(id){ document.getElementById(id).value=''; });
-      document.getElementById('pxStatus').value = 'Terminée';
-    }
-    document.getElementById('p2pModal').classList.remove('hidden');
-  }
-  function editP2P(id){ openP2PModal(id); }
-  function closeP2PModal(){ document.getElementById('p2pModal').classList.add('hidden'); editingP2PId = null; }
-
-  function saveP2P(){
-    var qty = parseFloat(document.getElementById('pxQty').value) || 0;
-    var price = parseFloat(document.getElementById('pxPrice').value) || 0;
-    var amountInput = document.getElementById('pxAmount').value;
-    var amount = amountInput !== '' ? (parseFloat(amountInput) || 0) : (qty * price);
-    var profitInput = document.getElementById('pxProfit').value;
-    var profit = profitInput !== '' ? (parseFloat(profitInput) || 0) : null;
-    var id = editingP2PId || genId();
-    var data = {
-      id: id,
-      date: document.getElementById('pxDate').value || new Date().toISOString().slice(0,10),
-      type: document.getElementById('pxType').value,
-      asset: document.getElementById('pxAsset').value,
-      qty: qty,
-      price: price,
-      amount: amount,
-      profit: profit,
-      counter: document.getElementById('pxCounter').value.trim() || '—',
-      status: document.getElementById('pxStatus').value,
-      deleted: false
-    };
-    closeP2PModal();
-    setSyncStatus('Enregistrement…', null);
-    sbUpsert('p2p_transactions', data).then(function(){
-      return sbSelect('p2p_transactions');
-    }).then(function(rows){
-      p2pHistory = rows;
-      renderP2P();
-      setSyncStatus('✓ Synchronisé', 'ok');
-    }).catch(function(err){
-      console.error(err);
-      setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
-      alert("La transaction n'a pas pu être enregistrée sur Supabase :\n" + err.message);
-    });
-  }
-
-  function deleteP2P(id){
-    if(!confirm('Supprimer cette transaction ?')) return;
-    setSyncStatus('Suppression…', null);
-    sbSoftDelete('p2p_transactions', id).then(function(){
-      p2pHistory = p2pHistory.filter(function(t){ return t.id !== id; });
-      renderP2P();
-      setSyncStatus('✓ Synchronisé', 'ok');
-    }).catch(function(err){
-      console.error(err);
-      setSyncStatus('⚠ Échec de la suppression', 'error');
-      alert("La suppression a échoué :\n" + err.message);
-    });
   }
 
   // ---------- Immobilier ----------
@@ -1919,8 +1545,7 @@
     objModal: saveObjEntry,
     paramsModal: saveParams,
     bienModal: saveBien,
-    loyerModal: saveLoyer,
-    p2pModal: saveP2P
+    loyerModal: saveLoyer
   };
   document.addEventListener('keydown', function(e){
     if(e.key !== 'Enter') return;

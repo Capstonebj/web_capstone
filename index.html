@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BAGNAN CAP ET FILS — Solidité. Vision. Performance.</title>
+<title>BAGNAN PROP — Solidité. Vision. Performance.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
@@ -195,6 +195,8 @@
   .login-brand .word{ font-family:var(--disp); font-weight:600; font-size:21px; letter-spacing:0.3px; }
   .login-sub{ font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--brass); text-transform:uppercase; margin-bottom:32px; }
   .login-card .btn-solid{ width:100%; padding:13px; margin-top:6px; }
+  .remember-row{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink-muted); margin-bottom:20px; cursor:pointer; user-select:none; }
+  .remember-row input{ width:15px; height:15px; accent-color:var(--brass); cursor:pointer; }
 
   /* ================= DASHBOARD ================= */
   #dashboard{ display:flex; min-height:100vh; }
@@ -279,6 +281,7 @@
   .calc-mini .label{ font-family:var(--mono); font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;}
   .calc-mini .value{ font-family:var(--mono); font-size:17px; color:var(--ink); }
   .note{ font-size:12px; color:var(--ink-faint); margin-top:16px; }
+  .hint-box{ font-size:12.5px; color:var(--ink-muted); background:var(--surface-raised); border:1px solid var(--line); padding:12px 14px; margin-bottom:14px; }
   .warn{ font-size:12.5px; color:var(--brick); margin-top:14px; }
 
   .chart-box{ position:relative; height:260px; margin-top:10px;}
@@ -320,9 +323,9 @@
           <path d="M21 18 L25 3 L35 3 L39 18 Z" fill="#b08d57"/>
         </svg>
       </div>
-      <div class="word">BAGNAN CAP ET FILS</div>
+      <div class="word">BAGNAN PROP</div>
     </div>
-    <div class="login-sub">BCF — Espace collaborateurs</div>
+    <div class="login-sub">BP — Espace collaborateurs</div>
     <div class="modal-error" id="loginError">Email ou mot de passe incorrect.</div>
     <div class="field">
       <label>Email</label>
@@ -332,6 +335,10 @@
       <label>Mot de passe</label>
       <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
     </div>
+    <label class="remember-row">
+      <input type="checkbox" id="loginRemember" checked>
+      Rester connecté sur cet appareil
+    </label>
     <button class="btn btn-solid" id="loginBtn" onclick="attemptLogin()">Connexion</button>
   </div>
 </div>
@@ -392,7 +399,7 @@
     <div class="modal-body">
       <div class="field"><label>Date</label><input type="date" id="oDate"></div>
       <div class="field"><label>Compte</label>
-        <select id="oCompte"><option>FTMO</option><option>Funding Pips</option></select>
+        <select id="oCompte"></select>
       </div>
       <div class="field"><label>Montant ($)</label><input type="number" step="any" id="oMontant"></div>
       <div class="field"><label>Fréquence</label><input type="text" id="oFreq" placeholder="Hebdo, Mensuel…"></div>
@@ -414,9 +421,8 @@
       <h3>Paramètres</h3>
     </div>
     <div class="modal-body">
-      <div class="field"><label>Date de début</label><input type="date" id="pDateDebut"></div>
-      <div class="field"><label>Capital initial / compte ($)</label><input type="number" step="any" id="pCapital"></div>
-      <div class="field"><label>Objectif / compte ($)</label><input type="number" step="any" id="pObjectif"></div>
+      <div class="field"><label>Date de début du plan</label><input type="date" id="pDateDebut"></div>
+      <div class="hint-box">Le capital initial et l'objectif de chaque compte sont désormais calculés automatiquement à partir des vrais plans de scaling FTMO et Funding Pips (voir le panneau « Plan de scaling — 5 ans » plus bas). Seule la date de départ du plan reste à régler ici.</div>
       <div class="modal-actions">
         <button class="btn btn-ghost" onclick="closeParamsModal()">Annuler</button>
         <button class="btn btn-solid" onclick="saveParams()">Enregistrer</button>
@@ -428,7 +434,7 @@
 <!-- ============ DASHBOARD ============ -->
 <div id="dashboard" class="hidden">
   <aside class="sidebar">
-    <div class="brand">BAGNAN CAP ET FILS <small>BCF</small></div>
+    <div class="brand">BAGNAN PROP <small>BP</small></div>
     <nav class="sidenav">
       <button class="nav-btn active" data-tab="overview" onclick="showTab('overview')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
@@ -445,10 +451,6 @@
       <button class="nav-btn" data-tab="calculator" onclick="showTab('calculator')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 11h2M12 11h2M16 11h2M8 15h2M12 15h2M16 15h2"/></svg>
         Lot Size Calculator
-      </button>
-      <button class="nav-btn" data-tab="immobilier" onclick="showTab('immobilier')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M9 13h.01M15 13h.01M9 9h.01M15 9h.01"/></svg>
-        Immobilier
       </button>
     </nav>
     <div class="sidebar-foot">
@@ -484,11 +486,6 @@
           <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 11h2M12 11h2M16 11h2M8 15h2M12 15h2M16 15h2"/></svg></div>
           <h4>Lot Size Calculator</h4>
           <p>Calculez la taille de position selon votre risque.</p>
-        </div>
-        <div class="tile" onclick="showTab('immobilier')">
-          <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 21h18M5 21V10l7-6 7 6v11M9 21v-6h6v6M9 13h.01M15 13h.01M9 9h.01M15 9h.01"/></svg></div>
-          <h4>Immobilier</h4>
-          <p>Portefeuille de biens, loyers et rendement.</p>
         </div>
       </div>
     </div>
@@ -529,6 +526,21 @@
       <div class="panel">
         <h3>Progression du solde par compte</h3>
         <div class="chart-box"><canvas id="objChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Plan de scaling — projection sur 5 ans</h3>
+        <p class="note" style="margin-top:0; margin-bottom:16px;">
+          Projection basée sur les vrais mécanismes de scaling publiés par les deux firmes (2026) :
+          <b>FTMO</b> — +25 % du solde initial tous les 4 mois, sous réserve de ≥10 % de profit net sur la période, d'être profitable sur au moins 2 des 4 mois, et sans violation de règle (plafond 2 000 000 $) ·
+          <b>Funding Pips</b> — paliers Launchpad (+20 % après 4 payouts et 10 % cumulé), Ascender (+30 % après 8 payouts et 20 % cumulé), Trailblazer (+40 % après 12 payouts et 30 % cumulé), Hot Seat (solde doublé après 16 payouts et 40 % cumulé), cadence estimée à ~1 payout/mois.
+          C'est un scénario « sur la trajectoire » en cas de qualification continue à chaque cycle — pas une garantie de résultat.
+        </p>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Compte</th><th>Départ</th><th>Année 1</th><th>Année 2</th><th>Année 3</th><th>Année 4</th><th>Année 5</th></tr></thead>
+          <tbody id="scalingPlanBody"></tbody>
+        </table>
+        </div>
       </div>
       <div class="panel">
         <h3>Entrées</h3>
@@ -586,94 +598,6 @@
       </div>
     </div>
 
-    <!-- IMMOBILIER -->
-    <div class="tab-panel hidden" id="tab-immobilier">
-      <div class="dash-head">
-        <div><div class="eyebrow">Outil · Investissement immobilier</div><h2>Portefeuille immobilier</h2></div>
-        <button class="btn btn-solid btn-sm" onclick="openBienModal()">+ Ajouter un bien</button>
-      </div>
-      <div class="stat-row" id="immoStats"></div>
-      <div class="panel">
-        <div class="panel-head"><h3>Biens</h3></div>
-        <div class="table-wrap">
-        <table>
-          <thead><tr><th>Nom</th><th>Type</th><th>Adresse</th><th>Acquisition</th><th>Prix d'achat</th><th>Valeur actuelle</th><th>Plus-value</th><th>Rendement locatif</th><th>Statut</th><th>Actions</th></tr></thead>
-          <tbody id="biensBody"></tbody>
-        </table>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-head">
-          <h3>Loyers perçus</h3>
-          <button class="btn btn-solid btn-sm" onclick="openLoyerModal()">+ Ajouter un loyer</button>
-        </div>
-        <div class="table-wrap">
-        <table>
-          <thead><tr><th>Date</th><th>Bien</th><th>Montant</th><th>Charges</th><th>Net</th><th>Locataire</th><th>Note</th><th>Actions</th></tr></thead>
-          <tbody id="loyersBody"></tbody>
-        </table>
-        </div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- ============ BIEN MODAL ============ -->
-<div id="bienModal" class="modal-overlay hidden">
-  <div class="modal wide">
-    <div class="modal-head">
-      <button class="close" onclick="closeBienModal()">&times;</button>
-      <div class="eyebrow">Immobilier</div>
-      <h3 id="bienModalTitle">Ajouter un bien</h3>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="field"><label>Nom / désignation</label><input type="text" id="bNom" placeholder="Villa Zongo, Terrain Titre 1234…"></div>
-        <div class="field"><label>Type</label>
-          <select id="bType"><option>Terrain</option><option>Résidentiel</option><option>Commercial</option></select>
-        </div>
-        <div class="field"><label>Date d'acquisition</label><input type="date" id="bDate"></div>
-        <div class="field"><label>Statut</label>
-          <select id="bStatut"><option>Loué</option><option>Vacant</option><option>En travaux</option><option>Vendu</option></select>
-        </div>
-        <div class="field"><label>Prix d'acquisition ($)</label><input type="number" step="any" id="bPrixAcq"></div>
-        <div class="field"><label>Valeur actuelle estimée ($)</label><input type="number" step="any" id="bValeur"></div>
-      </div>
-      <div class="field"><label>Adresse</label><input type="text" id="bAdresse" placeholder="Quartier, ville…"></div>
-      <div class="field"><label>Notes</label><input type="text" id="bNotes"></div>
-      <div class="modal-actions">
-        <button class="btn btn-ghost" onclick="closeBienModal()">Annuler</button>
-        <button class="btn btn-solid" onclick="saveBien()">Enregistrer</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ LOYER MODAL ============ -->
-<div id="loyerModal" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-head">
-      <button class="close" onclick="closeLoyerModal()">&times;</button>
-      <div class="eyebrow">Immobilier</div>
-      <h3 id="loyerModalTitle">Ajouter un loyer</h3>
-    </div>
-    <div class="modal-body">
-      <div class="field"><label>Date</label><input type="date" id="lDate"></div>
-      <div class="field"><label>Bien</label>
-        <select id="lBien"></select>
-      </div>
-      <div class="field"><label>Montant perçu ($)</label><input type="number" step="any" id="lMontant"></div>
-      <div class="field"><label>Charges ($)</label><input type="number" step="any" id="lCharges" placeholder="0 si aucune"></div>
-      <div class="field"><label>Locataire</label><input type="text" id="lLocataire"></div>
-      <div class="field"><label>Note</label><input type="text" id="lNote"></div>
-      <div class="modal-actions">
-        <button class="btn btn-ghost" onclick="closeLoyerModal()">Annuler</button>
-        <button class="btn btn-solid" onclick="saveLoyer()">Enregistrer</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script>
   /* =========================================================
@@ -769,20 +693,55 @@
     "US30":1, "USDCAD":0.0001, "USDCHF":0.0001, "USDJPY":0.01
   };
 
+  // ---------------------------------------------------------------
+  // Comptes de scaling suivis dans l'onglet Objectif.
+  // Capital initial et objectif calcules a partir des vrais plans de
+  // scaling publies par FTMO et Funding Pips (recherche 2026, voir le
+  // panneau "Plan de scaling" pour le detail des mecanismes et sources).
+  // ---------------------------------------------------------------
+  var ACCOUNTS = [
+    { id:'ftmo_10k',  label:'FTMO 10K',            firm:'FTMO',          capitalInitial:10000 },
+    { id:'ftmo_100k', label:'FTMO 100K',           firm:'FTMO',          capitalInitial:100000 },
+    { id:'fp_5k',     label:'Funding Pips 5K',     firm:'Funding Pips', capitalInitial:5000 },
+    { id:'fp_100k',   label:'Funding Pips 100K',   firm:'Funding Pips', capitalInitial:100000 }
+  ];
+
+  // FTMO : +25% du solde INITIAL tous les 4 mois (3 cycles/an) si conditions remplies. Plafond 2 000 000 $.
+  function projectFTMO(capital, years){
+    var cyclesParAn = 3;
+    var cycles = Math.floor(years * cyclesParAn);
+    var value = capital + capital * 0.25 * cycles;
+    return Math.min(value, 2000000);
+  }
+  // Funding Pips : paliers Launchpad/Ascender/Trailblazer/Hot Seat, cadence estimee ~1 payout/mois.
+  function projectFundingPips(capital, years){
+    var months = years * 12;
+    var value = capital;
+    if(months >= 4)  value *= 1.20; // Launchpad
+    if(months >= 8)  value *= 1.30; // Ascender
+    if(months >= 12) value *= 1.40; // Trailblazer
+    if(months >= 16) value *= 2;    // Hot Seat
+    return Math.min(value, 2000000);
+  }
+  function projectAccount(account, years){
+    return account.firm === 'FTMO' ? projectFTMO(account.capitalInitial, years) : projectFundingPips(account.capitalInitial, years);
+  }
+  function accountObjectif5ans(account){ return projectAccount(account, 5); }
+
   // Donnees chargees depuis Supabase (vides tant que non connecte / non charge)
   var trades = [];
-  var objectifParams = { date_debut:'2026-08-07', capital_initial:100000, objectif_par_compte:50000 };
+  var objectifParams = { date_debut:'2026-08-07' };
   var objectifEntries = [];
-  var biens = [];
-  var loyers = [];
 
   var equityChart, objChart;
   var currentSession = null; // { access_token, user } une fois connecte
+  var REMEMBER_KEY = 'bcf_refresh_token';
 
   // ---------- Login (Supabase Auth reel) ----------
   function attemptLogin(){
     var email = document.getElementById('loginUser').value.trim();
     var pass = document.getElementById('loginPass').value.trim();
+    var remember = document.getElementById('loginRemember').checked;
     var errEl = document.getElementById('loginError');
     var btn = document.getElementById('loginBtn');
     errEl.style.display = 'none';
@@ -804,6 +763,8 @@
         return;
       }
       currentSession = { access_token: res.body.access_token, refresh_token: res.body.refresh_token, user: res.body.user };
+      if(remember){ try{ localStorage.setItem(REMEMBER_KEY, currentSession.refresh_token); }catch(e){} }
+      else { try{ localStorage.removeItem(REMEMBER_KEY); }catch(e){} }
       document.getElementById('loginScreen').classList.add('hidden');
       document.getElementById('dashboard').classList.remove('hidden');
       var label = (currentSession.user && currentSession.user.email) || email;
@@ -819,11 +780,40 @@
     });
   }
 
+  // Tente de restaurer une session existante (case "Rester connecte") au chargement de la page
+  function tryRestoreSession(){
+    var refreshToken;
+    try{ refreshToken = localStorage.getItem(REMEMBER_KEY); }catch(e){ return; }
+    if(!refreshToken) return;
+
+    fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken })
+    }).then(function(r){
+      return r.json().then(function(body){ return { ok:r.ok, body:body }; });
+    }).then(function(res){
+      if(!res.ok || !res.body.access_token){
+        try{ localStorage.removeItem(REMEMBER_KEY); }catch(e){}
+        return;
+      }
+      currentSession = { access_token: res.body.access_token, refresh_token: res.body.refresh_token, user: res.body.user };
+      try{ localStorage.setItem(REMEMBER_KEY, currentSession.refresh_token); }catch(e){}
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      var label = (currentSession.user && currentSession.user.email) || '';
+      document.getElementById('userchip').textContent = 'CONNECTÉ · ' + label;
+      document.getElementById('welcomeMsg').textContent = 'Bienvenue, ' + label.split('@')[0];
+      initDashboard();
+    }).catch(function(err){ console.error(err); });
+  }
+
   function logout(){
     var token = currentSession && currentSession.access_token;
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('loginScreen').classList.remove('hidden');
     currentSession = null;
+    try{ localStorage.removeItem(REMEMBER_KEY); }catch(e){}
     if(token){
       fetch(SUPABASE_URL + '/auth/v1/logout', {
         method:'POST',
@@ -847,7 +837,7 @@
     fillSelect('tBroker', BROKERS);
     fillSelect('tStrategy', STRATEGIES);
     fillSelect('cBroker', BROKERS);
-    fillSelect('oCompte', BROKERS, true);
+    fillSelect('oCompte', ACCOUNTS.map(function(a){ return a.label; }), false);
     onBrokerChange();
     reloadAll();
   }
@@ -857,9 +847,7 @@
     return Promise.all([
       sbSelect('trades').then(function(rows){ trades = rows; }),
       sbSelect('objectif_entrees').then(function(rows){ objectifEntries = rows; }),
-      sbSelect('objectif_parametres', 'id=eq.1').then(function(rows){ if(rows && rows[0]) objectifParams = rows[0]; }),
-      sbSelect('immo_biens').then(function(rows){ biens = rows; }),
-      sbSelect('immo_loyers').then(function(rows){ loyers = rows; })
+      sbSelect('objectif_parametres', 'id=eq.1').then(function(rows){ if(rows && rows[0]) objectifParams = rows[0]; })
     ]).then(function(){
       renderAll();
       setSyncStatus('✓ Synchronisé', 'ok');
@@ -874,7 +862,6 @@
     safe(renderOverviewStats, 'overview');
     safe(renderJournal, 'journal');
     safe(renderObjectif, 'objectif');
-    safe(renderImmobilier, 'immobilier');
     safe(calculateLotSize, 'calculator');
   }
 
@@ -1083,32 +1070,33 @@
 
   // ---------- Objectif ----------
   function objectifProgress(){
-    var comptes = BROKERS.slice();
     var results = [];
-    var combineSolde = 0, combineGain = 0;
-    comptes.forEach(function(compte){
-      var gain = objectifEntries.filter(function(e){ return e.compte===compte; })
+    var combineSolde = 0, combineGain = 0, combineObjectif = 0;
+    ACCOUNTS.forEach(function(account){
+      var gain = objectifEntries.filter(function(e){ return e.compte===account.label; })
                                  .reduce(function(a,e){ return a + (e.montant||0); }, 0);
-      var solde = (objectifParams.capital_initial||0) + gain;
-      var pct = objectifParams.objectif_par_compte ? (gain/objectifParams.objectif_par_compte*100) : 0;
-      var restant = Math.max(0, (objectifParams.objectif_par_compte||0) - gain);
-      results.push({compte:compte, solde:solde, gain:gain, pct:pct, restant:restant});
-      combineSolde += solde; combineGain += gain;
+      var objectif = accountObjectif5ans(account);
+      var solde = account.capitalInitial + gain;
+      var pct = objectif ? (gain/(objectif-account.capitalInitial)*100) : 0;
+      var restant = Math.max(0, objectif - solde);
+      results.push({compte:account.label, solde:solde, gain:gain, pct:pct, restant:restant, objectif:objectif, capitalInitial:account.capitalInitial});
+      combineSolde += solde; combineGain += gain; combineObjectif += objectif;
     });
-    var objectifCombine = (objectifParams.objectif_par_compte||0) * comptes.length;
+    var combineCapital = ACCOUNTS.reduce(function(a,acc){ return a+acc.capitalInitial; }, 0);
     results.push({
       compte:'Combiné', solde:combineSolde, gain:combineGain,
-      pct: objectifCombine ? (combineGain/objectifCombine*100) : 0,
-      restant: Math.max(0, objectifCombine - combineGain)
+      pct: (combineObjectif-combineCapital) ? (combineGain/(combineObjectif-combineCapital)*100) : 0,
+      restant: Math.max(0, combineObjectif - combineSolde),
+      objectif: combineObjectif, capitalInitial: combineCapital
     });
     return results;
   }
 
   function renderObjectif(){
     document.getElementById('paramsStrip').innerHTML =
-      '<span>Début : <b>'+(objectifParams.date_debut||'—')+'</b></span>'+
-      '<span>Capital initial / compte : <b>'+Number(objectifParams.capital_initial||0).toLocaleString()+' $</b></span>'+
-      '<span>Objectif / compte : <b>+'+Number(objectifParams.objectif_par_compte||0).toLocaleString()+' $</b></span>';
+      '<span>Début du plan : <b>'+(objectifParams.date_debut||'—')+'</b></span>'+
+      '<span>Horizon : <b>5 ans</b></span>'+
+      '<span>4 comptes suivis : <b>FTMO 10K · FTMO 100K · Funding Pips 5K · Funding Pips 100K</b></span>';
 
     var progress = objectifProgress();
     var grid = document.getElementById('progressGrid');
@@ -1121,7 +1109,7 @@
         '<h4>'+p.compte+'</h4>'+
         '<div class="pct">'+p.pct.toFixed(1)+'%</div>'+
         '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div>'+
-        '<div class="sub"><span>Gain : '+p.gain.toFixed(0)+' $</span><span>Restant : '+p.restant.toFixed(0)+' $</span></div>';
+        '<div class="sub"><span>Gain : '+p.gain.toFixed(0)+' $</span><span>Objectif 5 ans : '+Number(p.objectif).toLocaleString()+' $</span></div>';
       grid.appendChild(div);
     });
 
@@ -1138,16 +1126,32 @@
       body.appendChild(tr);
     });
 
+    renderScalingPlanTable();
     safe(renderObjChart, 'objectif-chart');
     renderOverviewStats();
   }
 
+  function renderScalingPlanTable(){
+    var body = document.getElementById('scalingPlanBody');
+    if(!body) return;
+    body.innerHTML = '';
+    ACCOUNTS.forEach(function(account){
+      var tr = document.createElement('tr');
+      var cells = '<td>'+account.label+'</td><td>'+Number(account.capitalInitial).toLocaleString()+' $</td>';
+      for(var y=1; y<=5; y++){
+        cells += '<td>'+Number(Math.round(projectAccount(account, y))).toLocaleString()+' $</td>';
+      }
+      tr.innerHTML = cells;
+      body.appendChild(tr);
+    });
+  }
+
   function renderObjChart(){
     var ctx = document.getElementById('objChart').getContext('2d');
-    var comptes = BROKERS.slice();
-    var colors = {'FTMO':'#d3b485','Funding Pips':'#7f9c86'};
+    var colors = {'FTMO 10K':'#d3b485','FTMO 100K':'#b08d57','Funding Pips 5K':'#7f9c86','Funding Pips 100K':'#5f7d68'};
     var allDates = Array.from(new Set(objectifEntries.map(function(e){return e.date;}))).sort();
-    var datasets = comptes.map(function(compte){
+    var datasets = ACCOUNTS.map(function(account){
+      var compte = account.label;
       var byDate = {};
       objectifEntries.filter(function(e){return e.compte===compte;})
         .sort(function(a,b){return (a.date>b.date?1:-1);})
@@ -1155,9 +1159,9 @@
           running += e.montant||0;
           byDate[e.date] = running;
           return running;
-        }, objectifParams.capital_initial||0);
+        }, account.capitalInitial);
       var data = [];
-      var last = objectifParams.capital_initial||0;
+      var last = account.capitalInitial;
       allDates.forEach(function(d){ if(byDate[d]!==undefined) last=byDate[d]; data.push(last); });
       return { label:compte, data:data, borderColor:colors[compte]||'#b08d57', backgroundColor:'transparent', tension:0.25 };
     });
@@ -1238,17 +1242,13 @@
 
   function openParamsModal(){
     document.getElementById('pDateDebut').value = objectifParams.date_debut;
-    document.getElementById('pCapital').value = objectifParams.capital_initial;
-    document.getElementById('pObjectif').value = objectifParams.objectif_par_compte;
     document.getElementById('paramsModal').classList.remove('hidden');
   }
   function closeParamsModal(){ document.getElementById('paramsModal').classList.add('hidden'); }
   function saveParams(){
     var data = {
       id: 1,
-      date_debut: document.getElementById('pDateDebut').value,
-      capital_initial: parseFloat(document.getElementById('pCapital').value) || 0,
-      objectif_par_compte: parseFloat(document.getElementById('pObjectif').value) || 0
+      date_debut: document.getElementById('pDateDebut').value
     };
     closeParamsModal();
     setSyncStatus('Enregistrement…', null);
@@ -1306,257 +1306,36 @@
     }
   }
 
-  // ---------- Immobilier ----------
-  function loyersNetsPourBien(bienId){
-    return loyers.filter(function(l){ return l.bien_id === bienId; })
-      .reduce(function(acc, l){
-        acc.loyers += l.montant || 0;
-        acc.charges += l.charges || 0;
-        return acc;
-      }, {loyers:0, charges:0});
-  }
 
-  function rendementLocatif(bien){
-    var net = loyersNetsPourBien(bien.id);
-    var netTotal = net.loyers - net.charges;
-    var base = bien.prix_acquisition;
-    if(!base) return null;
-    return (netTotal / base) * 100; // rendement cumule depuis l'acquisition (%)
-  }
-
-  function immoIndicateurs(){
-    var actifs = biens.filter(function(b){ return b.statut !== 'Vendu'; });
-    var valeurTotale = actifs.reduce(function(a,b){ return a + (b.valeur_actuelle||0); }, 0);
-    var coutTotal = actifs.reduce(function(a,b){ return a + (b.prix_acquisition||0); }, 0);
-    var plusValue = valeurTotale - coutTotal;
-    var loyersNets = loyers.reduce(function(a,l){ return a + (l.montant||0) - (l.charges||0); }, 0);
-    var rendementMoyen = coutTotal ? (loyersNets / coutTotal * 100) : 0;
-    return { valeurTotale:valeurTotale, plusValue:plusValue, loyersNets:loyersNets, rendementMoyen:rendementMoyen, nbBiens:actifs.length };
-  }
-
-  function renderImmobilier(){
-    var s = immoIndicateurs();
-    document.getElementById('immoStats').innerHTML =
-      stat('Biens actifs', s.nbBiens) +
-      stat('Valeur du portefeuille', Number(s.valeurTotale).toLocaleString(undefined,{maximumFractionDigits:0})+' $') +
-      stat('Plus-value latente', (s.plusValue>=0?'+':'')+Number(s.plusValue).toLocaleString(undefined,{maximumFractionDigits:0})+' $', s.plusValue>=0?'pos':'neg') +
-      stat('Loyers nets perçus', (s.loyersNets>=0?'+':'')+Number(s.loyersNets).toLocaleString(undefined,{maximumFractionDigits:0})+' $', s.loyersNets>=0?'pos':'neg') +
-      stat('Rendement locatif moyen', s.rendementMoyen.toFixed(1)+'%');
-
-    var biensBody = document.getElementById('biensBody');
-    biensBody.innerHTML = '';
-    biens.slice().sort(function(a,b){ return (a.date_acquisition||'') < (b.date_acquisition||'') ? 1 : -1; }).forEach(function(b){
-      var plusValue = (b.valeur_actuelle||0) - (b.prix_acquisition||0);
-      var pvColor = plusValue >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
-      var rendement = rendementLocatif(b);
-      var statutClass = b.statut === 'Loué' ? 'ok' : b.statut === 'Vendu' ? 'be' : b.statut === 'En travaux' ? 'pending' : 'loss';
-      var tr = document.createElement('tr');
-      tr.innerHTML =
-        '<td>'+(b.nom||'—')+'</td><td>'+(b.type||'—')+'</td><td>'+(b.adresse||'—')+'</td>'+
-        '<td>'+(b.date_acquisition||'—')+'</td>'+
-        '<td>'+Number(b.prix_acquisition||0).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
-        '<td>'+Number(b.valeur_actuelle||0).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
-        '<td '+pvColor+'>'+(plusValue>=0?'+':'')+Number(plusValue).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
-        '<td>'+(rendement!=null ? rendement.toFixed(1)+'%' : '—')+'</td>'+
-        '<td><span class="pill '+statutClass+'">'+(b.statut||'—')+'</span></td>'+
-        '<td><div class="row-actions"><button class="row-edit" onclick="editBien(\''+b.id+'\')">Modifier</button><button class="row-del" onclick="deleteBien(\''+b.id+'\')">Suppr.</button></div></td>';
-      biensBody.appendChild(tr);
-    });
-
-    fillLBienSelect();
-
-    var loyersBody = document.getElementById('loyersBody');
-    loyersBody.innerHTML = '';
-    loyers.slice().sort(function(a,b){ return (a.date||'') < (b.date||'') ? 1 : -1; }).forEach(function(l){
-      var bien = biens.find(function(b){ return b.id === l.bien_id; });
-      var net = (l.montant||0) - (l.charges||0);
-      var netColor = net >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
-      var tr = document.createElement('tr');
-      tr.innerHTML =
-        '<td>'+l.date+'</td><td>'+(bien ? bien.nom : '—')+'</td>'+
-        '<td>'+Number(l.montant||0).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
-        '<td>'+Number(l.charges||0).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
-        '<td '+netColor+'>'+(net>=0?'+':'')+Number(net).toLocaleString(undefined,{maximumFractionDigits:0})+' $</td>'+
-        '<td>'+(l.locataire||'—')+'</td><td>'+(l.note||'—')+'</td>'+
-        '<td><div class="row-actions"><button class="row-edit" onclick="editLoyer(\''+l.id+'\')">Modifier</button><button class="row-del" onclick="deleteLoyer(\''+l.id+'\')">Suppr.</button></div></td>';
-      loyersBody.appendChild(tr);
-    });
-
-    renderOverviewStats();
-  }
-
-  function fillLBienSelect(){
-    var sel = document.getElementById('lBien');
-    var current = sel.value;
-    sel.innerHTML = '';
-    biens.forEach(function(b){
-      var o = document.createElement('option'); o.value = b.id; o.textContent = b.nom; sel.appendChild(o);
-    });
-    if(current) sel.value = current;
-  }
-
-  // ---- Biens ----
-  var editingBienId = null;
-
-  function openBienModal(id){
-    editingBienId = id || null;
-    if(editingBienId){
-      var b = biens.find(function(x){ return x.id === editingBienId; });
-      if(!b) return;
-      document.getElementById('bienModalTitle').textContent = 'Modifier le bien';
-      document.getElementById('bNom').value = b.nom || '';
-      document.getElementById('bType').value = b.type || 'Terrain';
-      document.getElementById('bDate').value = b.date_acquisition || '';
-      document.getElementById('bStatut').value = b.statut || 'Loué';
-      document.getElementById('bPrixAcq').value = b.prix_acquisition != null ? b.prix_acquisition : '';
-      document.getElementById('bValeur').value = b.valeur_actuelle != null ? b.valeur_actuelle : '';
-      document.getElementById('bAdresse').value = b.adresse || '';
-      document.getElementById('bNotes').value = b.notes || '';
-    } else {
-      document.getElementById('bienModalTitle').textContent = 'Ajouter un bien';
-      document.getElementById('bDate').value = new Date().toISOString().slice(0,10);
-      ['bNom','bAdresse','bPrixAcq','bValeur','bNotes'].forEach(function(id){ document.getElementById(id).value=''; });
-      document.getElementById('bStatut').value = 'Loué';
-    }
-    document.getElementById('bienModal').classList.remove('hidden');
-  }
-  function editBien(id){ openBienModal(id); }
-  function closeBienModal(){ document.getElementById('bienModal').classList.add('hidden'); editingBienId = null; }
-
-  function saveBien(){
-    var nom = document.getElementById('bNom').value.trim();
-    if(!nom){ return; }
-    var id = editingBienId || genId();
-    var data = {
-      id: id,
-      nom: nom,
-      type: document.getElementById('bType').value,
-      date_acquisition: document.getElementById('bDate').value || new Date().toISOString().slice(0,10),
-      statut: document.getElementById('bStatut').value,
-      prix_acquisition: parseFloat(document.getElementById('bPrixAcq').value) || 0,
-      valeur_actuelle: parseFloat(document.getElementById('bValeur').value) || 0,
-      adresse: document.getElementById('bAdresse').value.trim(),
-      notes: document.getElementById('bNotes').value.trim(),
-      deleted: false
-    };
-    closeBienModal();
-    setSyncStatus('Enregistrement…', null);
-    sbUpsert('immo_biens', data).then(function(){
-      return sbSelect('immo_biens');
-    }).then(function(rows){
-      biens = rows;
-      renderImmobilier();
-      setSyncStatus('✓ Synchronisé', 'ok');
-    }).catch(function(err){
-      console.error(err);
-      setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
-      alert("Le bien n'a pas pu être enregistré sur Supabase :\n" + err.message);
-    });
-  }
-
-  function deleteBien(id){
-    if(!confirm('Supprimer ce bien ? Les loyers associés resteront mais ne seront plus rattachés à un bien visible.')) return;
-    setSyncStatus('Suppression…', null);
-    sbSoftDelete('immo_biens', id).then(function(){
-      biens = biens.filter(function(b){ return b.id !== id; });
-      renderImmobilier();
-      setSyncStatus('✓ Synchronisé', 'ok');
-    }).catch(function(err){
-      console.error(err);
-      setSyncStatus('⚠ Échec de la suppression', 'error');
-      alert("La suppression a échoué :\n" + err.message);
-    });
-  }
-
-  // ---- Loyers ----
-  var editingLoyerId = null;
-
-  function openLoyerModal(id){
-    if(!biens.length){ alert('Ajoute d\'abord au moins un bien avant d\'enregistrer un loyer.'); return; }
-    editingLoyerId = id || null;
-    fillLBienSelect();
-    if(editingLoyerId){
-      var l = loyers.find(function(x){ return x.id === editingLoyerId; });
-      if(!l) return;
-      document.getElementById('loyerModalTitle').textContent = 'Modifier le loyer';
-      document.getElementById('lDate').value = l.date;
-      document.getElementById('lBien').value = l.bien_id;
-      document.getElementById('lMontant').value = l.montant != null ? l.montant : '';
-      document.getElementById('lCharges').value = l.charges != null ? l.charges : '';
-      document.getElementById('lLocataire').value = l.locataire || '';
-      document.getElementById('lNote').value = l.note || '';
-    } else {
-      document.getElementById('loyerModalTitle').textContent = 'Ajouter un loyer';
-      document.getElementById('lDate').value = new Date().toISOString().slice(0,10);
-      ['lMontant','lCharges','lLocataire','lNote'].forEach(function(id){ document.getElementById(id).value=''; });
-    }
-    document.getElementById('loyerModal').classList.remove('hidden');
-  }
-  function editLoyer(id){ openLoyerModal(id); }
-  function closeLoyerModal(){ document.getElementById('loyerModal').classList.add('hidden'); editingLoyerId = null; }
-
-  function saveLoyer(){
-    var bienId = document.getElementById('lBien').value;
-    if(!bienId){ return; }
-    var id = editingLoyerId || genId();
-    var data = {
-      id: id,
-      bien_id: bienId,
-      date: document.getElementById('lDate').value || new Date().toISOString().slice(0,10),
-      montant: parseFloat(document.getElementById('lMontant').value) || 0,
-      charges: parseFloat(document.getElementById('lCharges').value) || 0,
-      locataire: document.getElementById('lLocataire').value.trim(),
-      note: document.getElementById('lNote').value.trim(),
-      deleted: false
-    };
-    closeLoyerModal();
-    setSyncStatus('Enregistrement…', null);
-    sbUpsert('immo_loyers', data).then(function(){
-      return sbSelect('immo_loyers');
-    }).then(function(rows){
-      loyers = rows;
-      renderImmobilier();
-      setSyncStatus('✓ Synchronisé', 'ok');
-    }).catch(function(err){
-      console.error(err);
-      setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
-      alert("Le loyer n'a pas pu être enregistré sur Supabase :\n" + err.message);
-    });
-  }
-
-  function deleteLoyer(id){
-    if(!confirm('Supprimer ce loyer ?')) return;
-    setSyncStatus('Suppression…', null);
-    sbSoftDelete('immo_loyers', id).then(function(){
-      loyers = loyers.filter(function(l){ return l.id !== id; });
-      renderImmobilier();
-      setSyncStatus('✓ Synchronisé', 'ok');
-    }).catch(function(err){
-      console.error(err);
-      setSyncStatus('⚠ Échec de la suppression', 'error');
-      alert("La suppression a échoué :\n" + err.message);
-    });
-  }
-
-  // ---------- Validation au clavier (Entree) dans les fenetres modales ----------
+  // ---------- Validation au clavier (Entree) dans les fenetres modales et l'ecran de login ----------
   var MODAL_SUBMIT_HANDLERS = {
-    loginModal: attemptLogin,
     tradeModal: saveTrade,
     objModal: saveObjEntry,
-    paramsModal: saveParams,
-    bienModal: saveBien,
-    loyerModal: saveLoyer
+    paramsModal: saveParams
   };
   document.addEventListener('keydown', function(e){
     if(e.key !== 'Enter') return;
     if(e.target && e.target.tagName === 'TEXTAREA') return;
+    if(e.target && e.target.tagName === 'BUTTON') return; // laisse un bouton deja focus (Annuler, fermer) agir normalement
+
+    // Ecran de connexion plein page (pas une modale)
+    var loginScreen = document.getElementById('loginScreen');
+    if(loginScreen && !loginScreen.classList.contains('hidden')){
+      e.preventDefault();
+      attemptLogin();
+      return;
+    }
+
     var openModal = document.querySelector('.modal-overlay:not(.hidden)');
     if(!openModal) return;
     var handler = MODAL_SUBMIT_HANDLERS[openModal.id];
     if(!handler) return;
     e.preventDefault();
     handler();
-  });
+  }, true); // capture=true : intercepte l'evenement avant qu'un <select> ouvert ne l'absorbe
+
+  // Tentative de reconnexion automatique si "Rester connecte" avait ete coche
+  tryRestoreSession();
 </script>
 </body>
 </html>

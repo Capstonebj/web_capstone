@@ -287,6 +287,8 @@
   .chart-box{ position:relative; height:260px; margin-top:10px;}
 
   .progress-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-bottom:28px;}
+  .section-divider{ font-family:var(--mono); font-size:12px; letter-spacing:1px; color:var(--brass-bright); text-transform:uppercase; margin:32px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--line-strong); }
+  .section-divider:first-of-type{ margin-top:0; }
   .progress-card{ background:var(--void); padding:22px; }
   .progress-card h4{ font-family:var(--mono); font-size:12px; letter-spacing:1px; text-transform:uppercase; color:var(--brass-bright); margin-bottom:16px;}
   .progress-bar-track{ height:6px; background:var(--surface-raised); margin-bottom:12px; }
@@ -388,20 +390,20 @@
   </div>
 </div>
 
-<!-- ============ ADD OBJECTIF ENTRY MODAL ============ -->
+<!-- ============ ADD RETRAIT MODAL ============ -->
 <div id="objModal" class="modal-overlay hidden">
   <div class="modal">
     <div class="modal-head">
       <button class="close" onclick="closeObjModal()">&times;</button>
-      <div class="eyebrow">Objectif</div>
-      <h3 id="objModalTitle">Ajouter une entrée</h3>
+      <div class="eyebrow">Objectif · Retrait</div>
+      <h3 id="objModalTitle">Ajouter un retrait</h3>
     </div>
     <div class="modal-body">
       <div class="field"><label>Date</label><input type="date" id="oDate"></div>
       <div class="field"><label>Compte</label>
         <select id="oCompte"></select>
       </div>
-      <div class="field"><label>Montant ($)</label><input type="number" step="any" id="oMontant"></div>
+      <div class="field"><label>Montant retiré ($)</label><input type="number" step="any" id="oMontant"></div>
       <div class="field"><label>Fréquence</label><input type="text" id="oFreq" placeholder="Hebdo, Mensuel…"></div>
       <div class="field"><label>Note</label><input type="text" id="oNote"></div>
       <div class="modal-actions">
@@ -422,7 +424,11 @@
     </div>
     <div class="modal-body">
       <div class="field"><label>Date de début du plan</label><input type="date" id="pDateDebut"></div>
-      <div class="hint-box">Le capital initial et l'objectif de chaque compte sont désormais calculés automatiquement à partir des vrais plans de scaling FTMO et Funding Pips (voir le panneau « Plan de scaling — 5 ans » plus bas). Seule la date de départ du plan reste à régler ici.</div>
+      <div class="hint-box">Le capital de chaque compte suit automatiquement le plan de scaling FTMO / Funding Pips (voir le panneau « Plan de scaling »). Règle ici uniquement tes <b>objectifs de retraits personnels</b> — combien tu veux avoir sorti de chaque compte d'ici 5 ans.</div>
+      <div class="field"><label>Objectif retrait — FTMO 10K ($)</label><input type="number" step="any" id="pRetraitFtmo10k"></div>
+      <div class="field"><label>Objectif retrait — FTMO 100K ($)</label><input type="number" step="any" id="pRetraitFtmo100k"></div>
+      <div class="field"><label>Objectif retrait — Funding Pips 5K ($)</label><input type="number" step="any" id="pRetraitFp5k"></div>
+      <div class="field"><label>Objectif retrait — Funding Pips 100K ($)</label><input type="number" step="any" id="pRetraitFp100k"></div>
       <div class="modal-actions">
         <button class="btn btn-ghost" onclick="closeParamsModal()">Annuler</button>
         <button class="btn btn-solid" onclick="saveParams()">Enregistrer</button>
@@ -515,35 +521,38 @@
     <!-- OBJECTIF -->
     <div class="tab-panel hidden" id="tab-objectif">
       <div class="dash-head">
-        <div><div class="eyebrow">Outil · Objectif +% par compte</div><h2>Objectif</h2></div>
+        <div><div class="eyebrow">Outil · Capital &amp; retraits</div><h2>Objectif</h2></div>
         <div class="panel-toolbar">
           <button class="btn btn-ghost btn-sm" onclick="openParamsModal()">Paramètres</button>
-          <button class="btn btn-solid btn-sm" onclick="openObjModal()">+ Ajouter une entrée</button>
+          <button class="btn btn-solid btn-sm" onclick="openObjModal()">+ Ajouter un retrait</button>
         </div>
       </div>
       <div class="params-strip" id="paramsStrip"></div>
-      <div class="progress-grid" id="progressGrid"></div>
+
+      <div class="section-divider">📈 Plan de scaling — croissance du capital (projection)</div>
       <div class="panel">
-        <h3>Progression du solde par compte</h3>
-        <div class="chart-box"><canvas id="objChart"></canvas></div>
-      </div>
-      <div class="panel">
-        <h3>Plan de scaling — projection sur 5 ans</h3>
         <p class="note" style="margin-top:0; margin-bottom:16px;">
-          Projection basée sur les vrais mécanismes de scaling publiés par les deux firmes (2026) :
+          Projection du <b>solde du compte</b> selon les vrais mécanismes de scaling publiés par les deux firmes (2026) — pas une saisie manuelle, c'est calculé automatiquement :
           <b>FTMO</b> — +25 % du solde initial tous les 4 mois, sous réserve de ≥10 % de profit net sur la période, d'être profitable sur au moins 2 des 4 mois, et sans violation de règle (plafond 2 000 000 $) ·
           <b>Funding Pips</b> — paliers Launchpad (+20 % après 4 payouts et 10 % cumulé), Ascender (+30 % après 8 payouts et 20 % cumulé), Trailblazer (+40 % après 12 payouts et 30 % cumulé), Hot Seat (solde doublé après 16 payouts et 40 % cumulé), cadence estimée à ~1 payout/mois.
           C'est un scénario « sur la trajectoire » en cas de qualification continue à chaque cycle — pas une garantie de résultat.
         </p>
         <div class="table-wrap">
         <table>
-          <thead><tr><th>Compte</th><th>Départ</th><th>Année 1</th><th>Année 2</th><th>Année 3</th><th>Année 4</th><th>Année 5</th></tr></thead>
+          <thead><tr><th>Compte</th><th>Départ</th><th>Aujourd'hui (est.)</th><th>Année 1</th><th>Année 2</th><th>Année 3</th><th>Année 4</th><th>Année 5</th></tr></thead>
           <tbody id="scalingPlanBody"></tbody>
         </table>
         </div>
       </div>
+
+      <div class="section-divider">💰 Objectif de retraits — gains personnels sortis des comptes</div>
+      <div class="progress-grid" id="progressGrid"></div>
       <div class="panel">
-        <h3>Entrées</h3>
+        <h3>Cumul des retraits par compte</h3>
+        <div class="chart-box"><canvas id="objChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Retraits enregistrés</h3>
         <div class="table-wrap">
         <table>
           <thead><tr><th>Date</th><th>Compte</th><th>Montant</th><th>Fréquence</th><th>Note</th><th>Actions</th></tr></thead>
@@ -731,6 +740,7 @@
   // Donnees chargees depuis Supabase (vides tant que non connecte / non charge)
   var trades = [];
   var objectifParams = { date_debut:'2026-08-07' };
+  var retraitTargets = {}; // { 'FTMO 10K': 5000, ... } charge depuis Supabase
   var objectifEntries = [];
 
   var equityChart, objChart;
@@ -847,7 +857,11 @@
     return Promise.all([
       sbSelect('trades').then(function(rows){ trades = rows; }),
       sbSelect('objectif_entrees').then(function(rows){ objectifEntries = rows; }),
-      sbSelect('objectif_parametres', 'id=eq.1').then(function(rows){ if(rows && rows[0]) objectifParams = rows[0]; })
+      sbSelect('objectif_parametres', 'id=eq.1').then(function(rows){ if(rows && rows[0]) objectifParams = rows[0]; }),
+      sbSelect('objectif_retraits_params', 'select=*').then(function(rows){
+        retraitTargets = {};
+        (rows||[]).forEach(function(r){ retraitTargets[r.compte] = r.cible || 0; });
+      })
     ]).then(function(){
       renderAll();
       setSyncStatus('✓ Synchronisé', 'ok');
@@ -1071,23 +1085,21 @@
   // ---------- Objectif ----------
   function objectifProgress(){
     var results = [];
-    var combineSolde = 0, combineGain = 0, combineObjectif = 0;
+    var combineRetire = 0, combineCible = 0;
     ACCOUNTS.forEach(function(account){
-      var gain = objectifEntries.filter(function(e){ return e.compte===account.label; })
-                                 .reduce(function(a,e){ return a + (e.montant||0); }, 0);
-      var objectif = accountObjectif5ans(account);
-      var solde = account.capitalInitial + gain;
-      var pct = objectif ? (gain/(objectif-account.capitalInitial)*100) : 0;
-      var restant = Math.max(0, objectif - solde);
-      results.push({compte:account.label, solde:solde, gain:gain, pct:pct, restant:restant, objectif:objectif, capitalInitial:account.capitalInitial});
-      combineSolde += solde; combineGain += gain; combineObjectif += objectif;
+      var retire = objectifEntries.filter(function(e){ return e.compte===account.label; })
+                                   .reduce(function(a,e){ return a + (e.montant||0); }, 0);
+      var cible = retraitTargets[account.label] || 0;
+      var pct = cible ? (retire/cible*100) : 0;
+      var restant = Math.max(0, cible - retire);
+      results.push({compte:account.label, retire:retire, pct:pct, restant:restant, cible:cible});
+      combineRetire += retire; combineCible += cible;
     });
-    var combineCapital = ACCOUNTS.reduce(function(a,acc){ return a+acc.capitalInitial; }, 0);
     results.push({
-      compte:'Combiné', solde:combineSolde, gain:combineGain,
-      pct: (combineObjectif-combineCapital) ? (combineGain/(combineObjectif-combineCapital)*100) : 0,
-      restant: Math.max(0, combineObjectif - combineSolde),
-      objectif: combineObjectif, capitalInitial: combineCapital
+      compte:'Combiné', retire:combineRetire,
+      pct: combineCible ? (combineRetire/combineCible*100) : 0,
+      restant: Math.max(0, combineCible - combineRetire),
+      cible: combineCible
     });
     return results;
   }
@@ -1109,7 +1121,7 @@
         '<h4>'+p.compte+'</h4>'+
         '<div class="pct">'+p.pct.toFixed(1)+'%</div>'+
         '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div>'+
-        '<div class="sub"><span>Gain : '+p.gain.toFixed(0)+' $</span><span>Objectif 5 ans : '+Number(p.objectif).toLocaleString()+' $</span></div>';
+        '<div class="sub"><span>Retiré : '+p.retire.toFixed(0)+' $</span><span>Objectif : '+Number(p.cible).toLocaleString()+' $</span></div>';
       grid.appendChild(div);
     });
 
@@ -1135,9 +1147,17 @@
     var body = document.getElementById('scalingPlanBody');
     if(!body) return;
     body.innerHTML = '';
+    var yearsElapsed = 0;
+    if(objectifParams.date_debut){
+      var start = new Date(objectifParams.date_debut);
+      var now = new Date();
+      yearsElapsed = Math.max(0, (now - start) / (1000*60*60*24*365.25));
+    }
     ACCOUNTS.forEach(function(account){
       var tr = document.createElement('tr');
-      var cells = '<td>'+account.label+'</td><td>'+Number(account.capitalInitial).toLocaleString()+' $</td>';
+      var todayEst = Number(Math.round(projectAccount(account, yearsElapsed))).toLocaleString();
+      var cells = '<td>'+account.label+'</td><td>'+Number(account.capitalInitial).toLocaleString()+' $</td>'+
+        '<td style="color:var(--brass-bright)">'+todayEst+' $</td>';
       for(var y=1; y<=5; y++){
         cells += '<td>'+Number(Math.round(projectAccount(account, y))).toLocaleString()+' $</td>';
       }
@@ -1159,9 +1179,9 @@
           running += e.montant||0;
           byDate[e.date] = running;
           return running;
-        }, account.capitalInitial);
+        }, 0);
       var data = [];
-      var last = account.capitalInitial;
+      var last = 0;
       allDates.forEach(function(d){ if(byDate[d]!==undefined) last=byDate[d]; data.push(last); });
       return { label:compte, data:data, borderColor:colors[compte]||'#b08d57', backgroundColor:'transparent', tension:0.25 };
     });
@@ -1186,14 +1206,14 @@
     if(editingObjId){
       var e = objectifEntries.find(function(x){ return x.id === editingObjId; });
       if(!e) return;
-      document.getElementById('objModalTitle').textContent = "Modifier l'entrée";
+      document.getElementById('objModalTitle').textContent = "Modifier le retrait";
       document.getElementById('oDate').value = e.date;
       document.getElementById('oCompte').value = e.compte;
       document.getElementById('oMontant').value = e.montant;
       document.getElementById('oFreq').value = e.frequence || '';
       document.getElementById('oNote').value = e.note || '';
     } else {
-      document.getElementById('objModalTitle').textContent = 'Ajouter une entrée';
+      document.getElementById('objModalTitle').textContent = 'Ajouter un retrait';
       document.getElementById('oDate').value = new Date().toISOString().slice(0,10);
       ['oMontant','oFreq','oNote'].forEach(function(id){ document.getElementById(id).value=''; });
     }
@@ -1240,8 +1260,19 @@
     });
   }
 
+  var RETRAIT_FIELD_IDS = {
+    'FTMO 10K': 'pRetraitFtmo10k',
+    'FTMO 100K': 'pRetraitFtmo100k',
+    'Funding Pips 5K': 'pRetraitFp5k',
+    'Funding Pips 100K': 'pRetraitFp100k'
+  };
+
   function openParamsModal(){
     document.getElementById('pDateDebut').value = objectifParams.date_debut;
+    ACCOUNTS.forEach(function(account){
+      var fieldId = RETRAIT_FIELD_IDS[account.label];
+      if(fieldId) document.getElementById(fieldId).value = retraitTargets[account.label] || 0;
+    });
     document.getElementById('paramsModal').classList.remove('hidden');
   }
   function closeParamsModal(){ document.getElementById('paramsModal').classList.add('hidden'); }
@@ -1250,10 +1281,19 @@
       id: 1,
       date_debut: document.getElementById('pDateDebut').value
     };
+    var retraitUpserts = ACCOUNTS.map(function(account){
+      var fieldId = RETRAIT_FIELD_IDS[account.label];
+      var cible = fieldId ? (parseFloat(document.getElementById(fieldId).value) || 0) : 0;
+      return sbUpsert('objectif_retraits_params', { compte: account.label, cible: cible });
+    });
     closeParamsModal();
     setSyncStatus('Enregistrement…', null);
-    sbUpsert('objectif_parametres', data).then(function(){
+    Promise.all([sbUpsert('objectif_parametres', data)].concat(retraitUpserts)).then(function(){
       objectifParams = data;
+      return sbSelect('objectif_retraits_params', 'select=*');
+    }).then(function(rows){
+      retraitTargets = {};
+      (rows||[]).forEach(function(r){ retraitTargets[r.compte] = r.cible || 0; });
       renderObjectif();
       setSyncStatus('✓ Synchronisé', 'ok');
     }).catch(function(err){

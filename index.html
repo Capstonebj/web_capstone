@@ -424,11 +424,13 @@
     </div>
     <div class="modal-body">
       <div class="field"><label>Date de début du plan</label><input type="date" id="pDateDebut"></div>
-      <div class="hint-box">Le capital de chaque compte suit automatiquement le plan de scaling FTMO / Funding Pips (voir le panneau « Plan de scaling »). Règle ici uniquement tes <b>objectifs de retraits personnels</b> — combien tu veux avoir sorti de chaque compte d'ici 5 ans.</div>
+      <div class="hint-box">Le capital de chaque compte suit automatiquement le plan de scaling FTMO / Funding Pips / FundedNext (voir le panneau « Plan de scaling »). Règle ici uniquement tes <b>objectifs de retraits personnels</b> — combien tu veux avoir sorti de chaque compte d'ici 5 ans.</div>
       <div class="field"><label>Objectif retrait — FTMO 10K ($)</label><input type="number" step="any" id="pRetraitFtmo10k"></div>
-      <div class="field"><label>Objectif retrait — FTMO 100K ($)</label><input type="number" step="any" id="pRetraitFtmo100k"></div>
+      <div class="field"><label>Objectif retrait — FTMO 200K ($)</label><input type="number" step="any" id="pRetraitFtmo200k"></div>
       <div class="field"><label>Objectif retrait — Funding Pips 5K ($)</label><input type="number" step="any" id="pRetraitFp5k"></div>
-      <div class="field"><label>Objectif retrait — Funding Pips 100K ($)</label><input type="number" step="any" id="pRetraitFp100k"></div>
+      <div class="field"><label>Objectif retrait — Funding Pips 200K ($)</label><input type="number" step="any" id="pRetraitFp200k"></div>
+      <div class="field"><label>Objectif retrait — FundedNext 10K ($)</label><input type="number" step="any" id="pRetraitFn10k"></div>
+      <div class="field"><label>Objectif retrait — FundedNext 200K ($)</label><input type="number" step="any" id="pRetraitFn200k"></div>
       <div class="modal-actions">
         <button class="btn btn-ghost" onclick="closeParamsModal()">Annuler</button>
         <button class="btn btn-solid" onclick="saveParams()">Enregistrer</button>
@@ -458,6 +460,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 11h2M12 11h2M16 11h2M8 15h2M12 15h2M16 15h2"/></svg>
         Lot Size Calculator
       </button>
+      <button class="nav-btn" data-tab="stats" onclick="showTab('stats')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg>
+        Statistiques
+      </button>
     </nav>
     <div class="sidebar-foot">
       <div class="userchip" id="userchip">CONNECTÉ · —</div>
@@ -486,12 +492,17 @@
         <div class="tile" onclick="showTab('objectif')">
           <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div>
           <h4>Objectif</h4>
-          <p>Suivez la progression FTMO / Funding Pips.</p>
+          <p>Scaling FTMO / Funding Pips / FundedNext et retraits.</p>
         </div>
         <div class="tile" onclick="showTab('calculator')">
           <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 11h2M12 11h2M16 11h2M8 15h2M12 15h2M16 15h2"/></svg></div>
           <h4>Lot Size Calculator</h4>
           <p>Calculez la taille de position selon votre risque.</p>
+        </div>
+        <div class="tile" onclick="showTab('stats')">
+          <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg></div>
+          <h4>Statistiques</h4>
+          <p>Performance par stratégie et par H4 broke zone.</p>
         </div>
       </div>
     </div>
@@ -532,9 +543,10 @@
       <div class="section-divider">📈 Plan de scaling — croissance du capital (projection)</div>
       <div class="panel">
         <p class="note" style="margin-top:0; margin-bottom:16px;">
-          Projection du <b>solde du compte</b> selon les vrais mécanismes de scaling publiés par les deux firmes (2026) — pas une saisie manuelle, c'est calculé automatiquement :
+          Projection du <b>solde du compte</b> selon les vrais mécanismes de scaling publiés par les trois firmes (2026) — pas une saisie manuelle, c'est calculé automatiquement :
           <b>FTMO</b> — +25 % du solde initial tous les 4 mois, sous réserve de ≥10 % de profit net sur la période, d'être profitable sur au moins 2 des 4 mois, et sans violation de règle (plafond 2 000 000 $) ·
-          <b>Funding Pips</b> — paliers Launchpad (+20 % après 4 payouts et 10 % cumulé), Ascender (+30 % après 8 payouts et 20 % cumulé), Trailblazer (+40 % après 12 payouts et 30 % cumulé), Hot Seat (solde doublé après 16 payouts et 40 % cumulé), cadence estimée à ~1 payout/mois.
+          <b>Funding Pips</b> — paliers Launchpad (+20 % après 4 payouts et 10 % cumulé), Ascender (+30 % après 8 payouts et 20 % cumulé), Trailblazer (+40 % après 12 payouts et 30 % cumulé), Hot Seat (solde doublé après 16 payouts et 40 % cumulé), cadence estimée à ~1 payout/mois ·
+          <b>FundedNext Pro</b> (depuis le 12/01/2026) — +25 % du solde <i>courant</i> (composé) par cycle qualifiant (4 payouts, ≥4 % de croissance par cycle, 2 mois de trading actif minimum), cadence estimée à ~1 payout/mois, plafond 4 000 000 $.
           C'est un scénario « sur la trajectoire » en cas de qualification continue à chaque cycle — pas une garantie de résultat.
         </p>
         <div class="table-wrap">
@@ -607,6 +619,42 @@
       </div>
     </div>
 
+    <!-- STATISTIQUES -->
+    <div class="tab-panel hidden" id="tab-stats">
+      <div class="dash-head">
+        <div><div class="eyebrow">Analyse</div><h2>Statistiques par stratégie</h2></div>
+      </div>
+      <div class="panel">
+        <h3>Performance par stratégie</h3>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Stratégie</th><th>Trades</th><th>Win rate</th><th>R moyen</th><th>R total</th><th>P&amp;L total</th></tr></thead>
+          <tbody id="statsStrategyBody"></tbody>
+        </table>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>P&amp;L total par stratégie</h3>
+        <div class="chart-box"><canvas id="statsPnlChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Win rate par stratégie</h3>
+        <div class="chart-box"><canvas id="statsWinrateChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>H4 broke zone — impact sur la performance</h3>
+        <p class="note" style="margin-top:0; margin-bottom:16px;">Compare les trades où la zone H4 a été cassée (Yes) à ceux où elle ne l'a pas été (No), tous instruments et stratégies confondus.</p>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>H4 broke zone</th><th>Trades</th><th>Win rate</th><th>R moyen</th><th>P&amp;L total</th></tr></thead>
+          <tbody id="statsH4Body"></tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
 
 <script>
   /* =========================================================
@@ -671,7 +719,7 @@
 
   var BROKERS = ["FTMO", "Funding Pips"];
   var INSTRUMENTS_JOURNAL = ["US30","EURUSD","GBPUSD","USDJPY","USDCHF","AUDUSD","USDCAD","NZDUSD"];
-  var STRATEGIES = ["Imbalance Candle","Supply Candle","Demand Candle","High Candle","Low Candle"];
+  var STRATEGIES = ["Imbalance","Equal","Candles"];
 
   // Valeurs de pip reelles, issues de l'onglet "Hypotheses" (specifiques a chaque broker)
   var PIP_VALUES = {
@@ -705,14 +753,16 @@
   // ---------------------------------------------------------------
   // Comptes de scaling suivis dans l'onglet Objectif.
   // Capital initial et objectif calcules a partir des vrais plans de
-  // scaling publies par FTMO et Funding Pips (recherche 2026, voir le
-  // panneau "Plan de scaling" pour le detail des mecanismes et sources).
+  // scaling publies par FTMO, Funding Pips et FundedNext (recherche 2026,
+  // voir le panneau "Plan de scaling" pour le detail des mecanismes et sources).
   // ---------------------------------------------------------------
   var ACCOUNTS = [
-    { id:'ftmo_10k',  label:'FTMO 10K',            firm:'FTMO',          capitalInitial:10000 },
-    { id:'ftmo_100k', label:'FTMO 100K',           firm:'FTMO',          capitalInitial:100000 },
-    { id:'fp_5k',     label:'Funding Pips 5K',     firm:'Funding Pips', capitalInitial:5000 },
-    { id:'fp_100k',   label:'Funding Pips 100K',   firm:'Funding Pips', capitalInitial:100000 }
+    { id:'ftmo_10k',  label:'FTMO 10K',           firm:'FTMO',          capitalInitial:10000 },
+    { id:'ftmo_200k', label:'FTMO 200K',          firm:'FTMO',          capitalInitial:200000 },
+    { id:'fp_5k',     label:'Funding Pips 5K',    firm:'Funding Pips',  capitalInitial:5000 },
+    { id:'fp_200k',   label:'Funding Pips 200K',  firm:'Funding Pips',  capitalInitial:200000 },
+    { id:'fn_10k',    label:'FundedNext 10K',     firm:'FundedNext',    capitalInitial:10000 },
+    { id:'fn_200k',   label:'FundedNext 200K',    firm:'FundedNext',    capitalInitial:200000 }
   ];
 
   // FTMO : +25% du solde INITIAL tous les 4 mois (3 cycles/an) si conditions remplies. Plafond 2 000 000 $.
@@ -732,8 +782,19 @@
     if(months >= 16) value *= 2;    // Hot Seat
     return Math.min(value, 2000000);
   }
+  // FundedNext Pro (en vigueur depuis le 12/01/2026) : +25% du solde COURANT (compose) par cycle
+  // qualifiant (4 payouts + 4% de croissance min. par cycle + 2 mois de trading actif),
+  // cadence estimee ~1 payout/mois -> ~3 cycles/an. Plafond 4 000 000 $.
+  function projectFundedNext(capital, years){
+    var cyclesParAn = 3;
+    var cycles = Math.floor(years * cyclesParAn);
+    var value = capital * Math.pow(1.25, cycles);
+    return Math.min(value, 4000000);
+  }
   function projectAccount(account, years){
-    return account.firm === 'FTMO' ? projectFTMO(account.capitalInitial, years) : projectFundingPips(account.capitalInitial, years);
+    if(account.firm === 'FTMO') return projectFTMO(account.capitalInitial, years);
+    if(account.firm === 'FundedNext') return projectFundedNext(account.capitalInitial, years);
+    return projectFundingPips(account.capitalInitial, years);
   }
   function accountObjectif5ans(account){ return projectAccount(account, 5); }
 
@@ -877,6 +938,7 @@
     safe(renderJournal, 'journal');
     safe(renderObjectif, 'objectif');
     safe(calculateLotSize, 'calculator');
+    safe(renderStats, 'stats');
   }
 
   function safe(fn, label){
@@ -1108,7 +1170,7 @@
     document.getElementById('paramsStrip').innerHTML =
       '<span>Début du plan : <b>'+(objectifParams.date_debut||'—')+'</b></span>'+
       '<span>Horizon : <b>5 ans</b></span>'+
-      '<span>4 comptes suivis : <b>FTMO 10K · FTMO 100K · Funding Pips 5K · Funding Pips 100K</b></span>';
+      '<span>6 comptes suivis : <b>FTMO 10K/200K · Funding Pips 5K/200K · FundedNext 10K/200K</b></span>';
 
     var progress = objectifProgress();
     var grid = document.getElementById('progressGrid');
@@ -1168,7 +1230,7 @@
 
   function renderObjChart(){
     var ctx = document.getElementById('objChart').getContext('2d');
-    var colors = {'FTMO 10K':'#d3b485','FTMO 100K':'#b08d57','Funding Pips 5K':'#7f9c86','Funding Pips 100K':'#5f7d68'};
+    var colors = {'FTMO 10K':'#d3b485','FTMO 200K':'#b08d57','Funding Pips 5K':'#7f9c86','Funding Pips 200K':'#5f7d68','FundedNext 10K':'#a8879e','FundedNext 200K':'#7d6478'};
     var allDates = Array.from(new Set(objectifEntries.map(function(e){return e.date;}))).sort();
     var datasets = ACCOUNTS.map(function(account){
       var compte = account.label;
@@ -1262,9 +1324,11 @@
 
   var RETRAIT_FIELD_IDS = {
     'FTMO 10K': 'pRetraitFtmo10k',
-    'FTMO 100K': 'pRetraitFtmo100k',
+    'FTMO 200K': 'pRetraitFtmo200k',
     'Funding Pips 5K': 'pRetraitFp5k',
-    'Funding Pips 100K': 'pRetraitFp100k'
+    'Funding Pips 200K': 'pRetraitFp200k',
+    'FundedNext 10K': 'pRetraitFn10k',
+    'FundedNext 200K': 'pRetraitFn200k'
   };
 
   function openParamsModal(){
@@ -1343,6 +1407,120 @@
     if(lotBas <= 0){
       document.getElementById('calcWarning').classList.remove('hidden');
       document.getElementById('calcWarning').textContent = "Le lot brut est trop petit pour un pas de 0.01 : utilise la section « arrondi supérieur » ci-dessus (le risque réel dépassera légèrement ta cible).";
+    }
+  }
+
+  // ---------- Statistiques par strategie ----------
+  function computeGroupStats(list){
+    var closed = list.filter(function(t){ return t.pnl !== null && t.pnl !== undefined; });
+    var total = closed.length;
+    var wins = closed.filter(function(t){ return (t.pnl||0) > 0; }).length;
+    var totalR = closed.reduce(function(a,t){ return a + (t.r_realized||0); }, 0);
+    var totalPnl = closed.reduce(function(a,t){ return a + (t.pnl||0); }, 0);
+    return {
+      total: total,
+      winRate: total ? (wins/total*100) : 0,
+      avgR: total ? (totalR/total) : 0,
+      totalR: totalR,
+      totalPnl: totalPnl
+    };
+  }
+
+  var statsPnlChart, statsWinrateChart;
+
+  function renderStats(){
+    // --- par strategie ---
+    var strategies = Array.from(new Set(trades.map(function(t){ return t.strategy || 'Non renseignée'; })));
+    // garde l'ordre STRATEGIES en premier, puis toute valeur historique restante
+    strategies.sort(function(a,b){
+      var ia = STRATEGIES.indexOf(a), ib = STRATEGIES.indexOf(b);
+      if(ia===-1 && ib===-1) return a.localeCompare(b);
+      if(ia===-1) return 1;
+      if(ib===-1) return -1;
+      return ia-ib;
+    });
+
+    var rows = strategies.map(function(s){
+      var list = trades.filter(function(t){ return (t.strategy || 'Non renseignée') === s; });
+      var stats = computeGroupStats(list);
+      return { label:s, stats:stats };
+    }).filter(function(r){ return r.stats.total > 0; });
+
+    var body = document.getElementById('statsStrategyBody');
+    body.innerHTML = '';
+    if(!rows.length){
+      body.innerHTML = '<tr><td colspan="6" style="color:var(--ink-faint)">Aucun trade enregistré pour l\'instant.</td></tr>';
+    }
+    rows.forEach(function(r){
+      var s = r.stats;
+      var pnlColor = s.totalPnl>=0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>'+r.label+'</td><td>'+s.total+'</td><td>'+s.winRate.toFixed(1)+'%</td>'+
+        '<td>'+s.avgR.toFixed(2)+' R</td><td>'+s.totalR.toFixed(2)+' R</td>'+
+        '<td '+pnlColor+'>'+(s.totalPnl>=0?'+':'')+s.totalPnl.toFixed(2)+' $</td>';
+      body.appendChild(tr);
+    });
+
+    // --- graphiques ---
+    var labels = rows.map(function(r){ return r.label; });
+    var pnlData = rows.map(function(r){ return r.stats.totalPnl; });
+    var winrateData = rows.map(function(r){ return r.stats.winRate; });
+    var barColors = ['#b08d57','#7f9c86','#b06a5f','#d3b485','#5f7d68','#a8879e'];
+
+    var pnlCtx = document.getElementById('statsPnlChart');
+    if(pnlCtx){
+      if(statsPnlChart) statsPnlChart.destroy();
+      if(labels.length){
+        statsPnlChart = new Chart(pnlCtx.getContext('2d'), {
+          type:'bar',
+          data:{ labels:labels, datasets:[{ label:'P&L total ($)', data:pnlData, backgroundColor:barColors }] },
+          options:{ responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ display:false } },
+            scales:{
+              x:{ ticks:{ color:'#9aa3b2', font:{family:'IBM Plex Mono', size:10} }, grid:{ display:false } },
+              y:{ ticks:{ color:'#9aa3b2', font:{family:'IBM Plex Mono', size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } }
+            }
+          }
+        });
+      } else { pnlCtx.getContext('2d').clearRect(0,0,pnlCtx.width,pnlCtx.height); }
+    }
+
+    var winCtx = document.getElementById('statsWinrateChart');
+    if(winCtx){
+      if(statsWinrateChart) statsWinrateChart.destroy();
+      if(labels.length){
+        statsWinrateChart = new Chart(winCtx.getContext('2d'), {
+          type:'bar',
+          data:{ labels:labels, datasets:[{ label:'Win rate (%)', data:winrateData, backgroundColor:barColors }] },
+          options:{ responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ display:false } },
+            scales:{
+              x:{ ticks:{ color:'#9aa3b2', font:{family:'IBM Plex Mono', size:10} }, grid:{ display:false } },
+              y:{ min:0, max:100, ticks:{ color:'#9aa3b2', font:{family:'IBM Plex Mono', size:10} }, grid:{ color:'rgba(176,141,87,0.08)' } }
+            }
+          }
+        });
+      } else { winCtx.getContext('2d').clearRect(0,0,winCtx.width,winCtx.height); }
+    }
+
+    // --- H4 broke zone ---
+    var h4Body = document.getElementById('statsH4Body');
+    h4Body.innerHTML = '';
+    [
+      { label:'Yes', list: trades.filter(function(t){ return t.h4_broke_zone === true; }) },
+      { label:'No',  list: trades.filter(function(t){ return t.h4_broke_zone === false; }) },
+      { label:'Non renseigné', list: trades.filter(function(t){ return t.h4_broke_zone !== true && t.h4_broke_zone !== false; }) }
+    ].forEach(function(group){
+      var s = computeGroupStats(group.list);
+      if(s.total === 0) return;
+      var pnlColor = s.totalPnl>=0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>'+group.label+'</td><td>'+s.total+'</td><td>'+s.winRate.toFixed(1)+'%</td>'+
+        '<td>'+s.avgR.toFixed(2)+' R</td><td '+pnlColor+'>'+(s.totalPnl>=0?'+':'')+s.totalPnl.toFixed(2)+' $</td>';
+      h4Body.appendChild(tr);
+    });
+    if(!h4Body.children.length){
+      h4Body.innerHTML = '<tr><td colspan="5" style="color:var(--ink-faint)">Aucun trade enregistré pour l\'instant.</td></tr>';
     }
   }
 

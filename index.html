@@ -717,7 +717,7 @@
     el.style.color = kind==='error' ? 'var(--brick)' : kind==='ok' ? 'var(--sage)' : 'var(--ink-faint)';
   }
 
-  var BROKERS = ["FTMO", "Funding Pips"];
+  var BROKERS = ["FTMO", "Funding Pips", "FundedNext"];
   var INSTRUMENTS_JOURNAL = ["US30","EURUSD","GBPUSD","USDJPY","USDCHF","AUDUSD","USDCAD","NZDUSD"];
   var STRATEGIES = ["Imbalance","Equal","Candles"];
 
@@ -742,6 +742,16 @@
       "USDCAD": {v001:0.10, v100:10},
       "USDCHF": {v001:0.12, v100:12},
       "USDJPY": {v001:0.05, v100:5}
+    },
+    "FundedNext": {
+      "AUDUSD": {v001:0.10,  v100:10},
+      "EURUSD": {v001:0.10,  v100:10},
+      "GBPUSD": {v001:0.10,  v100:10},
+      "NZDUSD": {v001:0.10,  v100:10},
+      "US30":   {v001:0.10,  v100:10},
+      "USDCAD": {v001:0.072, v100:7.21},
+      "USDCHF": {v001:0.123, v100:12.32},
+      "USDJPY": {v001:0.063, v100:6.27}
     }
   };
 

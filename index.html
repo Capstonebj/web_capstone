@@ -196,6 +196,11 @@
   .login-sub{ font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--brass); text-transform:uppercase; margin-bottom:32px; }
   .login-card .btn-solid{ width:100%; padding:13px; margin-top:6px; }
   .remember-row{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink-muted); margin-bottom:20px; cursor:pointer; user-select:none; }
+  .pass-wrap{ position:relative; }
+  .pass-wrap input{ padding-right:42px; }
+  .pass-toggle{ position:absolute; right:0; top:0; bottom:0; width:40px; background:none; border:none; color:var(--ink-faint); display:flex; align-items:center; justify-content:center; }
+  .pass-toggle:hover{ color:var(--brass-bright); }
+  .pass-toggle svg{ width:18px; height:18px; }
   .remember-row input{ width:15px; height:15px; accent-color:var(--brass); cursor:pointer; }
 
   /* ================= DASHBOARD ================= */
@@ -335,7 +340,12 @@
     </div>
     <div class="field">
       <label>Mot de passe</label>
-      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+      <div class="pass-wrap">
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+        <button type="button" class="pass-toggle" id="passToggle" onclick="togglePasswordVisibility()" aria-label="Afficher le mot de passe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" id="eyeIcon"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
     </div>
     <label class="remember-row">
       <input type="checkbox" id="loginRemember" checked>
@@ -819,6 +829,18 @@
   var REMEMBER_KEY = 'bcf_refresh_token';
 
   // ---------- Login (Supabase Auth reel) ----------
+  function togglePasswordVisibility(){
+    var input = document.getElementById('loginPass');
+    var eye = document.getElementById('eyeIcon');
+    var btn = document.getElementById('passToggle');
+    var showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    btn.setAttribute('aria-label', showing ? 'Afficher le mot de passe' : 'Masquer le mot de passe');
+    eye.innerHTML = showing
+      ? '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/>'
+      : '<path d="M3 3l18 18M10.6 10.6a3 3 0 0 0 4.24 4.24M9.9 4.24A10.9 10.9 0 0 1 12 4c7 0 11 7 11 7a13.2 13.2 0 0 1-3.1 3.9M6.1 6.1A13.3 13.3 0 0 0 1 11s4 7 11 7a10.7 10.7 0 0 0 4.24-.86"/>';
+  }
+
   function attemptLogin(){
     var email = document.getElementById('loginUser').value.trim();
     var pass = document.getElementById('loginPass').value.trim();

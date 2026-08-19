@@ -558,10 +558,11 @@
           <b>Funding Pips</b> — paliers Launchpad (+20 % après 4 payouts et 10 % cumulé), Ascender (+30 % après 8 payouts et 20 % cumulé), Trailblazer (+40 % après 12 payouts et 30 % cumulé), Hot Seat (solde doublé après 16 payouts et 40 % cumulé), cadence estimée à ~1 payout/mois ·
           <b>FundedNext Pro</b> (depuis le 12/01/2026) — +25 % du solde <i>courant</i> (composé) par cycle qualifiant (4 payouts, ≥4 % de croissance par cycle, 2 mois de trading actif minimum), cadence estimée à ~1 payout/mois, plafond 4 000 000 $.
           C'est un scénario « sur la trajectoire » en cas de qualification continue à chaque cycle — pas une garantie de résultat.
+          Les colonnes <b>P&L réel</b> et <b>Solde réel</b> sont calculées directement depuis les trades du Journal rattachés à ce compte précis, pour comparer ta performance réelle à la trajectoire théorique.
         </p>
         <div class="table-wrap">
         <table>
-          <thead><tr><th>Compte</th><th>Départ</th><th>Aujourd'hui (est.)</th><th>Année 1</th><th>Année 2</th><th>Année 3</th><th>Année 4</th><th>Année 5</th></tr></thead>
+          <thead><tr><th>Compte</th><th>Départ</th><th>P&amp;L réel (Journal)</th><th>Solde réel</th><th>Aujourd'hui (est.)</th><th>Année 1</th><th>Année 2</th><th>Année 3</th><th>Année 4</th><th>Année 5</th></tr></thead>
           <tbody id="scalingPlanBody"></tbody>
         </table>
         </div>
@@ -937,7 +938,7 @@
   // ---------- init dashboard : charge tout depuis Supabase puis affiche ----------
   function initDashboard(){
     fillSelect('tInstrument', INSTRUMENTS_JOURNAL);
-    fillSelect('tBroker', BROKERS);
+    fillSelect('tBroker', ACCOUNTS.map(function(a){ return a.label; }));
     fillSelect('tStrategy', STRATEGIES);
     fillSelect('cBroker', BROKERS);
     fillSelect('oCompte', ACCOUNTS.map(function(a){ return a.label; }), false);
@@ -1250,7 +1251,13 @@
     ACCOUNTS.forEach(function(account){
       var tr = document.createElement('tr');
       var todayEst = Number(Math.round(projectAccount(account, yearsElapsed))).toLocaleString();
+      var pnlReel = trades.filter(function(t){ return t.broker === account.label; })
+                           .reduce(function(a,t){ return a + (t.pnl||0); }, 0);
+      var soldeReel = account.capitalInitial + pnlReel;
+      var pnlColor = pnlReel >= 0 ? 'style="color:var(--sage)"' : 'style="color:var(--brick)"';
       var cells = '<td>'+account.label+'</td><td>'+Number(account.capitalInitial).toLocaleString()+' $</td>'+
+        '<td '+pnlColor+'>'+(pnlReel>=0?'+':'')+Number(Math.round(pnlReel)).toLocaleString()+' $</td>'+
+        '<td>'+Number(Math.round(soldeReel)).toLocaleString()+' $</td>'+
         '<td style="color:var(--brass-bright)">'+todayEst+' $</td>';
       for(var y=1; y<=5; y++){
         cells += '<td>'+Number(Math.round(projectAccount(account, y))).toLocaleString()+' $</td>';

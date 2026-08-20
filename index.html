@@ -283,6 +283,21 @@
   .calc-result .label{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
   .calc-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:18px; margin-top:20px; }
   .calc-mini{ background:var(--void); border:1px solid var(--line-strong); padding:16px 18px; }
+
+  /* Photos de chart */
+  .chart-thumbs{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .chart-thumb{ position:relative; width:84px; height:84px; border:1px solid var(--line-strong); overflow:hidden; background:var(--void); }
+  .chart-thumb img{ width:100%; height:100%; object-fit:cover; cursor:pointer; }
+  .chart-thumb .remove-thumb{ position:absolute; top:2px; right:2px; width:20px; height:20px; border-radius:50%; background:rgba(16,19,26,0.85); border:1px solid var(--line-strong); color:var(--ink); font-size:13px; line-height:1; display:flex; align-items:center; justify-content:center; }
+  .chart-thumb .remove-thumb:hover{ border-color:var(--brick); color:var(--brick); }
+  .chart-thumb .uploading{ position:absolute; inset:0; background:rgba(16,19,26,0.6); display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:10px; color:var(--brass-bright); text-align:center; }
+  .row-imgs{ background:none; border:1px solid var(--line-strong); color:var(--ink-faint); font-family:var(--mono); font-size:11px; padding:5px 10px; }
+  .row-imgs:hover{ border-color:var(--brass); color:var(--brass-bright); }
+
+  /* Lightbox */
+  .lightbox-content{ max-width:94vw; max-height:90vh; overflow-y:auto; }
+  .lightbox-images{ display:flex; flex-direction:column; gap:16px; align-items:center; }
+  .lightbox-images img{ max-width:90vw; max-height:80vh; border:1px solid var(--line-strong); }
   .calc-mini .label{ font-family:var(--mono); font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;}
   .calc-mini .value{ font-family:var(--mono); font-size:17px; color:var(--ink); }
   .note{ font-size:12px; color:var(--ink-faint); margin-top:16px; }
@@ -392,11 +407,24 @@
         </div>
       </div>
       <div class="field"><label>Notes</label><input type="text" id="tNotes" placeholder="Contexte, setup, leçon retenue…"></div>
+      <div class="field">
+        <label>Photos du chart (3 max)</label>
+        <input type="file" id="tChartFiles" accept="image/*" multiple onchange="onChartFilesSelected(event)">
+        <div class="chart-thumbs" id="chartThumbs"></div>
+      </div>
       <div class="modal-actions">
         <button class="btn btn-ghost" onclick="closeTradeModal()">Annuler</button>
-        <button class="btn btn-solid" onclick="saveTrade()">Enregistrer le trade</button>
+        <button class="btn btn-solid" id="saveTradeBtn" onclick="saveTrade()">Enregistrer le trade</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ============ LIGHTBOX CHART IMAGES ============ -->
+<div id="lightboxOverlay" class="modal-overlay hidden" onclick="if(event.target===this) closeLightbox()">
+  <div class="lightbox-content">
+    <button class="close" onclick="closeLightbox()" style="position:fixed; top:22px; right:26px;">&times;</button>
+    <div id="lightboxImages" class="lightbox-images"></div>
   </div>
 </div>
 
@@ -1056,7 +1084,9 @@
         '<td>'+(t.outcome ? '<span class="pill '+outcomeClass+'">'+t.outcome+'</span>' : '—')+'</td>'+
         '<td>'+(t.r_realized!=null ? Number(t.r_realized).toFixed(2) : '—')+'</td>'+
         '<td '+pnlColor+'>'+((t.pnl||0)>=0?'+':'')+Number(t.pnl||0).toFixed(2)+' $</td>'+
-        '<td><div class="row-actions"><button class="row-edit" onclick="editTrade(\''+t.id+'\')">Modifier</button><button class="row-del" onclick="deleteTrade(\''+t.id+'\')">Suppr.</button></div></td>';
+        '<td><div class="row-actions">'+
+          (t.chart_urls && t.chart_urls.length ? '<button class="row-imgs" onclick=\'openLightbox('+JSON.stringify(t.chart_urls)+')\'>📷 '+t.chart_urls.length+'</button>' : '')+
+          '<button class="row-edit" onclick="editTrade(\''+t.id+'\')">Modifier</button><button class="row-del" onclick="deleteTrade(\''+t.id+'\')">Suppr.</button></div></td>';
       body.appendChild(tr);
     });
 
@@ -1085,9 +1115,14 @@
   }
 
   var editingTradeId = null;
+  var existingChartUrls = [];
+  var pendingChartFiles = [];
 
   function openTradeModal(id){
     editingTradeId = id || null;
+    existingChartUrls = [];
+    pendingChartFiles = [];
+    document.getElementById('tChartFiles').value = '';
     if(editingTradeId){
       var t = trades.find(function(x){ return x.id === editingTradeId; });
       if(!t) return;
@@ -1106,16 +1141,90 @@
       document.getElementById('tStrategy').value = t.strategy || '';
       document.getElementById('tH4Broke').value = t.h4_broke_zone === true ? 'Yes' : t.h4_broke_zone === false ? 'No' : '';
       document.getElementById('tNotes').value = t.notes === '—' ? '' : (t.notes || '');
+      existingChartUrls = (t.chart_urls || []).slice();
     } else {
       document.getElementById('tradeModalTitle').textContent = 'Ajouter un trade';
       document.getElementById('tDate').value = new Date().toISOString().slice(0,10);
       ['tEntry','tExit','tSL','tTP','tR','tPnl','tNotes','tOutcome'].forEach(function(id){ document.getElementById(id).value=''; });
       document.getElementById('tH4Broke').value = '';
     }
+    renderChartThumbs();
     document.getElementById('tradeModal').classList.remove('hidden');
   }
   function editTrade(id){ openTradeModal(id); }
   function closeTradeModal(){ document.getElementById('tradeModal').classList.add('hidden'); editingTradeId = null; }
+
+  // ---------- Photos de chart (Supabase Storage) ----------
+  function totalChartCount(){ return existingChartUrls.length + pendingChartFiles.length; }
+
+  function onChartFilesSelected(evt){
+    var files = Array.prototype.slice.call(evt.target.files || []);
+    var room = 3 - totalChartCount();
+    if(room <= 0){ alert('Maximum 3 photos par trade.'); evt.target.value=''; return; }
+    files.slice(0, room).forEach(function(f){ pendingChartFiles.push(f); });
+    if(files.length > room){ alert('Seules les '+room+' premières photos ont été ajoutées (maximum 3 au total).'); }
+    evt.target.value = '';
+    renderChartThumbs();
+  }
+
+  function removeExistingChartUrl(idx){ existingChartUrls.splice(idx,1); renderChartThumbs(); }
+  function removePendingChartFile(idx){ pendingChartFiles.splice(idx,1); renderChartThumbs(); }
+
+  function renderChartThumbs(){
+    var box = document.getElementById('chartThumbs');
+    box.innerHTML = '';
+    existingChartUrls.forEach(function(url, idx){
+      var div = document.createElement('div');
+      div.className = 'chart-thumb';
+      div.innerHTML = '<img src="'+url+'" onclick="openLightbox([\''+url+'\'])">'+
+        '<button type="button" class="remove-thumb" onclick="removeExistingChartUrl('+idx+')">&times;</button>';
+      box.appendChild(div);
+    });
+    pendingChartFiles.forEach(function(file, idx){
+      var div = document.createElement('div');
+      div.className = 'chart-thumb';
+      var img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
+      div.appendChild(img);
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'remove-thumb'; btn.textContent = '×';
+      btn.onclick = function(){ removePendingChartFile(idx); };
+      div.appendChild(btn);
+      box.appendChild(div);
+    });
+    var input = document.getElementById('tChartFiles');
+    input.disabled = totalChartCount() >= 3;
+  }
+
+  function uploadChartImage(file){
+    var ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+    var path = 'trades/' + Date.now() + '-' + Math.random().toString(16).slice(2) + '.' + ext;
+    return fetch(SUPABASE_URL + '/storage/v1/object/trade-charts/' + path, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + ((currentSession && currentSession.access_token) || SUPABASE_KEY),
+        'Content-Type': file.type || 'image/jpeg'
+      },
+      body: file
+    }).then(function(r){
+      if(!r.ok) return r.text().then(function(t){ throw new Error('Upload photo échoué ('+r.status+') '+t); });
+      return SUPABASE_URL + '/storage/v1/object/public/trade-charts/' + path;
+    });
+  }
+
+  // ---------- Lightbox ----------
+  function openLightbox(urls){
+    var box = document.getElementById('lightboxImages');
+    box.innerHTML = '';
+    (urls||[]).forEach(function(url){
+      var img = document.createElement('img');
+      img.src = url;
+      box.appendChild(img);
+    });
+    document.getElementById('lightboxOverlay').classList.remove('hidden');
+  }
+  function closeLightbox(){ document.getElementById('lightboxOverlay').classList.add('hidden'); }
 
   function saveTrade(){
     var instrument = document.getElementById('tInstrument').value;
@@ -1129,28 +1238,38 @@
     } else {
       nextNum = trades.length ? Math.max.apply(null, trades.map(function(t){return t.trade_num||0;})) + 1 : 1;
     }
-    var data = {
-      id: id,
-      trade_num: nextNum,
-      date: document.getElementById('tDate').value || new Date().toISOString().slice(0,10),
-      instrument: instrument,
-      direction: document.getElementById('tDirection').value,
-      broker: document.getElementById('tBroker').value,
-      entry_price: parseFloat(document.getElementById('tEntry').value) || null,
-      exit_price: parseFloat(document.getElementById('tExit').value) || null,
-      sl_pts: parseFloat(document.getElementById('tSL').value) || null,
-      tp_pts: parseFloat(document.getElementById('tTP').value) || null,
-      outcome: document.getElementById('tOutcome').value || null,
-      r_realized: parseFloat(document.getElementById('tR').value) || 0,
-      pnl: parseFloat(document.getElementById('tPnl').value) || 0,
-      strategy: document.getElementById('tStrategy').value,
-      h4_broke_zone: document.getElementById('tH4Broke').value === '' ? null : document.getElementById('tH4Broke').value === 'Yes',
-      notes: document.getElementById('tNotes').value.trim() || '—',
-      deleted: false
-    };
-    closeTradeModal();
-    setSyncStatus('Enregistrement…', null);
-    sbUpsert('trades', data).then(function(){
+
+    var btn = document.getElementById('saveTradeBtn');
+    btn.disabled = true;
+    btn.textContent = pendingChartFiles.length ? 'Envoi des photos…' : 'Enregistrement…';
+
+    Promise.all(pendingChartFiles.map(uploadChartImage)).then(function(uploadedUrls){
+      var data = {
+        id: id,
+        trade_num: nextNum,
+        date: document.getElementById('tDate').value || new Date().toISOString().slice(0,10),
+        instrument: instrument,
+        direction: document.getElementById('tDirection').value,
+        broker: document.getElementById('tBroker').value,
+        entry_price: parseFloat(document.getElementById('tEntry').value) || null,
+        exit_price: parseFloat(document.getElementById('tExit').value) || null,
+        sl_pts: parseFloat(document.getElementById('tSL').value) || null,
+        tp_pts: parseFloat(document.getElementById('tTP').value) || null,
+        outcome: document.getElementById('tOutcome').value || null,
+        r_realized: parseFloat(document.getElementById('tR').value) || 0,
+        pnl: parseFloat(document.getElementById('tPnl').value) || 0,
+        strategy: document.getElementById('tStrategy').value,
+        h4_broke_zone: document.getElementById('tH4Broke').value === '' ? null : document.getElementById('tH4Broke').value === 'Yes',
+        notes: document.getElementById('tNotes').value.trim() || '—',
+        chart_urls: existingChartUrls.concat(uploadedUrls),
+        deleted: false
+      };
+      btn.disabled = false;
+      btn.textContent = 'Enregistrer le trade';
+      closeTradeModal();
+      setSyncStatus('Enregistrement…', null);
+      return sbUpsert('trades', data);
+    }).then(function(){
       return sbSelect('trades');
     }).then(function(rows){
       trades = rows;
@@ -1158,6 +1277,8 @@
       setSyncStatus('✓ Synchronisé', 'ok');
     }).catch(function(err){
       console.error(err);
+      btn.disabled = false;
+      btn.textContent = 'Enregistrer le trade';
       setSyncStatus('⚠ Échec de l\'enregistrement', 'error');
       alert("Le trade n'a pas pu être enregistré sur Supabase :\n" + err.message);
     });

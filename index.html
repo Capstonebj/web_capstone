@@ -462,13 +462,11 @@
     </div>
     <div class="modal-body">
       <div class="field"><label>Date de début du plan</label><input type="date" id="pDateDebut"></div>
-      <div class="hint-box">Le capital de chaque compte suit automatiquement le plan de scaling FTMO / Funding Pips / FundedNext (voir le panneau « Plan de scaling »). Règle ici uniquement tes <b>objectifs de retraits personnels</b> — combien tu veux avoir sorti de chaque compte d'ici 5 ans.</div>
+      <div class="hint-box">Le capital de chaque compte suit automatiquement le plan de scaling FTMO / Funding Pips (voir le panneau « Plan de scaling »). Règle ici uniquement tes <b>objectifs de retraits personnels</b> — combien tu veux avoir sorti de chaque compte d'ici 5 ans.</div>
       <div class="field"><label>Objectif retrait — FTMO 10K ($)</label><input type="number" step="any" id="pRetraitFtmo10k"></div>
       <div class="field"><label>Objectif retrait — FTMO 200K ($)</label><input type="number" step="any" id="pRetraitFtmo200k"></div>
       <div class="field"><label>Objectif retrait — Funding Pips 5K ($)</label><input type="number" step="any" id="pRetraitFp5k"></div>
       <div class="field"><label>Objectif retrait — Funding Pips 200K ($)</label><input type="number" step="any" id="pRetraitFp200k"></div>
-      <div class="field"><label>Objectif retrait — FundedNext 10K ($)</label><input type="number" step="any" id="pRetraitFn10k"></div>
-      <div class="field"><label>Objectif retrait — FundedNext 200K ($)</label><input type="number" step="any" id="pRetraitFn200k"></div>
       <div class="modal-actions">
         <button class="btn btn-ghost" onclick="closeParamsModal()">Annuler</button>
         <button class="btn btn-solid" onclick="saveParams()">Enregistrer</button>
@@ -530,7 +528,7 @@
         <div class="tile" onclick="showTab('objectif')">
           <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div>
           <h4>Objectif</h4>
-          <p>Scaling FTMO / Funding Pips / FundedNext et retraits.</p>
+          <p>Scaling FTMO / Funding Pips et retraits.</p>
         </div>
         <div class="tile" onclick="showTab('calculator')">
           <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.3"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M8 6h8M8 11h2M12 11h2M16 11h2M8 15h2M12 15h2M16 15h2"/></svg></div>
@@ -581,10 +579,9 @@
       <div class="section-divider">📈 Plan de scaling — croissance du capital (projection)</div>
       <div class="panel">
         <p class="note" style="margin-top:0; margin-bottom:16px;">
-          Projection du <b>solde du compte</b> selon les vrais mécanismes de scaling publiés par les trois firmes (2026) — pas une saisie manuelle, c'est calculé automatiquement :
+          Projection du <b>solde du compte</b> selon les vrais mécanismes de scaling publiés par les deux firmes (2026) — pas une saisie manuelle, c'est calculé automatiquement :
           <b>FTMO</b> — +25 % du solde initial tous les 4 mois, sous réserve de ≥10 % de profit net sur la période, d'être profitable sur au moins 2 des 4 mois, et sans violation de règle (plafond 2 000 000 $) ·
-          <b>Funding Pips</b> — paliers Launchpad (+20 % après 4 payouts et 10 % cumulé), Ascender (+30 % après 8 payouts et 20 % cumulé), Trailblazer (+40 % après 12 payouts et 30 % cumulé), Hot Seat (solde doublé après 16 payouts et 40 % cumulé), cadence estimée à ~1 payout/mois ·
-          <b>FundedNext Pro</b> (depuis le 12/01/2026) — +25 % du solde <i>courant</i> (composé) par cycle qualifiant (4 payouts, ≥4 % de croissance par cycle, 2 mois de trading actif minimum), cadence estimée à ~1 payout/mois, plafond 4 000 000 $.
+          <b>Funding Pips</b> — paliers Launchpad (+20 % après 4 payouts et 10 % cumulé), Ascender (+30 % après 8 payouts et 20 % cumulé), Trailblazer (+40 % après 12 payouts et 30 % cumulé), Hot Seat (solde doublé après 16 payouts et 40 % cumulé), cadence estimée à ~1 payout/mois.
           C'est un scénario « sur la trajectoire » en cas de qualification continue à chaque cycle — pas une garantie de résultat.
           Les colonnes <b>P&L réel</b> et <b>Solde réel</b> sont calculées directement depuis les trades du Journal rattachés à ce compte précis, pour comparer ta performance réelle à la trajectoire théorique.
         </p>
@@ -756,7 +753,7 @@
     el.style.color = kind==='error' ? 'var(--brick)' : kind==='ok' ? 'var(--sage)' : 'var(--ink-faint)';
   }
 
-  var BROKERS = ["FTMO", "Funding Pips", "FundedNext"];
+  var BROKERS = ["FTMO", "Funding Pips"];
   var INSTRUMENTS_JOURNAL = ["US30","EURUSD","GBPUSD","USDJPY","USDCHF","AUDUSD","USDCAD","NZDUSD"];
   var STRATEGIES = ["Imbalance","Equal","Candles"];
 
@@ -781,16 +778,6 @@
       "USDCAD": {v001:0.10, v100:10},
       "USDCHF": {v001:0.12, v100:12},
       "USDJPY": {v001:0.05, v100:5}
-    },
-    "FundedNext": {
-      "AUDUSD": {v001:0.10,  v100:10},
-      "EURUSD": {v001:0.10,  v100:10},
-      "GBPUSD": {v001:0.10,  v100:10},
-      "NZDUSD": {v001:0.10,  v100:10},
-      "US30":   {v001:0.10,  v100:10},
-      "USDCAD": {v001:0.072, v100:7.21},
-      "USDCHF": {v001:0.123, v100:12.32},
-      "USDJPY": {v001:0.063, v100:6.27}
     }
   };
 
@@ -802,16 +789,14 @@
   // ---------------------------------------------------------------
   // Comptes de scaling suivis dans l'onglet Objectif.
   // Capital initial et objectif calcules a partir des vrais plans de
-  // scaling publies par FTMO, Funding Pips et FundedNext (recherche 2026,
+  // scaling publies par FTMO et Funding Pips (recherche 2026,
   // voir le panneau "Plan de scaling" pour le detail des mecanismes et sources).
   // ---------------------------------------------------------------
   var ACCOUNTS = [
     { id:'ftmo_10k',  label:'FTMO 10K',           firm:'FTMO',          capitalInitial:10000 },
     { id:'ftmo_200k', label:'FTMO 200K',          firm:'FTMO',          capitalInitial:200000 },
     { id:'fp_5k',     label:'Funding Pips 5K',    firm:'Funding Pips',  capitalInitial:5000 },
-    { id:'fp_200k',   label:'Funding Pips 200K',  firm:'Funding Pips',  capitalInitial:200000 },
-    { id:'fn_10k',    label:'FundedNext 10K',     firm:'FundedNext',    capitalInitial:10000 },
-    { id:'fn_200k',   label:'FundedNext 200K',    firm:'FundedNext',    capitalInitial:200000 }
+    { id:'fp_200k',   label:'Funding Pips 200K',  firm:'Funding Pips',  capitalInitial:200000 }
   ];
 
   // FTMO : +25% du solde INITIAL tous les 4 mois (3 cycles/an) si conditions remplies. Plafond 2 000 000 $.
@@ -831,18 +816,8 @@
     if(months >= 16) value *= 2;    // Hot Seat
     return Math.min(value, 2000000);
   }
-  // FundedNext Pro (en vigueur depuis le 12/01/2026) : +25% du solde COURANT (compose) par cycle
-  // qualifiant (4 payouts + 4% de croissance min. par cycle + 2 mois de trading actif),
-  // cadence estimee ~1 payout/mois -> ~3 cycles/an. Plafond 4 000 000 $.
-  function projectFundedNext(capital, years){
-    var cyclesParAn = 3;
-    var cycles = Math.floor(years * cyclesParAn);
-    var value = capital * Math.pow(1.25, cycles);
-    return Math.min(value, 4000000);
-  }
   function projectAccount(account, years){
     if(account.firm === 'FTMO') return projectFTMO(account.capitalInitial, years);
-    if(account.firm === 'FundedNext') return projectFundedNext(account.capitalInitial, years);
     return projectFundingPips(account.capitalInitial, years);
   }
   function accountObjectif5ans(account){ return projectAccount(account, 5); }
@@ -1324,7 +1299,7 @@
     document.getElementById('paramsStrip').innerHTML =
       '<span>Début du plan : <b>'+(objectifParams.date_debut||'—')+'</b></span>'+
       '<span>Horizon : <b>5 ans</b></span>'+
-      '<span>6 comptes suivis : <b>FTMO 10K/200K · Funding Pips 5K/200K · FundedNext 10K/200K</b></span>';
+      '<span>4 comptes suivis : <b>FTMO 10K/200K · Funding Pips 5K/200K</b></span>';
 
     var progress = objectifProgress();
     var grid = document.getElementById('progressGrid');
@@ -1390,7 +1365,7 @@
 
   function renderObjChart(){
     var ctx = document.getElementById('objChart').getContext('2d');
-    var colors = {'FTMO 10K':'#d3b485','FTMO 200K':'#b08d57','Funding Pips 5K':'#7f9c86','Funding Pips 200K':'#5f7d68','FundedNext 10K':'#a8879e','FundedNext 200K':'#7d6478'};
+    var colors = {'FTMO 10K':'#d3b485','FTMO 200K':'#b08d57','Funding Pips 5K':'#7f9c86','Funding Pips 200K':'#5f7d68'};
     var allDates = Array.from(new Set(objectifEntries.map(function(e){return e.date;}))).sort();
     var datasets = ACCOUNTS.map(function(account){
       var compte = account.label;
@@ -1486,9 +1461,7 @@
     'FTMO 10K': 'pRetraitFtmo10k',
     'FTMO 200K': 'pRetraitFtmo200k',
     'Funding Pips 5K': 'pRetraitFp5k',
-    'Funding Pips 200K': 'pRetraitFp200k',
-    'FundedNext 10K': 'pRetraitFn10k',
-    'FundedNext 200K': 'pRetraitFn200k'
+    'Funding Pips 200K': 'pRetraitFp200k'
   };
 
   function openParamsModal(){
